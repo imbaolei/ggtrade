@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="stock" >
+  <resultMap id="RM-STOCK" class="com.baolei.ghost.dal.dataobject.StockDO" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="open" property="open" jdbcType="REAL" />
+    <result column="close" property="close" jdbcType="REAL" />
+    <result column="high" property="high" jdbcType="REAL" />
+    <result column="low" property="low" jdbcType="REAL" />
+    <result column="bbi" property="bbi" jdbcType="REAL" />
+    <result column="vol" property="vol" jdbcType="REAL" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="period" property="period" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <select id="SQL_SELECT_STOCK_BY_ID" resultMap="RM-STOCK" parameterClass="com.baolei.ghost.dal.dataobject.StockDO" >
+    select *
+    from stock
+    where id = #id#
+  </select>
+  <select id="SQL_SELECT_STOCK_BY_CODE_AND_PERIOD" resultMap="RM-STOCK" parameterClass="com.baolei.ghost.dal.dataobject.StockDO" >
+    select *
+    from stock
+    where code = #code# and period = #period# order by time
+  </select>
+  <delete id="SQL_DELETE_STOCK_BY_ID" parameterClass="com.baolei.ghost.dal.dataobject.StockDO" >
+    delete from stock
+    where id = #id#
+  </delete>
+  <delete id="SQL_DELETE_STOCK_BY_CODE" parameterClass="com.baolei.ghost.dal.dataobject.StockDO" >
+    delete from stock
+    where code = #code#
+  </delete>
+  <insert id="SQL_INSERT_STOCK" parameterClass="com.baolei.ghost.dal.dataobject.StockDO" >
+    insert into stock (code, open, close, high, low, bbi, vol, time, period, gmt_create, gmt_modified)
+    values (#code#, #open#, #close#, #high#, #low#, #bbi#, #vol#, #time#, #period#, #gmtCreate#,
+      #gmtModified#)
+    <selectKey resultClass="java.lang.Integer" keyProperty="id" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+  <update id="SQL_UPDATE_STOCK_BY_ID" parameterClass="com.baolei.ghost.dal.dataobject.StockDO" >
+    update stock
+    set 
+      code = #code#,
+      open = #open#,
+      close = #close#,
+      high = #high#,
+      low = #low#,
+      bbi = #bbi#,
+      vol = #vol#,
+      time = #time#,
+      period = #period#,
+      gmt_create = #gmtCreate#,
+      gmt_modified = #gmtModified#
+      
+    where id = #id#
+  </update>
+  <update id="SQL_UPDATE_STOCK_BY_ID_SELECTIVE" parameterClass="com.baolei.ghost.dal.dataobject.StockDO" >
+    update stock
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="code" >
+        code = #code#
+      </isNotNull>
+      <isNotNull prepend="," property="open" >
+        open = #open#
+      </isNotNull>
+      <isNotNull prepend="," property="close" >
+        close = #close#
+      </isNotNull>
+      <isNotNull prepend="," property="high" >
+        high = #high#
+      </isNotNull>
+      <isNotNull prepend="," property="low" >
+        low = #low#
+      </isNotNull>
+      <isNotNull prepend="," property="bbi" >
+        bbi = #bbi#
+      </isNotNull>
+      <isNotNull prepend="," property="vol" >
+        vol = #vol#
+      </isNotNull>
+      <isNotNull prepend="," property="time" >
+        time = #time#
+      </isNotNull>
+      <isNotNull prepend="," property="period" >
+        period = #period#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtCreate" >
+        gmt_create = #gmtCreate#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtModified" >
+        gmt_modified = #gmtModified#
+      </isNotNull>
+    </dynamic>
+    where id = #id#
+  </update>
+</sqlMap>
