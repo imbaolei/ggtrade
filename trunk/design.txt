@@ -1,0 +1,46 @@
+1 判断能不能执行计划，就是判断执行计划所需要的条件是否都成立
+2 执行计划
+  2.1 判断是否是买点 //买点不同
+  	2.1.1 制定[买入]计划 
+  		设置交易次数,[个人账户]金额清零,[交易计划账户]打款,设置atr,设置买点,买入数量,加仓点,止损点
+  		... ... 需不需要考虑余额不够的情况
+  	2.1.2 执行买入
+  		设置计划交易账户总股数,设置买入完的余额,设置交易次数+1,设置下个[action]为[加仓]
+  2.2 判断是否到了[止损] 
+  	止损不需要判断[action],到了价位就执行
+  	如果止损点在最高和最低点之间或者开盘价就在止损点之下,都需要执行止损
+  	2.2.1 执行止损
+  		[交易计划账户]的余额归还[个人账户],总结计划过程,重置计划,设置终止计划状态为[止损]退出
+  2.3 判断是否到了[止赢] //止赢点不同
+  	判断[action]是否是[止赢]
+  	2.3.1 执行止赢
+  		[交易计划账户]的余额归还[个人账户],总结计划过程,重置计划,设置终止计划状态为[止赢]退出
+  2.4 判断是否可以[加仓]
+  	判断[action]是否是[加仓]
+  	判断[交易计划账户]的余额,调整头寸
+  	2.4.1 按计划执行加仓
+  		扣款[交易计划账户]金额,设置股票总数,交易次数+1,设置next[action]
+  	2.4.2 制定加仓后的计划
+  		如果next[action]是加仓,则需要重新计算加仓点和止损点,包括下次操作数量
+  		如果next[action]是止赢,只需要计算止损点即可
+		
+
+StockDO 股票对象
+drop table if exists stock;
+create table stock(						   
+	id int(11) not null auto_increment,
+	code varchar(10),
+	open float,
+	close float,
+	high float,
+	low float,
+	bbi float,
+	vol float,
+	time datetime,
+	period varchar(10),
+	gmt_create datetime,
+	gmt_modified datetime,
+	PRIMARY KEY (`id`),
+  	KEY `Index_stock_time` (`time`),
+  	KEY `Index_stock_code_period` (`code`,`period`)
+) type = innodb;

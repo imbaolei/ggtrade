@@ -1,0 +1,5 @@
+第一阶段 提醒功能
+ 设置代码code,数量tradeNum等信息
+ 入：买点buy,加仓点jc
+ 出：止赢点justWin,止损点stopLoss
+ 
