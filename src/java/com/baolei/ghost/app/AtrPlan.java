@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 
 public class AtrPlan {
 
-	private static float money = 200000;
+	private static float money = 400000;
 
-	private static float atr = 1.13f;
+	private static float atr = 0.44f;
 
-	private static float buyPoint = 28.55f;
+	private static float buyPoint = 11.5f;
 
 	private static int n = 2;
 	
