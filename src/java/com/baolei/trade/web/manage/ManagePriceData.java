@@ -1,5 +1,7 @@
 package com.baolei.trade.web.manage;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -9,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,6 +26,7 @@ import com.baolei.ghost.dal.dataobject.StockDO;
 @Controller
 @RequestMapping("/manage/manage_price_data.do")
 public class ManagePriceData {
+	protected Log log = LogFactory.getLog(getClass());
 	
 	@Autowired
 	private StockDAO stockDAO;
@@ -32,7 +37,9 @@ public class ManagePriceData {
 		String ma = request.getParameter("ma");
 		List<StockDO> stockList = stockDAO.selectStockByCodeAndPeriod(code, Constant.STOCK_PERIOD_DAY);
 		Map<String, StockDO> stockMap = StockUtil.toStockMap(stockList);
+		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
 		for(StockDO stockDO : stockList){
+			log.info(dateFormat.format(stockDO.getTime()));
 			JSONObject json = new JSONObject();
 			if(StringUtils.isNotEmpty(ma)){
 				String[] mas = ma.split(",");
