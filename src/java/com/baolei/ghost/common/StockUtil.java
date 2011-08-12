@@ -668,9 +668,9 @@ public class StockUtil {
 	 * @return
 	 * @throws ParseException
 	 */
-	private static float MA(Map<String, StockDO> stockMap,
+	public static float MA(Map<String, StockDO> stockMap,
 			 Date time, int count)
-			throws ParseException {
+			 {
 		// list是day这个周期的所有close值
 		List<Float> list = new ArrayList<Float>();
 		Date theDate = time;
@@ -679,6 +679,10 @@ public class StockUtil {
 			StockDO stockDO = stockMap.get(dateFormat.format(theDate));
 			list.add(stockDO.getClose());
 			theDate = pre(stockMap, theDate);
+			//如果没有pre Date,则返回说明没有ma
+			if(theDate == null){
+				return 0;
+			}
 		}
 		Float sum = new Float(0);
 		for (Float tmpFloat : list) {
@@ -715,6 +719,11 @@ public class StockUtil {
 		return Float.parseFloat(decimalFormat.format(sum / list.size()));
 	}
 
+	/**
+	 * 将stockDO list 转换为 日期为key的Map<String, StockDO>
+	 * @param stockList
+	 * @return
+	 */
 	public static Map<String, StockDO> toStockMap(List<StockDO> stockList) {
 		Map<String, StockDO> stockMap = new TreeMap<String, StockDO>();
 		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);

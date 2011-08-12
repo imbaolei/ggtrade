@@ -1,0 +1,29 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; utf-8" />
+	<script src=/html/js/jquery.js type=text/javascript></script>
+</head>
+    <body>
+		<script language="javascript">
+			function modify(){
+        	    var form = document.getElementById('modify');
+				var action = '?m=modify'
+				var code = $("input[name='code']").val();
+				var ma = $("input[name='ma']").val();
+				var action = "?m=manage"+"&code="+code+"&ma="+ma;
+				form.action='/manage/manage_price_data.do'+action;
+                form.method='POST';
+                form.submit();
+            }
+        </script>
+
+<form  id="modify"  method="post" >
+	code：<input name="code" type="text"   />
+ma：<input name="ma" type="text"   />
+
+      <input type="submit"   onclick="modify();"  value="更新" />
+        </form>
+        </body>
+</html>

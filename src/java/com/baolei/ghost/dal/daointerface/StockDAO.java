@@ -2,7 +2,10 @@ package com.baolei.ghost.dal.daointerface;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.baolei.ghost.dal.dataobject.StockDO;
+
 
 public interface StockDAO {
     Integer insertStock(StockDO record);

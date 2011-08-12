@@ -12,6 +12,7 @@
     <result column="vol" property="vol" jdbcType="REAL" />
     <result column="time" property="time" jdbcType="TIMESTAMP" />
     <result column="period" property="period" jdbcType="VARCHAR" />
+    <result column="ma" property="ma" jdbcType="VARCHAR" />
     <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
     <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -87,6 +88,9 @@
       </isNotNull>
       <isNotNull prepend="," property="period" >
         period = #period#
+      </isNotNull>
+      <isNotNull prepend="," property="ma" >
+        ma = #ma#
       </isNotNull>
       <isNotNull prepend="," property="gmtCreate" >
         gmt_create = #gmtCreate#
