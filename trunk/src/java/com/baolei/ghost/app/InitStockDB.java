@@ -14,7 +14,7 @@ import com.baolei.ghost.dal.daointerface.StockDAO;
 
 public class InitStockDB {
 
-	private static String filePath = "E:\\Temp\\TXTDAY\\SZ159901.TXT";
+	private static String filePath = "c:/tmp/SZ159901.TXT";
 	
 	public static void main(String[] args) throws IOException, ParseException {
 		System.out.println(new Date());

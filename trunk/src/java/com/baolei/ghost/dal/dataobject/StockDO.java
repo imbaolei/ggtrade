@@ -24,6 +24,16 @@ public class StockDO {
 	
 	String period;
 	
+	String ma;
+	
+	public String getMa() {
+		return ma;
+	}
+
+	public void setMa(String ma) {
+		this.ma = ma;
+	}
+
 	private Date gmtCreate;
 
     private Date gmtModified;
