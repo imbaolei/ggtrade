@@ -1,21 +1,23 @@
 package com.baolei.ghost.test.ma;
 
-import java.text.DecimalFormat;
-
+import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.ghost.test.Report;
 import com.baolei.ghost.test.Test;
 
 public class Test3MaTrend extends Test{
 	
-	float account;
-	float toucun;
-	float buyPoint;
-	Integer p1 ;
-	Integer p2 ;
-	Integer p3 ;
-	Report report;
-	DecimalFormat decimalFormat = new DecimalFormat("#.00");
+	protected float account;
+	protected float toucun;
+	protected float buyPoint;
+	protected Integer p1 ;
+	protected Integer p2 ;
+	protected Integer p3 ;
+	protected Report report;
+	protected float rate = 0.0135f; 
+	protected int transCount  = 0;
+	protected float totalFee = 0;
+	
 	
 	public Test3MaTrend(float account,Integer p1,Integer p2,Integer p3){
 		this.account = account;
@@ -62,11 +64,19 @@ public class Test3MaTrend extends Test{
 
 	@Override
 	public void buy(StockDO stockDO) {
-		toucun = account;
+		float fee = fee(account);
+		toucun = account - fee;
 		account = 0;
 		buyPoint = stockDO.getClose();
+		
 		stockDO.getReport().setAccount(account+toucun);
-		stockDO.getReport().setNotes(buyPoint + " 买入 ");
+		stockDO.getReport().setNotes(" - 买点 ： " + buyPoint);
+		stockDO.getReport().setFee(fee);
+		totalFee = totalFee + fee;
+		stockDO.getReport().setTotalFee(totalFee);
+		stockDO.getReport().setStatus(Constant.REPORT_STATUS_BUY);
+		transCount = transCount + 1;
+		stockDO.getReport().setTransCount(transCount);
 	}
 
 	@Override
@@ -79,15 +89,23 @@ public class Test3MaTrend extends Test{
 
 	@Override
 	public void sale(StockDO stockDO) {
-		
-		
-		toucun = toucun + (stockDO.getClose()-buyPoint)/buyPoint*toucun;
+		float fee = fee(toucun);
+		toucun = toucun + (stockDO.getClose()-buyPoint)/buyPoint*toucun - fee;
 		toucun = Float.parseFloat(decimalFormat.format(toucun));
 		account = toucun;
 		toucun = 0;
 		stockDO.getReport().setAccount(account+toucun);
-		stockDO.getReport().setNotes(stockDO.getClose() + " 卖出 ");
-		
+		stockDO.getReport().setNotes(" - 卖点 ： " +  stockDO.getClose() );
+		stockDO.getReport().setFee(fee);
+		totalFee = totalFee + fee;
+		stockDO.getReport().setTotalFee(totalFee);
+		stockDO.getReport().setStatus(Constant.REPORT_STATUS_SALE);
+	}
+	
+	public float fee(float money){
+		float fee = money*rate;
+		fee = Float.parseFloat(decimalFormat.format(fee));
+		return fee;
 	}
 
 
@@ -96,16 +114,16 @@ public class Test3MaTrend extends Test{
 	public void noBuyNoSale(StockDO stockDO) {
 		if(buyPoint == 0){
 			stockDO.getReport().setAccount(account+toucun);
-			stockDO.getReport().setNotes("条件未触发 ");
+			stockDO.getReport().setStatus(Constant.REPORT_STATUS_NOSTART);
 			return;
 		}
-		float tmpToucun = toucun + (stockDO.getClose()-buyPoint)/buyPoint*toucun;
+		float tmpToucun = toucun + (stockDO.getClose()-buyPoint)/buyPoint*toucun + account;
 		tmpToucun = Float.parseFloat(decimalFormat.format(tmpToucun));
 		stockDO.getReport().setAccount(tmpToucun);
 		if(toucun > 0 ){
-			stockDO.getReport().setNotes(" 持仓 ");
+			stockDO.getReport().setStatus(Constant.REPORT_STATUS_CHIYOU);
 		}else{
-			stockDO.getReport().setNotes(" 空仓 ");
+			stockDO.getReport().setStatus(Constant.REPORT_STATUS_KONGCANG);
 		}
 	}
 

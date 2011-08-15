@@ -22,6 +22,7 @@ import com.baolei.ghost.dal.daointerface.StockDAO;
 import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.ghost.test.Test;
 import com.baolei.ghost.test.ma.Test3MaTrend;
+import com.baolei.ghost.test.none.TestNone;
 
 @Controller
 @RequestMapping("/test/ma_trend.do")
@@ -38,7 +39,7 @@ protected Log log = LogFactory.getLog(getClass());
 	public String trade(HttpServletRequest request, ModelMap model) {
 		String code = request.getParameter("code");
 		List<StockDO> stockList = stockDAO.selectStockByCodeAndPeriod(code, Constant.STOCK_PERIOD_DAY);
-		test(stockList);
+		test3MaTrend(stockList);
 		return "test/ma_trend";
 	}
 	
@@ -49,16 +50,23 @@ protected Log log = LogFactory.getLog(getClass());
 		String code = "SZ399300";
 		List<StockDO> stockList = stockDAO.selectStockByCodeAndPeriod(code, Constant.STOCK_PERIOD_DAY);
 		MaTrend mt = new MaTrend();
-		mt.test(stockList);
-
+		mt.test3MaTrend(stockList);
+//		mt.testNone(stockList);
 	}
 	
-	public void test(List<StockDO> stockList){
+	public void test3MaTrend(List<StockDO> stockList){
 		float account = 100000;
 		Integer p1 = 20;
 		Integer p2 = 60;
 		Integer p3 = 90;
 		Test test = new Test3MaTrend(account,p1,p2,p3);
+		test.execute(stockList);
+		test.printReport(stockList);
+	}
+	
+	public void testNone(List<StockDO> stockList){
+		float account = 100000;
+		Test test = new TestNone(account);
 		test.execute(stockList);
 		test.printReport(stockList);
 	}
