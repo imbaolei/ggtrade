@@ -6,7 +6,7 @@ import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.ghost.test.Report;
 import com.baolei.ghost.test.Test;
 
-public class MaTrendTest extends Test{
+public class Test3MaTrend extends Test{
 	
 	float account;
 	float toucun;
@@ -17,7 +17,7 @@ public class MaTrendTest extends Test{
 	Report report;
 	DecimalFormat decimalFormat = new DecimalFormat("#.00");
 	
-	public MaTrendTest(float account,Integer p1,Integer p2,Integer p3){
+	public Test3MaTrend(float account,Integer p1,Integer p2,Integer p3){
 		this.account = account;
 		this.p1 = p1;
 		this.p2 = p2;
@@ -38,6 +38,9 @@ public class MaTrendTest extends Test{
 		float ma2 = stockDO.getMa(p2.toString());
 		float ma3 = stockDO.getMa(p3.toString());
 		//三个周期的均线都有值时
+		if((ma1 ==0) || (ma2 == 0) || (ma3 ==0)){
+			return true;
+		}
 		if(ma1 > 0 && ma2 > 0 && ma3 >0){
 			if(ma1<=ma2 && ma2<= ma3){
 				return true;
@@ -91,6 +94,11 @@ public class MaTrendTest extends Test{
 
 	@Override
 	public void noBuyNoSale(StockDO stockDO) {
+		if(buyPoint == 0){
+			stockDO.getReport().setAccount(account+toucun);
+			stockDO.getReport().setNotes("条件未触发 ");
+			return;
+		}
 		float tmpToucun = toucun + (stockDO.getClose()-buyPoint)/buyPoint*toucun;
 		tmpToucun = Float.parseFloat(decimalFormat.format(tmpToucun));
 		stockDO.getReport().setAccount(tmpToucun);

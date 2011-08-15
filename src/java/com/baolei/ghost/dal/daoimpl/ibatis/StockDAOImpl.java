@@ -94,9 +94,15 @@ public class StockDAOImpl extends BaseDAO implements StockDAO {
 		getSqlMapClientTemplate().execute(new SqlMapClientCallback() {
 			public Object doInSqlMapClient(SqlMapExecutor executor)
 					throws SQLException {
+				int batch = 0;
 				executor.startBatch();
 				for (int i = 0, count = stockList.size(); i < count; i++) {
 					executor.insert("SQL_INSERT_STOCK", stockList.get(i));
+					batch++;
+					if(batch==300){
+	    				executor.executeBatch();
+	    				batch = 0;
+	    			}
 				}
 				executor.executeBatch();
 				return null;

@@ -13,6 +13,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.dal.daointerface.StockDAO;
 import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.trade.bo.TradeBO;
 import com.baolei.trade.web.manage.ManagePriceData;
 
 public class InitStockDB2 {
@@ -26,21 +27,24 @@ public class InitStockDB2 {
 		isd2.init();
 	}
 	
+	
 	public void init(){
 		
 		ApplicationContext context = new ClassPathXmlApplicationContext(
 				"beans.xml");
 		StockDAO stockDAO = (StockDAO) context.getBean("stockDAO");
+		TradeBO tradeBO = (TradeBO) context.getBean("tradeBO");
 		DataParser sdp = new TxdFileParser();
 		log.info("start parse "  + new Date());
 		List<StockDO> stockDOList =  sdp.parse(code);
 		stockDAO.deleteStockByCode(code);
+		log.info("start insert "  + new Date());
 		stockDAO.insertStocks(stockDOList);
 		log.info("end parse "  + new Date());
 		stockDOList = stockDAO.selectStockByCodeAndPeriod(code, Constant.STOCK_PERIOD_DAY);
-		ManagePriceData mpd = new ManagePriceData();
-		stockDOList = mpd.maManage(stockDOList,code,"20,30,60,90,120");
+		stockDOList = tradeBO.maManage(stockDOList,"20,30,60,90,120");
 		stockDAO.updateStocksByIdBatch(stockDOList);
+		log.info("end ma "  + new Date());
 	}
 
 }

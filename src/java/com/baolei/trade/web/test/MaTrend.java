@@ -21,7 +21,7 @@ import com.baolei.ghost.common.StockUtil;
 import com.baolei.ghost.dal.daointerface.StockDAO;
 import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.ghost.test.Test;
-import com.baolei.ghost.test.ma.MaTrendTest;
+import com.baolei.ghost.test.ma.Test3MaTrend;
 
 @Controller
 @RequestMapping("/test/ma_trend.do")
@@ -58,7 +58,7 @@ protected Log log = LogFactory.getLog(getClass());
 		Integer p1 = 20;
 		Integer p2 = 60;
 		Integer p3 = 90;
-		Test test = new MaTrendTest(account,p1,p2,p3);
+		Test test = new Test3MaTrend(account,p1,p2,p3);
 		test.execute(stockList);
 		test.printReport(stockList);
 	}
