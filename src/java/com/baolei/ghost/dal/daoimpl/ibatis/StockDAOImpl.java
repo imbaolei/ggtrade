@@ -34,6 +34,28 @@ public class StockDAOImpl extends BaseDAO implements StockDAO {
 				"SQL_UPDATE_STOCK_BY_ID_SELECTIVE", record);
 		return rows;
 	}
+	
+	public void updateStocksByIdBatch(final List<StockDO> stockList) {
+		getSqlMapClientTemplate().execute(new SqlMapClientCallback() {
+			public Object doInSqlMapClient(SqlMapExecutor executor)
+					throws SQLException {
+				executor.startBatch();
+				int batch = 0;
+				for (int i = 0, count = stockList.size(); i < count; i++) {
+					getSqlMapClientTemplate().update("SQL_UPDATE_STOCK_BY_ID_SELECTIVE", stockList.get(i));
+					batch++;
+					if(batch==300){
+	    				executor.executeBatch();
+	    				batch = 0;
+	    			}
+
+				}
+				executor.executeBatch();
+				return null;
+			}
+		});
+		
+	}
 
 	public StockDO selectStockById(Integer id) {
 		StockDO key = new StockDO();
