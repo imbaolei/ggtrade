@@ -18,7 +18,7 @@ import com.baolei.ghost.dal.dataobject.StockDO;
 
 public class TxdFileParser implements DataParser {
 
-	private String filePath = "c:/tmp/";
+	private String filePath = "D:/java/project/data";
 
 	@Override
 	public List<String> reader(String code) {
