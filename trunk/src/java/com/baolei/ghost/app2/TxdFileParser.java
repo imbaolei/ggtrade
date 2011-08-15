@@ -13,12 +13,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.dal.dataobject.StockDO;
 
 public class TxdFileParser implements DataParser {
+	protected Log log = LogFactory.getLog(getClass());
 
-	private String filePath = "D:/java/project/data";
+	private String filePath = "D:/java/project/data/";
 
 	@Override
 	public List<String> reader(String code) {

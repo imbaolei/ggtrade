@@ -39,7 +39,7 @@ public abstract class Test {
 			StringBuffer sb = new StringBuffer();
 			sb.append(dateFormat.format(stockDO.getTime()))
 					.append(" - account :")
-					.append(stockDO.getReport().getAccount())
+					.append(stockDO.getReport().getAccount()).append(" ")
 					.append(stockDO.getReport().getNotes());
 			if (log.isInfoEnabled()) {
 				log.info(sb.toString());

@@ -3,10 +3,8 @@ package com.baolei.ghost.common;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -659,6 +657,30 @@ public class StockUtil {
 		return atr(stockMap, time, 20);
 	}
 	
+	
+	/**
+	 * 性能优化过的接口 不建议使用其他的ma
+	 * @param stockList
+	 * @param stockDO
+	 * @param count
+	 * @return
+	 */
+	public static float MA(List<StockDO> stockList,
+			 StockDO stockDO, int count)
+			 {
+		int index = stockList.indexOf(stockDO);
+		//如果stockDO 所在的位置之前没有count数量的 数据
+		if(count > (index+1)){
+			return 0;
+		}
+		List<StockDO> subList = stockList.subList(index+1-count, index+1);
+		Float sum = new Float(0);
+		for (StockDO tmpStock : subList) {
+			sum = sum + tmpStock.getClose();
+		}
+		return Float.parseFloat(decimalFormat.format(sum / subList.size()));
+	}
+	
 	/**
 	 * 从stockMap中计算 time这一天的count平均移动值
 	 * 
@@ -700,7 +722,7 @@ public class StockUtil {
 	 * @return
 	 * @throws ParseException
 	 */
-	private static float MA(Map<String, StockDO> stockMap,
+	public static float MA(Map<String, StockDO> stockMap,
 			List<StockDO> stockList, Date time, int count)
 			throws ParseException {
 		// list是day这个周期的所有close值
