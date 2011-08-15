@@ -23,4 +23,6 @@ public interface StockDAO {
     int deleteStockById(Integer id);
     
     int deleteStockByCode(String code);
+
+	void updateStocksByIdBatch(List<StockDO> stockList);
 }

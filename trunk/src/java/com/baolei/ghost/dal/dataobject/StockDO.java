@@ -2,6 +2,10 @@ package com.baolei.ghost.dal.dataobject;
 
 import java.util.Date;
 
+import net.sf.json.JSONObject;
+
+import com.baolei.ghost.test.Report;
+
 public class StockDO {
 	
 	String code;
@@ -25,6 +29,25 @@ public class StockDO {
 	String period;
 	
 	String ma;
+	
+	Report report = new Report();
+	
+	public Report getReport() {
+		return report;
+	}
+
+	public void setReport(Report report) {
+		this.report = report;
+	}
+
+	public float getMa(String key){
+		JSONObject json = JSONObject.fromObject(ma); 
+		Object value = json.get(key);
+		if(value != null){
+			return Float.parseFloat(value.toString());
+		}
+		return 0;
+	}
 	
 	public String getMa() {
 		return ma;

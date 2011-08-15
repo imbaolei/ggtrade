@@ -36,6 +36,12 @@ public class ManagePriceData {
 		String code = request.getParameter("code");
 		String ma = request.getParameter("ma");
 		List<StockDO> stockList = stockDAO.selectStockByCodeAndPeriod(code, Constant.STOCK_PERIOD_DAY);
+		stockList = maManage(stockList,code,ma);
+		stockDAO.updateStocksByIdBatch(stockList);
+		return "manage/manage_price_data";
+	}
+	
+	public List<StockDO> maManage(List<StockDO> stockList,String code ,String ma){
 		Map<String, StockDO> stockMap = StockUtil.toStockMap(stockList);
 		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
 		for(StockDO stockDO : stockList){
@@ -50,8 +56,7 @@ public class ManagePriceData {
 			}
 			stockDO.setMa(json.toString());
 		}
-		
-		return "manage/manage_price_data";
+		return stockList;
 	}
 	
 	@RequestMapping(params = "m=index")
