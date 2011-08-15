@@ -19,7 +19,7 @@
 			<value>hell05a</value>
 		</property>
 		<property name="url">
-			<value>jdbc:mysql://localhost:3306/ggtrade?useUnicode=true&amp;characterEncoding=utf-8
+			<value>jdbc:mysql://hg:3306/ggtrade?useUnicode=true&amp;characterEncoding=utf-8
 			</value>
 		</property>
 	</bean>
