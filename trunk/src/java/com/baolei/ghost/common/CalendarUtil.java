@@ -34,8 +34,34 @@ public class CalendarUtil {
 			}
 		}
 		return false;
-		
 	}
+	
+	/**
+	 * 得到这个stockDO日期之前的 在 这个月的stockList
+	 * @param stockList
+	 * @param stockDO
+	 * @return
+	 */
+	public List<StockDO> getStockListOfMonth(List<StockDO> stockList,StockDO stockDO){
+		List<StockDO> tmpStockList = new ArrayList<StockDO>();
+		int index = tmpStockList.indexOf(stockDO);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(stockDO.getTime());
+		int month = calendar.get(Calendar.MONTH);
+		for(int i  = index ; i> 0 ;i--){
+			StockDO tmpStockDO = stockList.get(i);
+			Calendar tmpCalendar = Calendar.getInstance();
+			tmpCalendar.setTime(tmpStockDO.getTime());
+			int tmpMonth = tmpCalendar.get(Calendar.MONTH);
+			if(tmpMonth == month){
+				tmpStockList.add(tmpStockDO);
+			}else {
+				break;
+			}
+		}
+		return tmpStockList;
+	}
+	
 
 	/**
 	 * 得到这一周所有的日期,以星期日为第一天
