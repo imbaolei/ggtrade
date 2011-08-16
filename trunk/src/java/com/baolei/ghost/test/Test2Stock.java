@@ -10,10 +10,13 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.common.StockUtil;
 import com.baolei.ghost.dal.dataobject.StockDO;
 
 public abstract class Test2Stock {
+	
+	
 
 	protected Log log = LogFactory.getLog(getClass());
 	protected DateFormat dateFormat = new SimpleDateFormat(
@@ -38,6 +41,9 @@ public abstract class Test2Stock {
 	public void execute() {
 		for (StockDO stockDO : pdStockList) {
 			String dateString = dateFormat.format(stockDO.getTime());
+			if(needDingTou(dateString)){
+				dingTou(dateString);
+			}
 			if (needBuy(dateString)) {
 				buy(dateString);
 				continue;
@@ -51,8 +57,8 @@ public abstract class Test2Stock {
 
 	}
 
-	public void printReport(List<StockDO> stockList) {
-		for (StockDO stockDO : stockList) {
+	public void printReport() {
+		for (StockDO stockDO : jyStockList) {
 			Report report = stockDO.getReport();
 			String date = dateFormat.format(stockDO.getTime());
 			String account = " - account: " + report.getAccount().toString();
@@ -73,29 +79,42 @@ public abstract class Test2Stock {
 			if (report.getTransCount() != null && report.getTransCount() > 0) {
 				transCount = " - 总交易次数 ：" + report.getTransCount();
 			}
+			String totalMoney = " ";
+			if (report.getTotalMoney() != null && report.getTotalMoney() > 0) {
+				totalMoney = " - 总投入金额 ：" + report.getTotalMoney();
+			}
 			String note = "";
 			if (StringUtils.isNotEmpty(report.getNotes())) {
 				note = " - " + report.getNotes();
 			}
 			StringBuffer sb = new StringBuffer();
 			sb.append(date).append(close).append(account).append(status)
-					.append(fee).append(transCount).append(totalFee)
+					.append(fee).append(transCount).append(totalFee).append(totalMoney)
 					.append(note);
 			if (log.isInfoEnabled()) {
 				log.info(sb.toString());
 			}
-
+			if(Constant.REPORT_STATUS_SALE.equals(stockDO.getReport().getStatus())){
+				sb = new StringBuffer();
+				String shouyi = " - 这次交易收益 ：" + report.getShouyi();
+				sb.append(shouyi);
+				log.info(sb.toString());
+			}
 		}
 	}
 
+	public abstract boolean needDingTou(String dateString);
+	
+	public abstract void dingTou(String dateString);
+	
 	public abstract boolean needBuy(String dateString);
-
-	public abstract void noBuyNoSale(String dateString);
 
 	public abstract void buy(String dateString);
 
 	public abstract boolean needSale(String dateString);
 
 	public abstract void sale(String dateString);
+	
+	public abstract void noBuyNoSale(String dateString);
 
 }

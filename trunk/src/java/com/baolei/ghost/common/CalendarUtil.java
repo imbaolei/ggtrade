@@ -5,7 +5,37 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+import com.baolei.ghost.dal.dataobject.StockDO;
+
+@Service("calendarUtil")
 public class CalendarUtil {
+	
+	
+	/**
+	 * 判断stockDO 是不是这个月的第一个交易日
+	 * @param stockList
+	 * @param stockDO
+	 * @return
+	 */
+	public boolean isFirstDayOfMonth(List<StockDO> stockList,StockDO stockDO){
+		int index = stockList.indexOf(stockDO);
+		if(index>0){
+			StockDO preStockDO = stockList.get(index-1);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(stockDO.getTime());
+			int month = calendar.get(Calendar.MONTH);
+			Calendar preCalendar = Calendar.getInstance();
+			preCalendar.setTime(preStockDO.getTime());
+			int premonth = preCalendar.get(Calendar.MONTH);
+			if(month > premonth){
+				return true;
+			}
+		}
+		return false;
+		
+	}
 
 	/**
 	 * 得到这一周所有的日期,以星期日为第一天

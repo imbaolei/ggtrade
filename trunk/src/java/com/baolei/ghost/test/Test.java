@@ -24,6 +24,7 @@ public abstract class Test {
 	public abstract boolean needBuy(StockDO stockDO);
 
 	public void execute(List<StockDO> stockList) {
+		this.stockList = stockList;
 		for (StockDO stockDO : stockList) {
 			if (needBuy(stockDO)) {
 				buy(stockDO);

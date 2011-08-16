@@ -34,7 +34,7 @@ public class TestNone extends Test{
 		tmpToucun = Float.parseFloat(decimalFormat.format(tmpToucun));
 		stockDO.getReport().setAccount(tmpToucun);
 		if(toucun > 0 ){
-			stockDO.getReport().setStatus(Constant.REPORT_STATUS_CHIYOU);
+			stockDO.getReport().setStatus(Constant.REPORT_STATUS_CHICANG);
 		}else{
 			stockDO.getReport().setStatus(Constant.REPORT_STATUS_KONGCANG);
 		}

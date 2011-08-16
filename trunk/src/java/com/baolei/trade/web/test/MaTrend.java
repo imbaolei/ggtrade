@@ -21,7 +21,10 @@ import com.baolei.ghost.common.StockUtil;
 import com.baolei.ghost.dal.daointerface.StockDAO;
 import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.ghost.test.Test;
+import com.baolei.ghost.test.Test2Stock;
 import com.baolei.ghost.test.ma.Test3MaTrend;
+import com.baolei.ghost.test.ma.Test3MaTrend2Stock;
+import com.baolei.ghost.test.ma.Test3MaTrendDingTou;
 import com.baolei.ghost.test.none.TestNone;
 
 @Controller
@@ -50,8 +53,11 @@ protected Log log = LogFactory.getLog(getClass());
 		String code = "SZ399300";
 		List<StockDO> stockList = stockDAO.selectStockByCodeAndPeriod(code, Constant.STOCK_PERIOD_DAY);
 		MaTrend mt = new MaTrend();
-		mt.test3MaTrend(stockList);
+//		mt.test3MaTrend(stockList);
 //		mt.testNone(stockList);
+		mt.test3MaTrend2Stock(stockList);
+//		mt.test3MaTrendDingTou(stockList);
+		
 	}
 	
 	public void test3MaTrend(List<StockDO> stockList){
@@ -69,6 +75,28 @@ protected Log log = LogFactory.getLog(getClass());
 		Test test = new TestNone(account);
 		test.execute(stockList);
 		test.printReport(stockList);
+	}
+	
+	public void test3MaTrend2Stock(List<StockDO> stockList){
+		float account = 100000;
+		Integer p1 = 20;
+		Integer p2 = 60;
+		Integer p3 = 90;
+		Test2Stock test = new Test3MaTrend2Stock(account,p1,p2,p3);
+		test.init(stockList, stockList);
+		test.execute();
+		test.printReport();
+	}
+	
+	public void test3MaTrendDingTou(List<StockDO> stockList){
+		float account = 1000;
+		Integer p1 = 20;
+		Integer p2 = 60;
+		Integer p3 = 90;
+		Test2Stock test = new Test3MaTrendDingTou(account,p1,p2,p3);
+		test.init(stockList, stockList);
+		test.execute();
+		test.printReport();
 	}
 	
 	
