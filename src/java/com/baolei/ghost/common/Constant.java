@@ -10,7 +10,7 @@ public class Constant {
 	
 	public static String REPORT_STATUS_NOSTART = "未开始"; //持有
 	
-	public static String REPORT_STATUS_CHIYOU = "持有"; //持有
+	public static String REPORT_STATUS_CHICANG = "持有"; //持有
 	
 	public static String REPORT_STATUS_KONGCANG = "空仓"; //空仓
 

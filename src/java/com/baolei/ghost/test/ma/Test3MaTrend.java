@@ -125,10 +125,12 @@ public class Test3MaTrend extends Test{
 		tmpToucun = Float.parseFloat(decimalFormat.format(tmpToucun));
 		stockDO.getReport().setAccount(tmpToucun);
 		if(toucunHR > 0 ){
-			stockDO.getReport().setStatus(Constant.REPORT_STATUS_CHIYOU);
+			stockDO.getReport().setStatus(Constant.REPORT_STATUS_CHICANG);
 		}else{
 			stockDO.getReport().setStatus(Constant.REPORT_STATUS_KONGCANG);
 		}
 	}
+	
+	
 
 }
