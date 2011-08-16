@@ -7,7 +7,7 @@ import com.baolei.ghost.test.Test2Stock;
 public class Test3MaTrend2Stock extends Test2Stock {
 
 	
-	protected float buyPoint;
+	protected StockDO lastBuyStockDO;
 	protected Integer p1;
 	protected Integer p2;
 	protected Integer p3;
@@ -65,7 +65,6 @@ public class Test3MaTrend2Stock extends Test2Stock {
 	@Override
 	public void buy(String dateString) {
 		StockDO stockDO = jyStockMap.get(dateString);
-		int index = jyStockList.indexOf(stockDO);
 		float fee = 0;
 		
 		fee = fee(toucunLR);
@@ -73,7 +72,7 @@ public class Test3MaTrend2Stock extends Test2Stock {
 		toucunLR = 0;
 
 		// 设置report
-		buyPoint = stockDO.getClose();
+		float buyPoint = stockDO.getClose();
 		float account = toucunHR + toucunLR;
 		stockDO.getReport().setAccount(account);
 		stockDO.getReport().setNotes(" - 买点 ： " + buyPoint);
@@ -83,6 +82,7 @@ public class Test3MaTrend2Stock extends Test2Stock {
 		stockDO.getReport().setStatus(Constant.REPORT_STATUS_BUY);
 		transCount = transCount + 1;
 		stockDO.getReport().setTransCount(transCount);
+		lastBuyStockDO = stockDO;
 	}
 
 	@Override
@@ -101,12 +101,15 @@ public class Test3MaTrend2Stock extends Test2Stock {
 		StockDO preStockDO = jyStockList.get(index - 1);
 		String status = preStockDO.getReport().getStatus();
 		float fee = 0;
-		float shouyi = 0;
+		
 		if (Constant.REPORT_STATUS_CHICANG.equals(status)
 				|| Constant.REPORT_STATUS_BUY.equals(status)) {
 			fee = fee(toucunHR);
-			shouyi = shouyi(dateString);
-			toucunLR = toucunLR + toucunHR + shouyi;
+			float buyPoint = lastBuyStockDO.getClose();
+			//损益 只计算这次卖出的损益，不包含上次买入时的交易费用
+			float sunyi  = (stockDO.getClose() - buyPoint) / buyPoint
+					* toucunHR - fee; 
+			toucunLR = toucunLR + toucunHR + sunyi;
 			toucunHR = 0;
 		}else{
 			//应该不会遇到
@@ -120,16 +123,22 @@ public class Test3MaTrend2Stock extends Test2Stock {
 		totalFee = totalFee + fee;
 		stockDO.getReport().setTotalFee(totalFee);
 		stockDO.getReport().setStatus(Constant.REPORT_STATUS_SALE);
+		float shouyi = shouyi(dateString);
 		stockDO.getReport().setShouyi(shouyi);
 		
 	}
 	
+	/**
+	 * 计算买入和卖出 两次操作中的 收益情况 包括上次买入时的交易费
+	 * @param dateString
+	 * @return
+	 */
 	protected float shouyi(String dateString){
+		//用卖出这天的账户金额 减去 上次买入前的 账户金额
 		StockDO stockDO = jyStockMap.get(dateString);
-		float fee = fee(toucunHR);
-		float shouyi = (stockDO.getClose() - buyPoint) / buyPoint
-		* toucunHR - fee;
-		shouyi = Float.parseFloat(decimalFormat.format(shouyi));
+		int index = jyStockList.indexOf(lastBuyStockDO);
+		StockDO preStockDO = jyStockList.get(index-1);
+		float shouyi = stockDO.getReport().getAccount() - preStockDO.getReport().getAccount();
 		return shouyi;
 	}
 
@@ -142,12 +151,13 @@ public class Test3MaTrend2Stock extends Test2Stock {
 	@Override
 	public void noBuyNoSale(String dateString) {
 		StockDO stockDO = jyStockMap.get(dateString);
-		if (buyPoint == 0) {
+		if (lastBuyStockDO == null) {
 			float account = toucunLR + toucunHR;
 			stockDO.getReport().setAccount(account);
 			stockDO.getReport().setStatus(Constant.REPORT_STATUS_NOSTART);
 			return;
 		}
+		float buyPoint = lastBuyStockDO.getClose();
 		float tmpToucun = toucunHR + (stockDO.getClose() - buyPoint) / buyPoint
 				* toucunHR;
 		tmpToucun = Float.parseFloat(decimalFormat.format(tmpToucun));

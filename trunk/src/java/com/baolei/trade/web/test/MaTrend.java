@@ -55,8 +55,8 @@ protected Log log = LogFactory.getLog(getClass());
 		MaTrend mt = new MaTrend();
 //		mt.test3MaTrend(stockList);
 //		mt.testNone(stockList);
-		mt.test3MaTrend2Stock(stockList);
-//		mt.test3MaTrendDingTou(stockList);
+//		mt.test3MaTrend2Stock(stockList);
+		mt.test3MaTrendDingTou(stockList);
 		
 	}
 	
