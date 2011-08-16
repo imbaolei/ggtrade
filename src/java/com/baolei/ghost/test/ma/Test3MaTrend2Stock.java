@@ -3,9 +3,9 @@ package com.baolei.ghost.test.ma;
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.ghost.test.Report;
-import com.baolei.ghost.test.Test;
+import com.baolei.ghost.test.Test2Stock;
 
-public class Test3MaTrend extends Test{
+public class Test3MaTrend2Stock extends Test2Stock{
 	
 	protected float account;
 	protected float toucunLR; //LowRisk低风险头寸
@@ -20,7 +20,7 @@ public class Test3MaTrend extends Test{
 	protected float totalFee = 0;
 	
 	
-	public Test3MaTrend(float account,Integer p1,Integer p2,Integer p3){
+	public Test3MaTrend2Stock(float account,Integer p1,Integer p2,Integer p3){
 		this.account = account;
 		this.p1 = p1;
 		this.p2 = p2;
@@ -55,7 +55,8 @@ public class Test3MaTrend extends Test{
 	
 
 	@Override
-	public boolean needBuy(StockDO stockDO) {
+	public boolean needBuy(String dateString) {
+		StockDO stockDO = pdStockMap.get(dateString); 
 		//如果判断没有头寸 而且 趋势不是走弱，即走强
 		if((toucunHR == 0) && !trendout(stockDO)){
 			return true;
@@ -67,7 +68,8 @@ public class Test3MaTrend extends Test{
 	
 	
 	@Override
-	public void buy(StockDO stockDO) {
+	public void buy(String dateString) {
+		StockDO stockDO = jyStockMap.get(dateString);
 		float fee = fee(account);
 		toucunHR = account - fee;
 		account = 0;
@@ -84,7 +86,8 @@ public class Test3MaTrend extends Test{
 	}
 
 	@Override
-	public boolean needSale(StockDO stockDO) {
+	public boolean needSale(String dateString) {
+		StockDO stockDO = pdStockMap.get(dateString);
 		if((toucunHR > 0) && trendout(stockDO)){
 			return true;
 		}
@@ -92,7 +95,8 @@ public class Test3MaTrend extends Test{
 	}
 
 	@Override
-	public void sale(StockDO stockDO) {
+	public void sale(String dateString) {
+		StockDO stockDO = jyStockMap.get(dateString);
 		float fee = fee(toucunHR);
 		toucunHR = toucunHR + (stockDO.getClose()-buyPoint)/buyPoint*toucunHR - fee;
 		toucunHR = Float.parseFloat(decimalFormat.format(toucunHR));
@@ -115,7 +119,8 @@ public class Test3MaTrend extends Test{
 
 
 	@Override
-	public void noBuyNoSale(StockDO stockDO) {
+	public void noBuyNoSale(String dateString) {
+		StockDO stockDO = jyStockMap.get(dateString);
 		if(buyPoint == 0){
 			stockDO.getReport().setAccount(account+toucunHR);
 			stockDO.getReport().setStatus(Constant.REPORT_STATUS_NOSTART);

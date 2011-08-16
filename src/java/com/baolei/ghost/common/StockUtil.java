@@ -191,7 +191,7 @@ public class StockUtil {
 	
 	/**
 	 * 取stockMap中time时间的前count天的时间
-	 * @param stockList
+	 * @param pdStockList
 	 * @param time
 	 * @param count
 	 * @return
