@@ -18,6 +18,16 @@ public class Report {
 	
 	private Float shouyi; // 买入 卖出 两次交易 中的收益
 	
+	private boolean dingTou = false;
+	
+	public boolean getDingTou() {
+		return dingTou;
+	}
+
+	public void setDingTou(boolean dingTou) {
+		this.dingTou = dingTou;
+	}
+
 	public Float getShouyi() {
 		return shouyi;
 	}
@@ -82,7 +92,6 @@ public class Report {
 		this.totalFee = totalFee;
 	}
 
-	
 
 	
 
