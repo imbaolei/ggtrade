@@ -1,12 +1,21 @@
 package com.baolei.ghost.test.ma;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.baolei.ghost.common.CalendarUtil;
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.ghost.test.Test2Stock;
 
+/**
+ * @author lei.baol
+ * 时点交易法 当且仅当 p1<=p2 && p2<=p3 周期的均线时 ，判断趋势走弱
+ * 如果走弱即卖出，非走弱即走强，走强时买入或持有
+ */
 public class Test3MaTrend2Stock extends Test2Stock {
 
-	
+	@Autowired
+	protected CalendarUtil calendarUtil;
 	protected StockDO lastBuyStockDO;
 	protected Integer p1;
 	protected Integer p2;
@@ -30,7 +39,6 @@ public class Test3MaTrend2Stock extends Test2Stock {
 	 * 
 	 * @param stockDO
 	 * @param p1
-	 *            周期1
 	 * @param p2
 	 * @param p3
 	 * @return

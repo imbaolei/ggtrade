@@ -14,21 +14,22 @@ import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.common.StockUtil;
 import com.baolei.ghost.dal.dataobject.StockDO;
 
+/**
+ * @author lei.baol
+ * 测试 两种 股票，一种用来做 买点买点的判断 pdStockList，一种是用来交易 jyStockList
+ * 如果判断的和交易的相同，则设置为同一个即可
+ * execute前 需要 先 init()
+ *
+ */
 public abstract class Test2Stock {
-	
-	
 
 	protected Log log = LogFactory.getLog(getClass());
 	protected DateFormat dateFormat = new SimpleDateFormat(
 			StockUtil.dateFormatString);
 	protected DecimalFormat decimalFormat = new DecimalFormat("#.00");
-
 	protected List<StockDO> pdStockList;
-
 	protected List<StockDO> jyStockList;
-
 	protected Map<String, StockDO> pdStockMap;
-
 	protected Map<String, StockDO> jyStockMap;
 
 	public void init(List<StockDO> pdStockList, List<StockDO> jyStockList) {

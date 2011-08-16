@@ -3,14 +3,17 @@ package com.baolei.ghost.test.ma;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.baolei.ghost.common.CalendarUtil;
-import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.dal.dataobject.StockDO;
 
 
+/**
+ * @author lei.baol
+ * 时点交易法 的定投版本 每月1号定投
+ * 
+ */
 public class Test3MaTrendDingTou extends Test3MaTrend2Stock {
 	
-	@Autowired
-	CalendarUtil calendarUtil = new CalendarUtil();
+	
 	protected float totalMoney;
 	protected float moneyPeriod = 1000;
 	protected float jyDingTouMoney = 0; //一次买入和卖出 期间 定投的金额
