@@ -25,6 +25,7 @@ import com.baolei.ghost.test.Test2Stock;
 import com.baolei.ghost.test.ma.Test3MaTrend;
 import com.baolei.ghost.test.ma.Test3MaTrend2Stock;
 import com.baolei.ghost.test.ma.Test3MaTrendDingTou;
+import com.baolei.ghost.test.ma.Test3MaTrendPeriod;
 import com.baolei.ghost.test.none.TestNone;
 
 @Controller
@@ -56,7 +57,8 @@ protected Log log = LogFactory.getLog(getClass());
 //		mt.test3MaTrend(stockList);
 //		mt.testNone(stockList);
 //		mt.test3MaTrend2Stock(stockList);
-		mt.test3MaTrendDingTou(stockList);
+//		mt.test3MaTrendDingTou(stockList);
+		mt.test3MaTrendPeriod(stockList);
 		
 	}
 	
@@ -83,6 +85,17 @@ protected Log log = LogFactory.getLog(getClass());
 		Integer p2 = 60;
 		Integer p3 = 90;
 		Test2Stock test = new Test3MaTrend2Stock(account,p1,p2,p3);
+		test.init(stockList, stockList);
+		test.execute();
+		test.printReport();
+	}
+	
+	public void test3MaTrendPeriod(List<StockDO> stockList){
+		float account = 100000;
+		Integer p1 = 20;
+		Integer p2 = 60;
+		Integer p3 = 90;
+		Test2Stock test = new Test3MaTrendPeriod(account,p1,p2,p3);
 		test.init(stockList, stockList);
 		test.execute();
 		test.printReport();

@@ -3,13 +3,14 @@ package com.baolei.ghost.test.ma;
 import com.baolei.ghost.common.CalendarUtil;
 import com.baolei.ghost.dal.dataobject.StockDO;
 
-public class Test3MaTrendPeriod extends Test3MaTrend2Stock{
-	
-	
-	public Test3MaTrendPeriod(float toucunLR, Integer p1, Integer p2, Integer p3) {
-		super(toucunLR, p1, p2, p3);
-	}
+public class Test3MaTrendPeriodDingTou extends Test3MaTrendDingTou{
 
+	public Test3MaTrendPeriodDingTou(float account, Integer p1, Integer p2,
+			Integer p3) {
+		super(account, p1, p2, p3);
+	}
+	
+	
 	@Override
 	public boolean needBuy(String dateString) {
 		StockDO stockDO = pdStockMap.get(dateString);
@@ -29,5 +30,4 @@ public class Test3MaTrendPeriod extends Test3MaTrend2Stock{
 		}
 		return false;
 	}
-
 }
