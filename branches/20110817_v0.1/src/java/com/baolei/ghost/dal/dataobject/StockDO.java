@@ -4,7 +4,7 @@ import java.util.Date;
 
 import net.sf.json.JSONObject;
 
-import com.baolei.ghost.test.Report;
+import com.baolei.trade.test.Report;
 
 public class StockDO {
 	
