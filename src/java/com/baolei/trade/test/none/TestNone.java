@@ -1,9 +1,9 @@
-package com.baolei.ghost.test.none;
+package com.baolei.trade.test.none;
 
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.ghost.test.Report;
-import com.baolei.ghost.test.Test;
+import com.baolei.trade.test.Test;
 
 public class TestNone extends Test{
 	float account;
@@ -16,7 +16,8 @@ public class TestNone extends Test{
 	}
 
 	@Override
-	public boolean needBuy(StockDO stockDO) {
+	public boolean needBuy(String dateString)  {
+		StockDO stockDO = pdStockMap.get(dateString);
 		if(toucun == 0){
 			return true;
 		}
@@ -24,7 +25,8 @@ public class TestNone extends Test{
 	}
 
 	@Override
-	public void noBuyNoSale(StockDO stockDO) {
+	public void noBuyNoSale(String dateString) {
+		StockDO stockDO = jyStockMap.get(dateString);
 		if(buyPoint == 0){
 			stockDO.getReport().setAccount(account+toucun);
 			stockDO.getReport().setStatus(Constant.REPORT_STATUS_NOSTART);
@@ -42,7 +44,8 @@ public class TestNone extends Test{
 	}
 
 	@Override
-	public void buy(StockDO stockDO) {
+	public void buy(String dateString) {
+		StockDO stockDO = jyStockMap.get(dateString);
 		toucun = account;
 		account = 0;
 		buyPoint = stockDO.getClose();
@@ -52,12 +55,24 @@ public class TestNone extends Test{
 	}
 
 	@Override
-	public boolean needSale(StockDO stockDO) {
+	public boolean needSale(String dateString) {
 		return false;
 	}
 
 	@Override
-	public void sale(StockDO stockDO) {
+	public void sale(String dateString) {
+		
+	}
+
+	@Override
+	public boolean needDingTou(String dateString) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void dingTou(String dateString) {
+		// TODO Auto-generated method stub
 		
 	}
 

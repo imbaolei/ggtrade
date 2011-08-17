@@ -20,13 +20,12 @@ import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.common.StockUtil;
 import com.baolei.ghost.dal.daointerface.StockDAO;
 import com.baolei.ghost.dal.dataobject.StockDO;
-import com.baolei.ghost.test.Test;
-import com.baolei.ghost.test.Test2Stock;
-import com.baolei.ghost.test.ma.Test3MaTrend;
-import com.baolei.ghost.test.ma.Test3MaTrend2Stock;
-import com.baolei.ghost.test.ma.Test3MaTrendDingTou;
-import com.baolei.ghost.test.ma.Test3MaTrendPeriod;
-import com.baolei.ghost.test.none.TestNone;
+import com.baolei.trade.test.Test;
+import com.baolei.trade.test.none.TestNone;
+import com.baolei.trade.test.trend.ma.Test3MaTrend;
+import com.baolei.trade.test.trend.ma.Test3MaTrendDingTou;
+import com.baolei.trade.test.trend.ma.period.Test3MaTrendPeriod;
+
 
 @Controller
 @RequestMapping("/test/ma_trend.do")
@@ -67,16 +66,16 @@ protected Log log = LogFactory.getLog(getClass());
 		Integer p1 = 20;
 		Integer p2 = 60;
 		Integer p3 = 90;
-		Test test = new Test3MaTrend(account,p1,p2,p3);
-		test.execute(stockList);
-		test.printReport(stockList);
+		Test3MaTrend test = new Test3MaTrend();
+		test.execute();
+		test.printReport();
 	}
 	
 	public void testNone(List<StockDO> stockList){
 		float account = 100000;
 		Test test = new TestNone(account);
-		test.execute(stockList);
-		test.printReport(stockList);
+		test.execute();
+		test.printReport();
 	}
 	
 	public void test3MaTrend2Stock(List<StockDO> stockList){
@@ -84,8 +83,8 @@ protected Log log = LogFactory.getLog(getClass());
 		Integer p1 = 20;
 		Integer p2 = 60;
 		Integer p3 = 90;
-		Test2Stock test = new Test3MaTrend2Stock(account,p1,p2,p3);
-		test.init(stockList, stockList);
+		Test3MaTrend test = new Test3MaTrend();
+		test.initStockList(stockList, stockList);
 		test.execute();
 		test.printReport();
 	}
@@ -95,8 +94,8 @@ protected Log log = LogFactory.getLog(getClass());
 		Integer p1 = 20;
 		Integer p2 = 60;
 		Integer p3 = 90;
-		Test2Stock test = new Test3MaTrendPeriod(account,p1,p2,p3);
-		test.init(stockList, stockList);
+		Test3MaTrend test = new Test3MaTrendPeriod();
+		test.initStockList(stockList, stockList);
 		test.execute();
 		test.printReport();
 	}
@@ -106,8 +105,8 @@ protected Log log = LogFactory.getLog(getClass());
 		Integer p1 = 20;
 		Integer p2 = 60;
 		Integer p3 = 90;
-		Test2Stock test = new Test3MaTrendDingTou(account,p1,p2,p3);
-		test.init(stockList, stockList);
+		Test3MaTrend test = new Test3MaTrendDingTou();
+		test.initStockList(stockList, stockList);
 		test.execute();
 		test.printReport();
 	}
