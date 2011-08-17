@@ -19,7 +19,7 @@ public class CalendarUtil {
 	 * @param stockDO
 	 * @return
 	 */
-	public boolean isFirstDayOfMonth(List<StockDO> stockList,StockDO stockDO){
+	public static boolean isFirstDayOfMonth(List<StockDO> stockList,StockDO stockDO){
 		int index = stockList.indexOf(stockDO);
 		if(index>0){
 			StockDO preStockDO = stockList.get(index-1);

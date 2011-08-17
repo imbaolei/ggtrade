@@ -1,7 +1,5 @@
 package com.baolei.ghost.test.ma;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.baolei.ghost.common.CalendarUtil;
 import com.baolei.ghost.dal.dataobject.StockDO;
 
@@ -28,7 +26,7 @@ public class Test3MaTrendDingTou extends Test3MaTrend2Stock {
 	@Override
 	public boolean needDingTou(String dateString) {
 		StockDO stockDO = pdStockMap.get(dateString);
-		if(calendarUtil.isFirstDayOfMonth(pdStockList, stockDO)){
+		if(CalendarUtil.isFirstDayOfMonth(pdStockList, stockDO)){
 			return true;
 		}
 		return false;
