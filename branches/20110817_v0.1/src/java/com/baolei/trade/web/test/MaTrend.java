@@ -22,6 +22,7 @@ import com.baolei.ghost.dal.daointerface.StockDAO;
 import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.trade.test.Test;
 import com.baolei.trade.test.none.TestNone;
+import com.baolei.trade.test.none.TestNoneDingTou;
 import com.baolei.trade.test.trend.ma.Test3MaTrend;
 import com.baolei.trade.test.trend.ma.Test3MaTrendDingTou;
 import com.baolei.trade.test.trend.ma.period.Test3MaTrendPeriod;
@@ -57,7 +58,8 @@ protected Log log = LogFactory.getLog(getClass());
 //		mt.testNone(stockList);
 //		mt.test3MaTrend2Stock(stockList);
 //		mt.test3MaTrendDingTou(stockList);
-		mt.test3MaTrendPeriod(stockList);
+//		mt.test3MaTrendPeriod(stockList);
+		mt.testNoneDingTou(stockList);
 		
 	}
 	
@@ -74,6 +76,17 @@ protected Log log = LogFactory.getLog(getClass());
 	public void testNone(List<StockDO> stockList){
 		float account = 100000;
 		Test test = new TestNone(account);
+		test.execute();
+		test.printReport();
+	}
+	
+	public void testNoneDingTou(List<StockDO> stockList){
+		float account = 1000;
+		float moneyPeriod = 1000;
+		Test test = new TestNoneDingTou();
+		test.initAccount(account);
+		test.setMoneyPeriod(moneyPeriod);
+		test.initStockList(stockList, stockList);
 		test.execute();
 		test.printReport();
 	}
