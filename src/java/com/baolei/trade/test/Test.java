@@ -35,7 +35,6 @@ public abstract class Test {
 	protected float rate = 0.0135f;
 	protected float toucunLR; // LowRisk低风险头寸
 	protected float toucunHR; // HighRisk高风险头寸
-	protected float toucun;
 	protected int transCount = 0;
 	protected float totalFee = 0;
 	protected StockDO lastBuyStockDO;
@@ -161,5 +160,9 @@ public abstract class Test {
 	public abstract void sale(String dateString);
 	
 	public abstract void noBuyNoSale(String dateString);
+
+	public void initAccount(float account) {
+		this.toucunLR = account; 		
+	}
 
 }

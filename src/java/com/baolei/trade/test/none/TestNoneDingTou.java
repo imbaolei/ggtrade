@@ -20,7 +20,7 @@ public class TestNoneDingTou extends Test {
 
 	@Override
 	public boolean needBuy(String dateString) {
-		if(toucun == 0){
+		if(toucunHR == 0){
 			return true;
 		}
 		return false;
