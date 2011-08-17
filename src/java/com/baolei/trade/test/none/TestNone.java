@@ -2,7 +2,7 @@ package com.baolei.trade.test.none;
 
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.dal.dataobject.StockDO;
-import com.baolei.ghost.test.Report;
+import com.baolei.trade.test.Report;
 import com.baolei.trade.test.Test;
 
 public class TestNone extends Test{
