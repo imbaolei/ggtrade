@@ -20,6 +20,16 @@ public class Report {
 	
 	private boolean dingTou = false;
 	
+	private Float shareHR;
+	
+	public Float getShareHR() {
+		return shareHR;
+	}
+
+	public void setShareHR(Float shareHR) {
+		this.shareHR = shareHR;
+	}
+
 	public boolean getDingTou() {
 		return dingTou;
 	}

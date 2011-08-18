@@ -25,6 +25,7 @@ import com.baolei.trade.test.none.TestNone;
 import com.baolei.trade.test.none.TestNoneDingTou;
 import com.baolei.trade.test.trend.ma.Test3MaTrend;
 import com.baolei.trade.test.trend.ma.Test3MaTrendDingTou;
+import com.baolei.trade.test.trend.ma.Test3MaTrendDingTouFE;
 import com.baolei.trade.test.trend.ma.period.Test3MaTrendPeriod;
 
 
@@ -35,6 +36,13 @@ protected Log log = LogFactory.getLog(getClass());
 	
 	@Autowired
 	private StockDAO stockDAO;
+	
+	float account = 70000;
+	float moneyPeriod = 1000;
+	float accountDingTou = 1000;
+	Integer p1 = 20;
+	Integer p2 = 60;
+	Integer p3 = 90;
 	
 	public static DecimalFormat decimalFormat = new DecimalFormat("#.00");
 	public static DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
@@ -59,71 +67,63 @@ protected Log log = LogFactory.getLog(getClass());
 //		mt.test3MaTrend2Stock(stockList);
 //		mt.test3MaTrendDingTou(stockList);
 //		mt.test3MaTrendPeriod(stockList);
-		mt.testNoneDingTou(stockList);
+//		mt.testNoneDingTou(stockList);
+//		mt.test3MaTrendPeriodDingTou(stockList);
+		mt.test3MaTrendDingTouFE(stockList);
 		
 	}
 	
 	public void test3MaTrend(List<StockDO> stockList){
-		float account = 100000;
-		Integer p1 = 20;
-		Integer p2 = 60;
-		Integer p3 = 90;
 		Test3MaTrend test = new Test3MaTrend();
 		test.execute();
 		test.printReport();
 	}
 	
 	public void testNone(List<StockDO> stockList){
-		float account = 100000;
-		Test test = new TestNone(account);
+		Test test = new TestNone();
+		test.initCash(account);
+		test.initStockList(stockList, stockList);
 		test.execute();
 		test.printReport();
 	}
 	
 	public void testNoneDingTou(List<StockDO> stockList){
-		float account = 1000;
-		float moneyPeriod = 1000;
 		Test test = new TestNoneDingTou();
-		test.initAccount(account);
-		test.setMoneyPeriod(moneyPeriod);
+		test.initCash(accountDingTou);
+		test.setMoneyDingTou(moneyPeriod);
 		test.initStockList(stockList, stockList);
 		test.execute();
 		test.printReport();
 	}
 	
-	public void test3MaTrend2Stock(List<StockDO> stockList){
-		float account = 100000;
-		Integer p1 = 20;
-		Integer p2 = 60;
-		Integer p3 = 90;
-		Test3MaTrend test = new Test3MaTrend();
-		test.initStockList(stockList, stockList);
-		test.execute();
-		test.printReport();
-	}
 	
 	public void test3MaTrendPeriod(List<StockDO> stockList){
-		float account = 100000;
-		Integer p1 = 20;
-		Integer p2 = 60;
-		Integer p3 = 90;
 		Test3MaTrend test = new Test3MaTrendPeriod();
+		test.initCash(account);
 		test.initStockList(stockList, stockList);
 		test.execute();
 		test.printReport();
 	}
 	
 	public void test3MaTrendDingTou(List<StockDO> stockList){
-		float account = 1000;
-		Integer p1 = 20;
-		Integer p2 = 60;
-		Integer p3 = 90;
 		Test3MaTrend test = new Test3MaTrendDingTou();
+		test.initAccount(accountDingTou, p1, p2, p3);
+		test.setMoneyDingTou(moneyPeriod);
 		test.initStockList(stockList, stockList);
 		test.execute();
 		test.printReport();
 	}
 	
+	
+	public void test3MaTrendDingTouFE(List<StockDO> stockList){
+		Test3MaTrendDingTouFE test = new Test3MaTrendDingTouFE();
+		test.initCash(accountDingTou);
+		test.initMaParam(p1, p2, p3);
+		test.setMoneyDingTou(moneyPeriod);
+		test.initStockList(stockList, stockList);
+		test.execute();
+		test.printReport();
+	}
 	
 
 }

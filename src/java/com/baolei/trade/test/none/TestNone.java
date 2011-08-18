@@ -2,23 +2,13 @@ package com.baolei.trade.test.none;
 
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.dal.dataobject.StockDO;
-import com.baolei.trade.test.Report;
 import com.baolei.trade.test.Test;
 
 public class TestNone extends Test{
-	float account;
-	float toucun;
-	float buyPoint;
-	Report report;
-	
-	public TestNone(float account){
-		this.account = account;
-	}
 
 	@Override
 	public boolean needBuy(String dateString)  {
-		StockDO stockDO = pdStockMap.get(dateString);
-		if(toucun == 0){
+		if(toucunHR == 0){
 			return true;
 		}
 		return false;
@@ -27,15 +17,16 @@ public class TestNone extends Test{
 	@Override
 	public void noBuyNoSale(String dateString) {
 		StockDO stockDO = jyStockMap.get(dateString);
+		float buyPoint = lastBuyStockDO.getClose();
 		if(buyPoint == 0){
-			stockDO.getReport().setAccount(account+toucun);
+			stockDO.getReport().setAccount(cash+toucunHR);
 			stockDO.getReport().setStatus(Constant.REPORT_STATUS_NOSTART);
 			return;
 		}
-		float tmpToucun = toucun + (stockDO.getClose()-buyPoint)/buyPoint*toucun;
+		float tmpToucun = toucunHR + (stockDO.getClose()-buyPoint)/buyPoint*toucunHR;
 		tmpToucun = Float.parseFloat(decimalFormat.format(tmpToucun));
 		stockDO.getReport().setAccount(tmpToucun);
-		if(toucun > 0 ){
+		if(toucunHR > 0 ){
 			stockDO.getReport().setStatus(Constant.REPORT_STATUS_CHICANG);
 		}else{
 			stockDO.getReport().setStatus(Constant.REPORT_STATUS_KONGCANG);
@@ -46,10 +37,11 @@ public class TestNone extends Test{
 	@Override
 	public void buy(String dateString) {
 		StockDO stockDO = jyStockMap.get(dateString);
-		toucun = account;
-		account = 0;
-		buyPoint = stockDO.getClose();
-		stockDO.getReport().setAccount(account+toucun);
+		toucunHR = cash;
+		cash = 0;
+		lastBuyStockDO = stockDO;
+		float buyPoint = lastBuyStockDO.getClose();
+		stockDO.getReport().setAccount(cash+toucunHR);
 		stockDO.getReport().setNotes(buyPoint + " 买入 ");
 		
 	}

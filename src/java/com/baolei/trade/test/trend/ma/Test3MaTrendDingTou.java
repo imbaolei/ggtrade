@@ -33,16 +33,16 @@ public class Test3MaTrendDingTou extends Test3MaTrend {
 	@Override
 	public void dingTou(String dateString) {
 		StockDO stockDO = jyStockMap.get(dateString);
-		toucunLR = toucunLR + moneyPeriod;
+		cash = cash + moneyDingTou;
 		//定投的时候 如果总定金额等于0，相当于还没开始计算总金额
 		if(totalMoney == 0 ){
-			totalMoney = toucunLR;
+			totalMoney = cash;
 		}else{
-			totalMoney = totalMoney + moneyPeriod;
+			totalMoney = totalMoney + moneyDingTou;
 		}
 		stockDO.getReport().setTotalMoney(totalMoney);
 		stockDO.getReport().setDingTou(true);
-		jyDingTouMoney = jyDingTouMoney + moneyPeriod;
+		jyDingTouMoney = jyDingTouMoney + moneyDingTou;
 	}
 	
 	@Override
@@ -53,7 +53,7 @@ public class Test3MaTrendDingTou extends Test3MaTrend {
 		//如果买入当天定投过 因为定投在买入之前，所以当天定投的钱要算入收益成本 
 		StockDO stockDO = jyStockMap.get(dateString);
 		if(stockDO.getReport().getDingTou()){
-			jyDingTouMoney = moneyPeriod;
+			jyDingTouMoney = moneyDingTou;
 		}
 		
 	}
