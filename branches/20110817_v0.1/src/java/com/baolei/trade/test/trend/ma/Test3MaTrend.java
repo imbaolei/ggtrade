@@ -34,7 +34,7 @@ public class Test3MaTrend extends Test {
 	
 
 	public void initAccount(float toucunLR, Integer p1, Integer p2, Integer p3) {
-		this.toucunLR = toucunLR;
+		this.cash = toucunLR;
 		this.p1 = p1;
 		this.p2 = p2;
 		this.p3 = p3;
@@ -82,13 +82,13 @@ public class Test3MaTrend extends Test {
 		StockDO stockDO = jyStockMap.get(dateString);
 		float fee = 0;
 		
-		fee = fee(toucunLR);
-		toucunHR = toucunHR + toucunLR - fee;
-		toucunLR = 0;
+		fee = fee(cash);
+		toucunHR = toucunHR + cash - fee;
+		cash = 0;
 
 		// 设置report
 		float buyPoint = stockDO.getClose();
-		float account = toucunHR + toucunLR;
+		float account = toucunHR + cash;
 		stockDO.getReport().setAccount(account);
 		stockDO.getReport().setNotes(" - 买点 ： " + buyPoint);
 		stockDO.getReport().setFee(fee);
@@ -124,14 +124,14 @@ public class Test3MaTrend extends Test {
 			//损益 只计算这次卖出的损益，不包含上次买入时的交易费用
 			float sunyi  = (stockDO.getClose() - buyPoint) / buyPoint
 					* toucunHR - fee; 
-			toucunLR = toucunLR + toucunHR + sunyi;
+			cash = cash + toucunHR + sunyi;
 			toucunHR = 0;
 		}else{
 			//应该不会遇到
 			//TODO log.error
 		}
 
-		float account = toucunLR + toucunHR;
+		float account = cash + toucunHR;
 		stockDO.getReport().setAccount(account);
 		stockDO.getReport().setNotes(" - 卖点 ： " + stockDO.getClose());
 		stockDO.getReport().setFee(fee);
@@ -163,7 +163,7 @@ public class Test3MaTrend extends Test {
 	public void noBuyNoSale(String dateString) {
 		StockDO stockDO = jyStockMap.get(dateString);
 		if (lastBuyStockDO == null) {
-			float account = toucunLR + toucunHR;
+			float account = cash + toucunHR;
 			stockDO.getReport().setAccount(account);
 			stockDO.getReport().setStatus(Constant.REPORT_STATUS_NOSTART);
 			return;
@@ -172,7 +172,7 @@ public class Test3MaTrend extends Test {
 		float tmpToucun = toucunHR + (stockDO.getClose() - buyPoint) / buyPoint
 				* toucunHR;
 		tmpToucun = Float.parseFloat(decimalFormat.format(tmpToucun));
-		float account = tmpToucun + toucunLR;
+		float account = tmpToucun + cash;
 		stockDO.getReport().setAccount(account);
 		if (toucunHR > 0) {
 			stockDO.getReport().setStatus(Constant.REPORT_STATUS_CHICANG);

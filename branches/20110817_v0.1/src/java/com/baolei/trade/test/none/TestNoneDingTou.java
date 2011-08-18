@@ -14,13 +14,13 @@ public class TestNoneDingTou extends Test {
 		
 	}
 	
-	public void initAccount(float account){
-		this.toucunLR = account;
+	public void initCash(float account){
+		this.cash = account;
 	}
 
 	@Override
 	public boolean needBuy(String dateString) {
-		if(toucunHR == 0){
+		if(cash != 0){
 			return true;
 		}
 		return false;
@@ -30,7 +30,7 @@ public class TestNoneDingTou extends Test {
 	public void noBuyNoSale(String dateString) {
 		StockDO stockDO = jyStockMap.get(dateString);
 		if (lastBuyStockDO == null) {
-			float account = toucunLR + toucunHR;
+			float account = cash + toucunHR;
 			stockDO.getReport().setAccount(account);
 			stockDO.getReport().setStatus(Constant.REPORT_STATUS_NOSTART);
 			return;
@@ -39,7 +39,7 @@ public class TestNoneDingTou extends Test {
 		float tmpToucun = toucunHR + (stockDO.getClose() - buyPoint) / buyPoint
 				* toucunHR;
 		tmpToucun = Float.parseFloat(decimalFormat.format(tmpToucun));
-		float account = tmpToucun + toucunLR;
+		float account = tmpToucun + cash;
 		stockDO.getReport().setAccount(account);
 		if (toucunHR > 0) {
 			stockDO.getReport().setStatus(Constant.REPORT_STATUS_CHICANG);
@@ -54,15 +54,24 @@ public class TestNoneDingTou extends Test {
 		StockDO stockDO = jyStockMap.get(dateString);
 		float fee = 0;
 		
-		fee = fee(toucunLR);
-		toucunHR = toucunHR + toucunLR - fee;
-		toucunLR = 0;
+		//计算 上次定投 到 这次 定投 之间的收益
+		if(lastBuyStockDO != null){
+			float buyPoint = lastBuyStockDO.getClose();
+			toucunHR = toucunHR + (stockDO.getClose() - buyPoint) / buyPoint
+					* toucunHR;
+			toucunHR = Float.parseFloat(decimalFormat.format(toucunHR));
+		}
+		
+		
+		//将 剩余的钱买入 高风险账户  也就是定投账户
+		fee = fee(cash);
+		toucunHR = toucunHR + cash - fee;
+		cash = 0;
 
 		// 设置report
-		float buyPoint = stockDO.getClose();
-		float account = toucunHR + toucunLR;
+		float account = toucunHR + cash;
 		stockDO.getReport().setAccount(account);
-		stockDO.getReport().setNotes(" - 买点 ： " + buyPoint);
+		stockDO.getReport().setNotes(" - 买点 ： " + stockDO.getClose());
 		stockDO.getReport().setFee(fee);
 		totalFee = totalFee + fee;
 		stockDO.getReport().setTotalFee(totalFee);
@@ -95,16 +104,16 @@ public class TestNoneDingTou extends Test {
 	@Override
 	public void dingTou(String dateString) {
 		StockDO stockDO = jyStockMap.get(dateString);
-		toucunLR = toucunLR + moneyPeriod;
+		cash = cash + moneyDingTou;
 		// 定投的时候 如果总定金额等于0，相当于还没开始计算总金额
 		if (totalMoney == 0) {
-			totalMoney = toucunLR;
+			totalMoney = cash;
 		} else {
-			totalMoney = totalMoney + moneyPeriod;
+			totalMoney = totalMoney + moneyDingTou;
 		}
 		stockDO.getReport().setTotalMoney(totalMoney);
 		stockDO.getReport().setDingTou(true);
-		jyDingTouMoney = jyDingTouMoney + moneyPeriod;
+		jyDingTouMoney = jyDingTouMoney + moneyDingTou;
 	}
 
 

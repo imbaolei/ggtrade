@@ -26,50 +26,43 @@ public abstract class Test {
 	protected Log log = LogFactory.getLog(getClass());
 	protected DateFormat dateFormat = new SimpleDateFormat(
 			StockUtil.dateFormatString);
-	protected DecimalFormat decimalFormat = new DecimalFormat("#.00");
+	protected DecimalFormat decimalFormat = new DecimalFormat("#.##");
 	protected List<StockDO> pdStockList;
 	protected List<StockDO> jyStockList;
 	protected Map<String, StockDO> pdStockMap;
 	protected Map<String, StockDO> jyStockMap;
-	protected float moneyPeriod ; //每个周期定投的数额
-	protected float rate = 0.0135f;
-	protected float toucunLR; // LowRisk低风险头寸
-	protected float toucunHR; // HighRisk高风险头寸
+	protected float moneyDingTou ; //每个周期定投的数额
+	protected float rateHR = 0.0135f;
+	protected float cash; // LowRisk低风险头寸
+	protected float toucunHR; // HighRisk高风险头寸 
+	protected float shareHR; // HighRisk高风险份额
 	protected int transCount = 0;
 	protected float totalFee = 0;
 	protected StockDO lastBuyStockDO;
 	
 	
-	public float getRate() {
-		return rate;
+	public float getRateHR() {
+		return rateHR;
 	}
 
-	public void setRate(float rate) {
-		this.rate = rate;
+	public void setRateHR(float rate) {
+		this.rateHR = rate;
 	}
 
-	public float getMoneyPeriod() {
-		return moneyPeriod;
+	public float getMoneyDingTou() {
+		return moneyDingTou;
 	}
 
-	public void setMoneyPeriod(float moneyPeriod) {
-		this.moneyPeriod = moneyPeriod;
+	public void setMoneyDingTou(float moneyDingTou) {
+		this.moneyDingTou = moneyDingTou;
 	}
 
 	protected float fee(float money) {
-		float fee = money * rate;
+		float fee = money * rateHR;
 		fee = Float.parseFloat(decimalFormat.format(fee));
 		return fee;
 	}
 	
-	/**
-	 */
-	public void initStockList(List<StockDO> stockList) {
-		this.pdStockList = stockList;
-		this.jyStockList = stockList;
-		pdStockMap = StockUtil.toStockMap(pdStockList);
-		jyStockMap = StockUtil.toStockMap(jyStockList);
-	}
 
 	/**
 	 * @param pdStockList 判断的stock
@@ -131,9 +124,13 @@ public abstract class Test {
 			if (StringUtils.isNotEmpty(report.getNotes())) {
 				note = " - " + report.getNotes();
 			}
+			String shareHR = "";
+			if (report.getShareHR() != null && report.getShareHR() > 0) {
+				shareHR = " 持有份额 ： " + report.getShareHR();
+			}
 			StringBuffer sb = new StringBuffer();
-			sb.append(date).append(close).append(account).append(status)
-					.append(fee).append(transCount).append(totalFee).append(totalMoney)
+			sb.append(date).append(close).append(shareHR).append(account).append(status)
+					.append(fee)
 					.append(note);
 			if (log.isInfoEnabled()) {
 				log.info(sb.toString());
@@ -141,7 +138,7 @@ public abstract class Test {
 			if(Constant.REPORT_STATUS_SALE.equals(stockDO.getReport().getStatus())){
 				sb = new StringBuffer();
 				String shouyi = " - 这次交易收益 ：" + report.getShouyi();
-				sb.append(shouyi);
+				sb.append(transCount).append(totalFee).append(totalMoney).append(shouyi);
 				log.info(sb.toString());
 			}
 		}
@@ -161,8 +158,8 @@ public abstract class Test {
 	
 	public abstract void noBuyNoSale(String dateString);
 
-	public void initAccount(float account) {
-		this.toucunLR = account; 		
+	public void initCash(float cash) {
+		this.cash = cash; 		
 	}
 
 }
