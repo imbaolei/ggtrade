@@ -65,18 +65,20 @@ protected Log log = LogFactory.getLog(getClass());
 		MaTrend mt = new MaTrend();
 //		mt.test3MaTrend(stockList);
 //		mt.testNone(stockList);
-//		mt.test3MaTrend2Stock(stockList);
+		mt.test3MaTrend(stockList);
 //		mt.test3MaTrendDingTou(stockList);
 //		mt.test3MaTrendPeriod(stockList);
 //		mt.testNoneDingTou(stockList);
 //		mt.test3MaTrendPeriodDingTou(stockList);
 //		mt.test3MaTrendDingTouFE(stockList);
-		mt.test3MaTrendShare(stockList);
+//		mt.test3MaTrendShare(stockList);
 		
 	}
 	
 	public void test3MaTrend(List<StockDO> stockList){
 		Test3MaTrend test = new Test3MaTrend();
+		test.initAccount(account, p1, p2, p3);
+		test.initStockList(stockList, stockList);
 		test.execute();
 		test.printReport();
 	}

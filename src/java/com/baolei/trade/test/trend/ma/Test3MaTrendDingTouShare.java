@@ -80,7 +80,7 @@ public class Test3MaTrendDingTouShare extends Test {
 	 * @return
 	 */
 	protected float buyShare(float money, float buyPoint) {
-		float share = Float.parseFloat(decimalFormat.format(money / buyPoint));
+		float share = money / buyPoint;
 		return NumberUtil.roundDown(share, 2);
 	}
 
@@ -180,7 +180,7 @@ public class Test3MaTrendDingTouShare extends Test {
 			float buyPoint = lastBuyStockDO.getClose();
 			// 损益 只计算这次卖出的损益，不包含上次买入时的交易费用
 			float sunyi = (stockDO.getClose() - buyPoint) * shareHR - fee;
-			cash = cash + shareHR * stockDO.getClose() + sunyi;
+			cash = cash + shareHR * stockDO.getClose() - fee;
 			shareHR = 0;
 		} else {
 			// 应该不会遇到

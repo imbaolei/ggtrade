@@ -119,6 +119,7 @@ public class Test3MaTrend extends Test {
 		
 		if (Constant.REPORT_STATUS_CHICANG.equals(status)
 				|| Constant.REPORT_STATUS_BUY.equals(status)) {
+			//TODO 这里有bug toucunHR还是买入时的价格
 			fee = fee(toucunHR);
 			float buyPoint = lastBuyStockDO.getClose();
 			//损益 只计算这次卖出的损益，不包含上次买入时的交易费用
