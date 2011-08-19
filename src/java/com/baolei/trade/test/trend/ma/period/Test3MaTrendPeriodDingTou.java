@@ -4,8 +4,7 @@ import com.baolei.ghost.common.CalendarUtil;
 import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.trade.test.trend.ma.Test3MaTrendDingTou;
 
-public class Test3MaTrendPeriodDingTou extends Test3MaTrendDingTou{
-
+public class Test3MaTrendPeriodDingTou extends Test3MaTrendDingTou {
 	public Test3MaTrendPeriodDingTou() {
 	}
 	
@@ -29,4 +28,5 @@ public class Test3MaTrendPeriodDingTou extends Test3MaTrendDingTou{
 		}
 		return false;
 	}
+
 }
