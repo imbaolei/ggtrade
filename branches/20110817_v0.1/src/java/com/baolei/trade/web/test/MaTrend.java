@@ -25,7 +25,8 @@ import com.baolei.trade.test.none.TestNone;
 import com.baolei.trade.test.none.TestNoneDingTou;
 import com.baolei.trade.test.trend.ma.Test3MaTrend;
 import com.baolei.trade.test.trend.ma.Test3MaTrendDingTou;
-import com.baolei.trade.test.trend.ma.Test3MaTrendDingTouFE;
+import com.baolei.trade.test.trend.ma.Test3MaTrendDingTouShare;
+import com.baolei.trade.test.trend.ma.Test3MaTrendShare;
 import com.baolei.trade.test.trend.ma.period.Test3MaTrendPeriod;
 
 
@@ -37,7 +38,7 @@ protected Log log = LogFactory.getLog(getClass());
 	@Autowired
 	private StockDAO stockDAO;
 	
-	float account = 70000;
+	float account = 100000;
 	float moneyPeriod = 1000;
 	float accountDingTou = 1000;
 	Integer p1 = 20;
@@ -69,7 +70,8 @@ protected Log log = LogFactory.getLog(getClass());
 //		mt.test3MaTrendPeriod(stockList);
 //		mt.testNoneDingTou(stockList);
 //		mt.test3MaTrendPeriodDingTou(stockList);
-		mt.test3MaTrendDingTouFE(stockList);
+//		mt.test3MaTrendDingTouFE(stockList);
+		mt.test3MaTrendShare(stockList);
 		
 	}
 	
@@ -116,7 +118,7 @@ protected Log log = LogFactory.getLog(getClass());
 	
 	
 	public void test3MaTrendDingTouFE(List<StockDO> stockList){
-		Test3MaTrendDingTouFE test = new Test3MaTrendDingTouFE();
+		Test3MaTrendDingTouShare test = new Test3MaTrendDingTouShare();
 		test.initCash(accountDingTou);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(moneyPeriod);
@@ -125,5 +127,14 @@ protected Log log = LogFactory.getLog(getClass());
 		test.printReport();
 	}
 	
-
+	public void test3MaTrendShare(List<StockDO> stockList){
+		Test3MaTrendDingTouShare test = new Test3MaTrendShare();
+		test.initCash(account);
+		test.initMaParam(p1, p2, p3);
+		test.setMoneyDingTou(0);
+		test.initStockList(stockList, stockList);
+		test.execute();
+		test.printReport();
+	}
+	
 }

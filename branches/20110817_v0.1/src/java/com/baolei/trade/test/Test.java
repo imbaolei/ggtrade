@@ -15,32 +15,29 @@ import com.baolei.ghost.common.StockUtil;
 import com.baolei.ghost.dal.dataobject.StockDO;
 
 /**
- * @author lei.baol
- * 测试 两种 股票，一种用来做 买点买点的判断 pdStockList，一种是用来交易 jyStockList
- * 如果判断的和交易的相同，则设置为同一个即可
- * execute前 需要 先 initAccount()
- *
+ * @author lei.baol 测试 两种 股票，一种用来做 买点买点的判断 pdStockList，一种是用来交易 jyStockList
+ *         如果判断的和交易的相同，则设置为同一个即可 execute前 需要 先 initAccount()
+ * 
  */
 public abstract class Test {
 
 	protected Log log = LogFactory.getLog(getClass());
 	protected DateFormat dateFormat = new SimpleDateFormat(
 			StockUtil.dateFormatString);
-	protected DecimalFormat decimalFormat = new DecimalFormat("#.##");
+	protected DecimalFormat decimalFormat = new DecimalFormat("#.00");
 	protected List<StockDO> pdStockList;
 	protected List<StockDO> jyStockList;
 	protected Map<String, StockDO> pdStockMap;
 	protected Map<String, StockDO> jyStockMap;
-	protected float moneyDingTou ; //每个周期定投的数额
+	protected float moneyDingTou; // 每个周期定投的数额
 	protected float rateHR = 0.0135f;
 	protected float cash; // LowRisk低风险头寸
-	protected float toucunHR; // HighRisk高风险头寸 
+	protected float toucunHR; // HighRisk高风险头寸
 	protected float shareHR; // HighRisk高风险份额
 	protected int transCount = 0;
 	protected float totalFee = 0;
 	protected StockDO lastBuyStockDO;
-	
-	
+
 	public float getRateHR() {
 		return rateHR;
 	}
@@ -62,13 +59,15 @@ public abstract class Test {
 		fee = Float.parseFloat(decimalFormat.format(fee));
 		return fee;
 	}
-	
 
 	/**
-	 * @param pdStockList 判断的stock
-	 * @param jyStockList 交易的stock
+	 * @param pdStockList
+	 *            判断的stock
+	 * @param jyStockList
+	 *            交易的stock
 	 */
-	public void initStockList(List<StockDO> pdStockList, List<StockDO> jyStockList) {
+	public void initStockList(List<StockDO> pdStockList,
+			List<StockDO> jyStockList) {
 		this.pdStockList = pdStockList;
 		this.jyStockList = jyStockList;
 		pdStockMap = StockUtil.toStockMap(pdStockList);
@@ -78,7 +77,7 @@ public abstract class Test {
 	public void execute() {
 		for (StockDO stockDO : pdStockList) {
 			String dateString = dateFormat.format(stockDO.getTime());
-			if(needDingTou(dateString)){
+			if (needDingTou(dateString)) {
 				dingTou(dateString);
 			}
 			if (needBuy(dateString)) {
@@ -129,25 +128,23 @@ public abstract class Test {
 				shareHR = " 持有份额 ： " + report.getShareHR();
 			}
 			StringBuffer sb = new StringBuffer();
-			sb.append(date).append(close).append(shareHR).append(account).append(status)
-					.append(fee)
-					.append(note);
-			if (log.isInfoEnabled()) {
-				log.info(sb.toString());
-			}
-			if(Constant.REPORT_STATUS_SALE.equals(stockDO.getReport().getStatus())){
+			sb.append(date).append(close).append(shareHR).append(account)
+					.append(status).append(fee).append(note).append(transCount).append(totalFee).append(totalMoney);
+			log.info(sb.toString());
+			if (Constant.REPORT_STATUS_SALE.equals(stockDO.getReport()
+					.getStatus())) {
 				sb = new StringBuffer();
 				String shouyi = " - 这次交易收益 ：" + report.getShouyi();
-				sb.append(transCount).append(totalFee).append(totalMoney).append(shouyi);
+				sb.append(shouyi);
 				log.info(sb.toString());
 			}
 		}
 	}
 
 	public abstract boolean needDingTou(String dateString);
-	
+
 	public abstract void dingTou(String dateString);
-	
+
 	public abstract boolean needBuy(String dateString);
 
 	public abstract void buy(String dateString);
@@ -155,11 +152,11 @@ public abstract class Test {
 	public abstract boolean needSale(String dateString);
 
 	public abstract void sale(String dateString);
-	
+
 	public abstract void noBuyNoSale(String dateString);
 
 	public void initCash(float cash) {
-		this.cash = cash; 		
+		this.cash = cash;
 	}
 
 }
