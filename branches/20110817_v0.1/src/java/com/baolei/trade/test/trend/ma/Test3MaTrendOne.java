@@ -1,5 +1,13 @@
 package com.baolei.trade.test.trend.ma;
 
+import com.baolei.ghost.common.NumberUtil;
+import com.baolei.ghost.dal.dataobject.StockDO;
+
+/**
+ * 一次投入 无定投 追随趋势
+ * @author baolei
+ *
+ */
 public class Test3MaTrendOne extends Test3MaTrendDT{
 	@Override
 	public boolean needDingTou(String dateString) {
@@ -9,4 +17,7 @@ public class Test3MaTrendOne extends Test3MaTrendDT{
 	@Override
 	public void dingTou(String dateString) {
 	}
+	
+	
+	
 }

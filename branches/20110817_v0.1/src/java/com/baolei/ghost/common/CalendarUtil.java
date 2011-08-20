@@ -13,33 +13,13 @@ import com.baolei.ghost.dal.dataobject.StockDO;
 public class CalendarUtil {
 	
 	
-	/**
-	 * 判断stockDO 是不是这个月的第一个交易日
-	 * @param stockList
-	 * @param stockDO
-	 * @return
-	 */
-	public static boolean isFirstDayOfMonth(List<StockDO> stockList,StockDO stockDO){
-		int index = stockList.indexOf(stockDO);
-		if(index>0){
-			StockDO preStockDO = stockList.get(index-1);
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(stockDO.getTime());
-			int month = calendar.get(Calendar.MONTH);
-			Calendar preCalendar = Calendar.getInstance();
-			preCalendar.setTime(preStockDO.getTime());
-			int premonth = preCalendar.get(Calendar.MONTH);
-			if(month > premonth){
-				return true;
-			}
-		}
-		return false;
-	}
+	
 	
 	/**
 	 * 判断stockDO 是不是这个月的第  firstDay 个交易日
 	 * @param stockList
 	 * @param stockDO
+	 * @param firstDay
 	 * @return
 	 */
 	public static boolean isFirstDayOfMonth(List<StockDO> stockList,StockDO stockDO,int firstDay){
@@ -63,11 +43,15 @@ public class CalendarUtil {
 	public static List<StockDO> getStockListOfMonth(List<StockDO> stockList,StockDO stockDO){
 		List<StockDO> tmpStockList = new ArrayList<StockDO>();
 		int index = stockList.indexOf(stockDO);
+		if(index <= 0){
+			return tmpStockList;
+		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(stockDO.getTime());
 		int month = calendar.get(Calendar.MONTH);
-		int monthFirstIndex = -1;
-		for(int i  = index ; i> 0 ;i--){
+		//这个月的第一天 距离 stockDO的天数
+		int monthFirstIndex = 0;
+		for(int i  = index-1 ; i> 0 ;i--){
 			StockDO tmpStockDO = stockList.get(i);
 			Calendar tmpCalendar = Calendar.getInstance();
 			tmpCalendar.setTime(tmpStockDO.getTime());
@@ -78,6 +62,7 @@ public class CalendarUtil {
 			monthFirstIndex++;
 		}
 		monthFirstIndex = index - monthFirstIndex;
+		//截取到 monthFirstIndex 到 index 这天的 list，因为subList是前闭后开 所以index需要+1
 		tmpStockList = stockList.subList(monthFirstIndex, index+1);
 		return tmpStockList;
 	}

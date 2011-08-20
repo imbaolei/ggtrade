@@ -66,8 +66,8 @@ protected Log log = LogFactory.getLog(getClass());
 //		mt.test3MaTrend(stockList);
 //		mt.test3MaDingTouTrend(stockList);
 //		mt.testNoneDingTou(stockList);
-		mt.test3MaTrendPeriod(stockList);
-//		mt.test3MaDingTouTrendPeriod(stockList);
+//		mt.test3MaTrendPeriod(stockList);
+		mt.test3MaDingTouTrendPeriod(stockList);
 		
 		
 	}
