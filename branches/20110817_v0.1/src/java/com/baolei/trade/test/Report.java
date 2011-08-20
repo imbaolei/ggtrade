@@ -22,6 +22,16 @@ public class Report {
 	
 	private Float shareHR;
 	
+	private Float shouyiPercent;
+	
+	public Float getShouyiPercent() {
+		return shouyiPercent;
+	}
+
+	public void setShouyiPercent(Float shouyiPercent) {
+		this.shouyiPercent = shouyiPercent;
+	}
+
 	public Float getShareHR() {
 		return shareHR;
 	}

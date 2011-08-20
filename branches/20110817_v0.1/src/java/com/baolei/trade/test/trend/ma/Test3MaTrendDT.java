@@ -6,7 +6,7 @@ import com.baolei.ghost.common.NumberUtil;
 import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.trade.test.Test;
 
-public class Test3MaTrendDingTou extends Test {
+public class Test3MaTrendDT extends Test {
 
 	protected float totalMoney;
 	protected float jyDingTouMoney = 0; // 一次买入和卖出 期间 定投的金额
@@ -97,16 +97,28 @@ public class Test3MaTrendDingTou extends Test {
 		StockDO preStockDO = jyStockList.get(index - 1);
 		float shouyi = stockDO.getReport().getAccount()
 				- preStockDO.getReport().getAccount() - jyDingTouMoney;
-//		shouyi =  Float.parseFloat(decimalFormat.format(shouyi));
 		shouyi = NumberUtil.roundDown(shouyi, 2);
 		return shouyi;
+	}
+
+	protected float shouyiPersent(String dateString) {
+		// 用卖出这天的账户金额 减去 上次买入前的 账户金额
+		StockDO stockDO = jyStockMap.get(dateString);
+		int index = jyStockList.indexOf(lastBuyStockDO);
+		StockDO preStockDO = jyStockList.get(index - 1);
+		float preAccount = preStockDO.getReport().getAccount();
+		float shouyi = stockDO.getReport().getAccount()
+				- preAccount - jyDingTouMoney;
+		float shouyiPersent =  shouyi/preAccount;
+		shouyiPersent = NumberUtil.roundDown(shouyiPersent*100, 2);
+		return shouyiPersent;
 	}
 
 	@Override
 	public boolean needBuy(String dateString) {
 		StockDO stockDO = pdStockMap.get(dateString);
 		// 如果判断没有高风险头寸 而且 趋势不是走弱，即走强
-		//TODO 定投的买入不是很好
+		// TODO 定投的买入不是很好
 		float buyPoint = stockDO.getClose();
 		float fee = fee(cash);
 		float availCash = cash - fee;
@@ -121,22 +133,22 @@ public class Test3MaTrendDingTou extends Test {
 	@Override
 	public void buy(String dateString) {
 		StockDO stockDO = jyStockMap.get(dateString);
+		//如果是空仓后 第一次买入 则 更新lastBuyStockDO 否则是加仓
+		if(shareHR == 0 ){
+			lastBuyStockDO = stockDO;
+		}
 		float fee = 0;
 		float buyPoint = stockDO.getClose();
 		fee = fee(cash);
 		float availCash = cash - fee;
-
 		float share = buyShare(availCash, buyPoint);
-		
-		cash = availCash - share * buyPoint ;
-//		cash = Float.parseFloat(decimalFormat.format(cash));
+		cash = availCash - share * buyPoint;
 		cash = NumberUtil.roundDown(cash, 2);
 		shareHR = shareHR + share;
 
-		
 		// 设置report
 		float account = shareHR * buyPoint + cash;
-//		account = Float.parseFloat(decimalFormat.format(account));
+		// account = Float.parseFloat(decimalFormat.format(account));
 		account = NumberUtil.roundDown(account, 2);
 		stockDO.getReport().setAccount(account);
 		shareHR = NumberUtil.roundDown(shareHR, 2);
@@ -148,14 +160,13 @@ public class Test3MaTrendDingTou extends Test {
 		stockDO.getReport().setStatus(Constant.REPORT_STATUS_BUY);
 		transCount = transCount + 1;
 		stockDO.getReport().setTransCount(transCount);
-		lastBuyStockDO = stockDO;
 		
+
 		jyDingTouMoney = 0;
-		//如果买入当天定投过 因为定投在买入之前，所以当天定投的钱要算入收益成本 
-		if(stockDO.getReport().getDingTou()){
+		// 如果买入当天定投过 因为定投在买入之前，所以当天定投的钱要算入收益成本
+		if (stockDO.getReport().getDingTou()) {
 			jyDingTouMoney = moneyDingTou;
 		}
-		
 
 	}
 
@@ -175,7 +186,7 @@ public class Test3MaTrendDingTou extends Test {
 		StockDO preStockDO = jyStockList.get(index - 1);
 		String status = preStockDO.getReport().getStatus();
 		float fee = 0;
-
+		float reportShare = shareHR;
 		if (Constant.REPORT_STATUS_CHICANG.equals(status)
 				|| Constant.REPORT_STATUS_BUY.equals(status)) {
 			fee = fee(shareHR * stockDO.getClose());
@@ -189,7 +200,7 @@ public class Test3MaTrendDingTou extends Test {
 
 		float account = cash;
 		stockDO.getReport().setAccount(account);
-		stockDO.getReport().setShareHR(shareHR);
+		stockDO.getReport().setShareHR(reportShare);
 		stockDO.getReport().setNotes(" - 卖点 ： " + stockDO.getClose());
 		stockDO.getReport().setFee(fee);
 		totalFee = totalFee + fee;
@@ -197,6 +208,8 @@ public class Test3MaTrendDingTou extends Test {
 		stockDO.getReport().setStatus(Constant.REPORT_STATUS_SALE);
 		float shouyi = shouyi(dateString);
 		stockDO.getReport().setShouyi(shouyi);
+		Float shouyiPersent = shouyiPersent(dateString);
+		stockDO.getReport().setShouyiPercent(shouyiPersent);
 		jyDingTouMoney = 0;
 
 	}
@@ -210,10 +223,8 @@ public class Test3MaTrendDingTou extends Test {
 			stockDO.getReport().setStatus(Constant.REPORT_STATUS_NOSTART);
 			return;
 		}
-		float buyPoint = lastBuyStockDO.getClose();
 		float tmpToucun = shareHR * stockDO.getClose();
 		float account = tmpToucun + cash;
-//		account = Float.parseFloat(decimalFormat.format(account));
 		account = NumberUtil.roundDown(account, 2);
 		stockDO.getReport().setAccount(account);
 		stockDO.getReport().setShareHR(shareHR);

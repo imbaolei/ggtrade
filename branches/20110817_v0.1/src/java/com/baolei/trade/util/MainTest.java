@@ -7,7 +7,7 @@ import java.util.List;
 import com.baolei.trade.domain.StockDO;
 import com.thoughtworks.xstream.XStream;
 
-public class Test {
+public class MainTest {
 
 	/**
 	 * @param args
