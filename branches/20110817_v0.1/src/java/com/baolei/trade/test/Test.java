@@ -30,7 +30,7 @@ public abstract class Test {
 	protected Map<String, StockDO> pdStockMap;
 	protected Map<String, StockDO> jyStockMap;
 	protected float moneyDingTou; // 每个周期定投的数额
-	protected float rateHR = 0.008f;
+	protected float rateHR = 0.0135f;
 	protected float cash; // LowRisk低风险头寸
 	protected float toucunHR; // HighRisk高风险头寸
 	protected float shareHR; // HighRisk高风险份额
