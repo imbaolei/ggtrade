@@ -30,7 +30,7 @@ public abstract class Test {
 	protected Map<String, StockDO> pdStockMap;
 	protected Map<String, StockDO> jyStockMap;
 	protected float moneyDingTou; // 每个周期定投的数额
-	protected float rateHR = 0.0135f;
+	protected float rateHR = 0.008f;
 	protected float cash; // LowRisk低风险头寸
 	protected float toucunHR; // HighRisk高风险头寸
 	protected float shareHR; // HighRisk高风险份额
@@ -95,6 +95,9 @@ public abstract class Test {
 
 	public void printReport() {
 		for (StockDO stockDO : jyStockList) {
+			if(reportFilter(stockDO)){
+				continue ;
+			}
 			Report report = stockDO.getReport();
 			String date = dateFormat.format(stockDO.getTime());
 			String account = " - account: " + report.getAccount().toString();
@@ -136,9 +139,27 @@ public abstract class Test {
 				sb = new StringBuffer();
 				String shouyi = " - 这次交易收益 ：" + report.getShouyi();
 				sb.append(shouyi);
+				String shouyiPersent =  " - 这次交易收益率 ：" + report.getShouyiPercent() +"%";
+				sb.append(shouyiPersent);
 				log.info(sb.toString());
 			}
 		}
+	}
+	
+	public boolean reportFilter(StockDO stockDO){
+		Report report  = stockDO.getReport();
+		String status = report.getStatus();
+		if(Constant.REPORT_STATUS_BUY.equals(status)){
+			log.info("");
+			return false;
+		}
+		
+		if(Constant.REPORT_STATUS_SALE.equals(status)){
+			return false;
+		}
+			
+		return true;
+		
 	}
 
 	public abstract boolean needDingTou(String dateString);

@@ -23,9 +23,10 @@ import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.trade.test.Test;
 import com.baolei.trade.test.none.TestNone;
 import com.baolei.trade.test.none.TestNoneDingTou;
-import com.baolei.trade.test.trend.ma.Test3MaTrendDingTou;
-import com.baolei.trade.test.trend.ma.Test3MaTrend;
-import com.baolei.trade.test.trend.ma.period.Test3MaTrendPeriodDingTou;
+import com.baolei.trade.test.trend.ma.Test3MaTrendOne;
+import com.baolei.trade.test.trend.ma.Test3MaTrendDT;
+import com.baolei.trade.test.trend.ma.period.Test3MaTrendOnePeriod;
+import com.baolei.trade.test.trend.ma.period.Test3MaTrendDTPeriod;
 
 
 @Controller
@@ -61,16 +62,13 @@ protected Log log = LogFactory.getLog(getClass());
 		String code = "SZ399300";
 		List<StockDO> stockList = stockDAO.selectStockByCodeAndPeriod(code, Constant.STOCK_PERIOD_DAY);
 		MaTrend mt = new MaTrend();
-//		mt.test3MaTrend(stockList);
 //		mt.testNone(stockList);
 //		mt.test3MaTrend(stockList);
-//		mt.test3MaTrendDingTou(stockList);
-//		mt.test3MaTrendPeriod(stockList);
+//		mt.test3MaDingTouTrend(stockList);
 //		mt.testNoneDingTou(stockList);
-//		mt.test3MaTrendDingTouShare(stockList);
-//		mt.test3MaTrendDingTouFE(stockList);
-//		mt.test3MaTrendShare(stockList);
-//		mt.test3MaTrendPeriodDingTouShare(stockList);
+		mt.test3MaTrendPeriod(stockList);
+//		mt.test3MaDingTouTrendPeriod(stockList);
+		
 		
 	}
 	
@@ -97,8 +95,8 @@ protected Log log = LogFactory.getLog(getClass());
 	
 	
 	
-	public void test3MaTrendPeriodDingTouShare(List<StockDO> stockList){
-		Test3MaTrendDingTou test = new Test3MaTrendPeriodDingTou();
+	public void test3MaDingTouTrendPeriod(List<StockDO> stockList){
+		Test3MaTrendDT test = new Test3MaTrendDTPeriod();
 		test.initCash(accountDingTou);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(moneyPeriod);
@@ -107,8 +105,8 @@ protected Log log = LogFactory.getLog(getClass());
 		test.printReport();
 	}
 	
-	public void test3MaTrendDingTouShare(List<StockDO> stockList){
-		Test3MaTrendDingTou test = new Test3MaTrendDingTou();
+	public void test3MaDingTouTrend(List<StockDO> stockList){
+		Test3MaTrendDT test = new Test3MaTrendDT();
 		test.initCash(accountDingTou);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(moneyPeriod);
@@ -117,8 +115,10 @@ protected Log log = LogFactory.getLog(getClass());
 		test.printReport();
 	}
 	
-	public void test3MaTrendShare(List<StockDO> stockList){
-		Test3MaTrendDingTou test = new Test3MaTrend();
+
+	
+	public void test3MaTrend(List<StockDO> stockList){
+		Test3MaTrendDT test = new Test3MaTrendOne();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(0);
@@ -127,4 +127,13 @@ protected Log log = LogFactory.getLog(getClass());
 		test.printReport();
 	}
 	
+	public void test3MaTrendPeriod(List<StockDO> stockList){
+		Test3MaTrendDT test = new Test3MaTrendOnePeriod();
+		test.initCash(account);
+		test.initMaParam(p1, p2, p3);
+		test.setMoneyDingTou(0);
+		test.initStockList(stockList, stockList);
+		test.execute();
+		test.printReport();
+	}
 }
