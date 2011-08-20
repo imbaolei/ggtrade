@@ -8,7 +8,7 @@ public class Test3MaTrendOnePeriod extends Test3MaTrendOne{
 	@Override
 	public boolean needBuy(String dateString) {
 		StockDO stockDO = pdStockMap.get(dateString);
-		boolean isFirstDay =  CalendarUtil.isFirstDayOfMonth(pdStockList, stockDO);
+		boolean isFirstDay =  CalendarUtil.isFirstDayOfMonth(pdStockList, stockDO,firstDay);
 		if(super.needBuy(dateString)&& isFirstDay){
 			return true;
 		}
@@ -18,7 +18,7 @@ public class Test3MaTrendOnePeriod extends Test3MaTrendOne{
 	@Override
 	public boolean needSale(String dateString) {
 		StockDO stockDO = pdStockMap.get(dateString);
-		boolean isFirstDay =  CalendarUtil.isFirstDayOfMonth(pdStockList, stockDO);
+		boolean isFirstDay =  CalendarUtil.isFirstDayOfMonth(pdStockList, stockDO,firstDay);
 		if(super.needSale(dateString)&&isFirstDay){
 			return true;
 		}

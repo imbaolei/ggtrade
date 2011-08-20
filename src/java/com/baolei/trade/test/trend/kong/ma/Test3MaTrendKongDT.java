@@ -1,4 +1,4 @@
-package com.baolei.trade.test.trend.ma;
+package com.baolei.trade.test.trend.kong.ma;
 
 import com.baolei.ghost.common.CalendarUtil;
 import com.baolei.ghost.common.Constant;
@@ -6,22 +6,13 @@ import com.baolei.ghost.common.NumberUtil;
 import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.trade.test.Test;
 
-public class Test3MaTrendDT extends Test {
+public class Test3MaTrendKongDT extends Test {
 
 	protected float totalMoney;
 	protected float jyDingTouMoney = 0; // 一次买入和卖出 期间 定投的金额
 	protected Integer p1;
 	protected Integer p2;
 	protected Integer p3;
-	protected Integer firstDay =1 ; //第几天
-
-	public Integer getFirstDay() {
-		return firstDay;
-	}
-
-	public void setFirstDay(Integer firstDay) {
-		this.firstDay = firstDay;
-	}
 
 	public void initMaParam(Integer p1, Integer p2, Integer p3) {
 		this.p1 = p1;
@@ -33,7 +24,6 @@ public class Test3MaTrendDT extends Test {
 	@Override
 	public boolean needDingTou(String dateString) {
 		StockDO stockDO = pdStockMap.get(dateString);
-		//每个月一号定投
 		if (CalendarUtil.isFirstDayOfMonth(pdStockList, stockDO)) {
 			return true;
 		}
