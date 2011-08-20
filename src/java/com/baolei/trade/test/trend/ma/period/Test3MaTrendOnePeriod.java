@@ -4,6 +4,10 @@ import com.baolei.ghost.common.CalendarUtil;
 import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.trade.test.trend.ma.Test3MaTrendOne;
 
+/**
+ * @author baolei
+ * 趋势 + 一次投入 + 时间过滤
+ */
 public class Test3MaTrendOnePeriod extends Test3MaTrendOne{
 	@Override
 	public boolean needBuy(String dateString) {

@@ -95,7 +95,7 @@ public class TestNoneDingTou extends Test {
 	@Override
 	public boolean needDingTou(String dateString) {
 		StockDO stockDO = pdStockMap.get(dateString);
-		if (CalendarUtil.isFirstDayOfMonth(pdStockList, stockDO)) {
+		if (CalendarUtil.isFirstDayOfMonth(pdStockList, stockDO,firstDay)) {
 			return true;
 		}
 		return false;

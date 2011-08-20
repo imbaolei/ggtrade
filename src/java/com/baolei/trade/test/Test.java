@@ -31,12 +31,20 @@ public abstract class Test {
 	protected Map<String, StockDO> jyStockMap;
 	protected float moneyDingTou; // 每个周期定投的数额
 	protected float rateHR = 0.0135f;
-	protected float cash; // LowRisk低风险头寸
+	protected float cash; // 现金
 	protected float toucunHR; // HighRisk高风险头寸
 	protected float shareHR; // HighRisk高风险份额
 	protected int transCount = 0;
 	protected float totalFee = 0;
-	protected StockDO lastBuyStockDO;
+	/**
+	 * lastBuyStockDO 上次买入时stockDO 用来计算上次买入到这次交易之间的 资金变化情况
+	 * 如果其他业务逻辑需要用，不能影响上述逻辑
+	 */
+	protected StockDO lastBuyStockDO; 
+	protected Integer firstDay =1 ; //第几天定投
+	protected float totalMoney;
+	protected float jyDingTouMoney = 0; // 一次买入和卖出 期间 定投的金额
+	protected boolean reportFilterSwitch = true;
 
 	public float getRateHR() {
 		return rateHR;
@@ -95,7 +103,7 @@ public abstract class Test {
 
 	public void printReport() {
 		for (StockDO stockDO : jyStockList) {
-			if(reportFilter(stockDO)){
+			if(reportFilter(stockDO)&&reportFilterSwitch){
 				continue ;
 			}
 			Report report = stockDO.getReport();

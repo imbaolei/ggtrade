@@ -1,27 +1,25 @@
 package com.baolei.trade.test.trend.ma;
 
+import java.util.Calendar;
+
 import com.baolei.ghost.common.CalendarUtil;
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.common.NumberUtil;
 import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.trade.test.Test;
 
+/**
+ * 
+ * 定投 + 趋势
+ * 
+ * @author baolei
+ * 
+ */
 public class Test3MaTrendDT extends Test {
 
-	protected float totalMoney;
-	protected float jyDingTouMoney = 0; // 一次买入和卖出 期间 定投的金额
 	protected Integer p1;
 	protected Integer p2;
 	protected Integer p3;
-	protected Integer firstDay =1 ; //第几天
-
-	public Integer getFirstDay() {
-		return firstDay;
-	}
-
-	public void setFirstDay(Integer firstDay) {
-		this.firstDay = firstDay;
-	}
 
 	public void initMaParam(Integer p1, Integer p2, Integer p3) {
 		this.p1 = p1;
@@ -33,8 +31,8 @@ public class Test3MaTrendDT extends Test {
 	@Override
 	public boolean needDingTou(String dateString) {
 		StockDO stockDO = pdStockMap.get(dateString);
-		//每个月一号定投
-		if (CalendarUtil.isFirstDayOfMonth(pdStockList, stockDO)) {
+		// 每个月第firstDay 天定投
+		if (CalendarUtil.isFirstDayOfMonth(pdStockList, stockDO, firstDay)) {
 			return true;
 		}
 		return false;
@@ -52,8 +50,8 @@ public class Test3MaTrendDT extends Test {
 			totalMoney = totalMoney + moneyDingTou;
 		}
 		stockDO.getReport().setTotalMoney(totalMoney);
-		stockDO.getReport().setDingTou(true);// 证明今天是定投日
-		jyDingTouMoney = jyDingTouMoney + moneyDingTou;
+		stockDO.getReport().setDingTou(true);// 设置今天是定投日
+		
 
 	}
 
@@ -94,6 +92,53 @@ public class Test3MaTrendDT extends Test {
 		return NumberUtil.roundDown(share, 2);
 	}
 
+	
+
+	/**
+	 * 找到这次交易最开始买入的那天
+	 * 
+	 * @param dateString
+	 * @return
+	 */
+	protected StockDO findStartStock(String dateString) {
+		StockDO stockDO = jyStockMap.get(dateString);
+		int index = jyStockList.indexOf(stockDO);
+		StockDO startStock = null;
+		for (int i = index - 1; i > 0; i--) {
+			StockDO tmpStockDO = jyStockList.get(i);
+			String status = tmpStockDO.getReport().getStatus();
+			if (Constant.REPORT_STATUS_SALE.equals(status)
+					|| Constant.REPORT_STATUS_NOSTART.equals(status)) {
+				break;
+			}
+			if (Constant.REPORT_STATUS_BUY.equals(status)) {
+				startStock = tmpStockDO;
+			}
+
+		}
+		return startStock;
+	}
+	
+	protected float jyDingTouMoney(String dateString){
+		StockDO stockDO = jyStockMap.get(dateString);
+		int index = jyStockList.indexOf(stockDO);
+		float jyDingTouMoney = 0;
+		for (int i = index - 1; i > 0; i--) {
+			StockDO tmpStockDO = jyStockList.get(i);
+			String status = tmpStockDO.getReport().getStatus();
+			
+			if (Constant.REPORT_STATUS_SALE.equals(status)
+					|| Constant.REPORT_STATUS_NOSTART.equals(status)) {
+				break;
+			}
+			if (tmpStockDO.getReport().getDingTou()) {
+				jyDingTouMoney = jyDingTouMoney + moneyDingTou;
+			}
+
+		}
+		return jyDingTouMoney;
+	}
+
 	/**
 	 * 计算买入和卖出 两次操作中的 收益情况 包括上次买入时的交易费
 	 * 
@@ -103,24 +148,27 @@ public class Test3MaTrendDT extends Test {
 	protected float shouyi(String dateString) {
 		// 用卖出这天的账户金额 减去 上次买入前的 账户金额
 		StockDO stockDO = jyStockMap.get(dateString);
-		int index = jyStockList.indexOf(lastBuyStockDO);
+		// 根据jyStockList 找到这次定投最开始的 那天的 stockDO
+		StockDO startStockDO = findStartStock(dateString);
+		int index = jyStockList.indexOf(startStockDO);
 		StockDO preStockDO = jyStockList.get(index - 1);
 		float shouyi = stockDO.getReport().getAccount()
-				- preStockDO.getReport().getAccount() - jyDingTouMoney;
+				- preStockDO.getReport().getAccount() - jyDingTouMoney(dateString);
 		shouyi = NumberUtil.roundDown(shouyi, 2);
 		return shouyi;
 	}
-
+	
 	protected float shouyiPersent(String dateString) {
 		// 用卖出这天的账户金额 减去 上次买入前的 账户金额
 		StockDO stockDO = jyStockMap.get(dateString);
-		int index = jyStockList.indexOf(lastBuyStockDO);
+		StockDO startStockDO = findStartStock(dateString);
+		int index = jyStockList.indexOf(startStockDO);
 		StockDO preStockDO = jyStockList.get(index - 1);
 		float preAccount = preStockDO.getReport().getAccount();
-		float shouyi = stockDO.getReport().getAccount()
-				- preAccount - jyDingTouMoney;
-		float shouyiPersent =  shouyi/preAccount;
-		shouyiPersent = NumberUtil.roundDown(shouyiPersent*100, 2);
+		float shouyi = stockDO.getReport().getAccount() - preAccount
+				- jyDingTouMoney(dateString);
+		float shouyiPersent = shouyi / preAccount;
+		shouyiPersent = NumberUtil.roundDown(shouyiPersent * 100, 2);
 		return shouyiPersent;
 	}
 
@@ -128,7 +176,7 @@ public class Test3MaTrendDT extends Test {
 	public boolean needBuy(String dateString) {
 		StockDO stockDO = pdStockMap.get(dateString);
 		// 如果判断没有高风险头寸 而且 趋势不是走弱，即走强
-		// TODO 定投的买入不是很好
+		// 计算 可以买入的份额，如果可以买入的份额大于0
 		float buyPoint = stockDO.getClose();
 		float fee = fee(cash);
 		float availCash = cash - fee;
@@ -143,8 +191,8 @@ public class Test3MaTrendDT extends Test {
 	@Override
 	public void buy(String dateString) {
 		StockDO stockDO = jyStockMap.get(dateString);
-		//如果是空仓后 第一次买入 则 更新lastBuyStockDO 否则是加仓
-		if(shareHR == 0 ){
+		// 如果是空仓后 第一次买入 则 更新lastBuyStockDO 否则是加仓
+		if (shareHR == 0) {
 			lastBuyStockDO = stockDO;
 		}
 		float fee = 0;
@@ -170,13 +218,13 @@ public class Test3MaTrendDT extends Test {
 		stockDO.getReport().setStatus(Constant.REPORT_STATUS_BUY);
 		transCount = transCount + 1;
 		stockDO.getReport().setTransCount(transCount);
-		
 
-		jyDingTouMoney = 0;
-		// 如果买入当天定投过 因为定投在买入之前，所以当天定投的钱要算入收益成本
-		if (stockDO.getReport().getDingTou()) {
-			jyDingTouMoney = moneyDingTou;
-		}
+		//如果是第一次买入 则
+//		jyDingTouMoney = moneyDingTou;
+//		// 如果买入当天定投过 因为定投在买入之前，所以当天定投的钱要算入收益成本
+//		if (stockDO.getReport().getDingTou()) {
+//			jyDingTouMoney = moneyDingTou;
+//		}
 
 	}
 
@@ -200,7 +248,6 @@ public class Test3MaTrendDT extends Test {
 		if (Constant.REPORT_STATUS_CHICANG.equals(status)
 				|| Constant.REPORT_STATUS_BUY.equals(status)) {
 			fee = fee(shareHR * stockDO.getClose());
-			// 损益 只计算这次卖出的损益，不包含上次买入时的交易费用
 			cash = cash + shareHR * stockDO.getClose() - fee;
 			shareHR = 0;
 		} else {
@@ -220,7 +267,7 @@ public class Test3MaTrendDT extends Test {
 		stockDO.getReport().setShouyi(shouyi);
 		Float shouyiPersent = shouyiPersent(dateString);
 		stockDO.getReport().setShouyiPercent(shouyiPersent);
-		jyDingTouMoney = 0;
+//		jyDingTouMoney = 0;
 
 	}
 
