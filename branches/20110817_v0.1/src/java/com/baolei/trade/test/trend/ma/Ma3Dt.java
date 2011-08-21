@@ -1,7 +1,5 @@
 package com.baolei.trade.test.trend.ma;
 
-import java.util.Calendar;
-
 import com.baolei.ghost.common.CalendarUtil;
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.common.NumberUtil;
@@ -15,7 +13,7 @@ import com.baolei.trade.test.Test;
  * @author baolei
  * 
  */
-public class Test3MaTrendDT extends Test {
+public class Ma3Dt extends Test {
 
 	protected Integer p1;
 	protected Integer p2;
@@ -54,6 +52,16 @@ public class Test3MaTrendDT extends Test {
 		
 
 	}
+	
+	protected boolean isMaReadyJy(StockDO stockDO){
+		float ma1 = stockDO.getMa(p1.toString());
+		float ma2 = stockDO.getMa(p2.toString());
+		float ma3 = stockDO.getMa(p3.toString());
+		if ((ma1 == 0) || (ma2 == 0) || (ma3 == 0)) {
+			return false;
+		}
+		return true;
+	}
 
 	/**
 	 * 当且仅当 p1<=p2 && p2<=p3 周期的均线时 ，判断趋势走弱
@@ -68,10 +76,7 @@ public class Test3MaTrendDT extends Test {
 		float ma1 = stockDO.getMa(p1.toString());
 		float ma2 = stockDO.getMa(p2.toString());
 		float ma3 = stockDO.getMa(p3.toString());
-		// 三个周期的均线都有值时
-		if ((ma1 == 0) || (ma2 == 0) || (ma3 == 0)) {
-			return true;
-		}
+		
 		if (ma1 > 0 && ma2 > 0 && ma3 > 0) {
 			if (ma1 <= ma2 && ma2 <= ma3) {
 				return true;
@@ -180,7 +185,7 @@ public class Test3MaTrendDT extends Test {
 		float fee = fee(cash);
 		float availCash = cash - fee;
 		float share = buyShare(availCash, buyPoint);
-		if ((share > 0) && !trendout(stockDO)) {
+		if ((share > 0) && isMaReadyJy(stockDO) &&!trendout(stockDO)) {
 			return true;
 		}
 		return false;
