@@ -1,8 +1,8 @@
 package com.baolei.trade.test.trend.ma;
 
-import com.baolei.ghost.common.CalendarUtil;
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.common.NumberUtil;
+import com.baolei.ghost.common.StockUtil;
 import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.trade.test.Test;
 
@@ -13,7 +13,7 @@ import com.baolei.trade.test.Test;
  * @author baolei
  * 
  */
-public class Ma3Dt extends Test {
+public class Ma3 extends Test {
 
 	protected Integer p1;
 	protected Integer p2;
@@ -30,7 +30,7 @@ public class Ma3Dt extends Test {
 	public boolean needDingTou(String dateString) {
 		StockDO stockDO = pdStockMap.get(dateString);
 		// 每个月第firstDay 天定投
-		if (CalendarUtil.isFirstDayOfMonth(pdStockList, stockDO, firstDay)) {
+		if (StockUtil.isFirstDayOfMonth(pdStockList, stockDO, firstDay)) {
 			return true;
 		}
 		return false;

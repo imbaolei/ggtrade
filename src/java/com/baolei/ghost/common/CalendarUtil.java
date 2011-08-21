@@ -15,57 +15,7 @@ public class CalendarUtil {
 	
 	
 	
-	/**
-	 * 判断stockDO 是不是这个月的第  firstDay 个交易日
-	 * @param stockList
-	 * @param stockDO
-	 * @param firstDay
-	 * @return
-	 */
-	public static boolean isFirstDayOfMonth(List<StockDO> stockList,StockDO stockDO,int firstDay){
-		int index = stockList.indexOf(stockDO);
-		if(index>0){
-			List<StockDO> monthList = getStockListOfMonth(stockList,stockDO);
-			int monthIndex = monthList.indexOf(stockDO);
-			if(monthIndex == (firstDay-1)){
-				return true;
-			}
-		}
-		return false;
-	}
 	
-	/**
-	 * 得到这个stockDO日期之前的 在 这个月的stockList
-	 * @param stockList
-	 * @param stockDO
-	 * @return
-	 */
-	public static List<StockDO> getStockListOfMonth(List<StockDO> stockList,StockDO stockDO){
-		List<StockDO> tmpStockList = new ArrayList<StockDO>();
-		int index = stockList.indexOf(stockDO);
-		if(index <= 0){
-			return tmpStockList;
-		}
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(stockDO.getTime());
-		int month = calendar.get(Calendar.MONTH);
-		//这个月的第一天 距离 stockDO的天数
-		int monthFirstIndex = 0;
-		for(int i  = index-1 ; i> 0 ;i--){
-			StockDO tmpStockDO = stockList.get(i);
-			Calendar tmpCalendar = Calendar.getInstance();
-			tmpCalendar.setTime(tmpStockDO.getTime());
-			int tmpMonth = tmpCalendar.get(Calendar.MONTH);
-			if(tmpMonth != month){
-				break;
-			}
-			monthFirstIndex++;
-		}
-		monthFirstIndex = index - monthFirstIndex;
-		//截取到 monthFirstIndex 到 index 这天的 list，因为subList是前闭后开 所以index需要+1
-		tmpStockList = stockList.subList(monthFirstIndex, index+1);
-		return tmpStockList;
-	}
 	
 
 	/**

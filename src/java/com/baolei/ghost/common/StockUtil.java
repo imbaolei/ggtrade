@@ -34,6 +34,114 @@ public class StockUtil {
 	public static String dateFormatString = "yyyy/MM/dd";
 
 	public static DecimalFormat decimalFormat = new DecimalFormat("#.000");
+	
+	/**
+	 * 判断stockDO 是不是这个月的第  firstDay 个交易日
+	 * @param stockList
+	 * @param stockDO
+	 * @param firstDay
+	 * @return
+	 */
+	public static boolean isFirstDayOfMonth(List<StockDO> stockList,StockDO stockDO,int firstDay){
+		int index = stockList.indexOf(stockDO);
+		if(index>0){
+			List<StockDO> monthList = getStockListOfMonth(stockList,stockDO);
+			int monthIndex = monthList.indexOf(stockDO);
+			if(monthIndex == (firstDay-1)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * 得到这个stockDO日期之前的 在 这个月的stockList
+	 * @param stockList
+	 * @param stockDO
+	 * @return
+	 */
+	public static List<StockDO> getStockListOfMonth(List<StockDO> stockList,StockDO stockDO){
+		List<StockDO> tmpStockList = new ArrayList<StockDO>();
+		int index = stockList.indexOf(stockDO);
+		if(index <= 0){
+			return tmpStockList;
+		}
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(stockDO.getTime());
+		int month = calendar.get(Calendar.MONTH);
+		//这个月的第一天 距离 stockDO的天数
+		int monthFirstIndex = 0;
+		for(int i  = index-1 ; i> 0 ;i--){
+			StockDO tmpStockDO = stockList.get(i);
+			Calendar tmpCalendar = Calendar.getInstance();
+			tmpCalendar.setTime(tmpStockDO.getTime());
+			int tmpMonth = tmpCalendar.get(Calendar.MONTH);
+			if(tmpMonth != month){
+				break;
+			}
+			monthFirstIndex++;
+		}
+		monthFirstIndex = index - monthFirstIndex;
+		//截取到 monthFirstIndex 到 index 这天的 list，因为subList是前闭后开 所以index需要+1
+		tmpStockList = stockList.subList(monthFirstIndex, index+1);
+		return tmpStockList;
+	}
+	
+	/**
+	 * 得到这个stockDO日期之前 count天的List 包含stockDO 这天
+	 * @param stockList
+	 * @param stockDO
+	 * @return
+	 */
+	public static List<StockDO> getStockListOfPreCount(List<StockDO> stockList,StockDO stockDO,int count){
+		List<StockDO> tmpStockList = new ArrayList<StockDO>();
+		int index = stockList.indexOf(stockDO);
+		if(index <= 0){
+			return tmpStockList;
+		}
+		int startIndex = 0;
+		if((index+1) >= count){
+			startIndex = index+1-count;
+		}
+		tmpStockList = stockList.subList(startIndex, index+1);
+		return tmpStockList;
+	}
+	
+	public static boolean isLLV(List<StockDO> stockList,StockDO stockDO,int count){
+		List<StockDO> tmpStockList = getStockListOfPreCount(stockList,stockDO,count);
+		//如果不够count天，则不是count天内最低价
+		if(tmpStockList.size() < count){
+			return false;
+		}
+		float llv = tmpStockList.get(0).getLow();
+		for(StockDO tmpStock : tmpStockList){
+			if(tmpStock.getLow() <= llv){
+				llv = tmpStock.getLow();
+			}
+		}
+		if(stockDO.getLow() <= llv){
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean isHHV(List<StockDO> stockList,StockDO stockDO,int count){
+		List<StockDO> tmpStockList = getStockListOfPreCount(stockList,stockDO,count);
+		//如果不够count天，则不是count天内最低价
+		if(tmpStockList.size() < count){
+			return false;
+		}
+		float hhv = tmpStockList.get(0).getHigh();
+		for(StockDO tmpStock : tmpStockList){
+			if(tmpStock.getHigh() >= hhv){
+				hhv = tmpStock.getHigh();
+			}
+		}
+		if(stockDO.getHigh() >= hhv){
+			return true;
+		}
+		return false;
+	}
 
 	public static Date preWeekDay(Map<String, StockDO> stockMap, Date time)
 			throws ParseException {

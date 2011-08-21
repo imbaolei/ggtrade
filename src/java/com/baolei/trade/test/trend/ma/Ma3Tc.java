@@ -9,7 +9,7 @@ import com.baolei.ghost.dal.dataobject.StockDO;
  *         如果走弱即卖出，非走弱即走强，走强时买入或持有
  */
 
-public class Ma3TcDt extends Ma3Dt {
+public class Ma3Tc extends Ma3 {
 
 
 	@Override

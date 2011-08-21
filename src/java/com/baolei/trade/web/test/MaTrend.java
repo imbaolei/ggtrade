@@ -23,14 +23,13 @@ import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.trade.test.Test;
 import com.baolei.trade.test.none.TestNone;
 import com.baolei.trade.test.none.TestNoneDingTou;
-import com.baolei.trade.test.trend.kong.ma.KongMa3TcDt;
-import com.baolei.trade.test.trend.kong.ma.KongMa3TcOne;
+import com.baolei.trade.test.trend.kong.ma.Ma3KongTc;
+import com.baolei.trade.test.trend.kong.ma.filter.Ma3KongTcLLV;
 import com.baolei.trade.test.trend.kong.ma.period.KongMa3TcOnePeriod;
-import com.baolei.trade.test.trend.ma.Ma3Dt;
-import com.baolei.trade.test.trend.ma.Ma3One;
-import com.baolei.trade.test.trend.ma.Ma3TcDt;
-import com.baolei.trade.test.trend.ma.period.Ma3DtPeriod;
-import com.baolei.trade.test.trend.ma.period.Ma3OnePeriod;
+import com.baolei.trade.test.trend.ma.Ma3;
+import com.baolei.trade.test.trend.ma.Ma3Tc;
+import com.baolei.trade.test.trend.ma.filter.Ma3LLV;
+import com.baolei.trade.test.trend.ma.period.Ma3Period;
 
 
 @Controller
@@ -64,19 +63,19 @@ protected Log log = LogFactory.getLog(getClass());
 		"beans.xml");
 		StockDAO stockDAO = (StockDAO) context.getBean("stockDAO");
 		String code = "SZ399300";
+//		String code = "SH999999";
 		List<StockDO> stockList = stockDAO.selectStockByCodeAndPeriod(code, Constant.STOCK_PERIOD_DAY);
 		MaTrend mt = new MaTrend();
 //		mt.testNone(stockList);
-//		mt.test3MaTrend(stockList);
 //		mt.test3MaDingTouTrend(stockList);
 //		mt.testNoneDingTou(stockList);
-//		mt.test3MaTrendPeriod(stockList);
 //		mt.test3MaDingTouTrendPeriod(stockList);
 //		mt.test3MaTrendTouCunDT(stockList);
 //		mt.test3MaTrendKongTouCunDT(stockList);
-		mt.test3MaTrendKongTouCunOne(stockList);
 //		mt.test3MaTrendKongTouCunOnePeriod(stockList);
-//		mt.test3MaTrendKongTouCunOne2(stockList);
+//		mt.ma3DtLLV(stockList);
+		mt.kongMa3TcDtLLV(stockList);
+		
 		
 		
 	}
@@ -105,7 +104,7 @@ protected Log log = LogFactory.getLog(getClass());
 	
 	
 	public void test3MaDingTouTrendPeriod(List<StockDO> stockList){
-		Ma3Dt test = new Ma3DtPeriod();
+		Ma3 test = new Ma3Period();
 		test.initCash(accountDingTou);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(moneyPeriod);
@@ -115,7 +114,7 @@ protected Log log = LogFactory.getLog(getClass());
 	}
 	
 	public void test3MaDingTouTrend(List<StockDO> stockList){
-		Ma3Dt test = new Ma3Dt();
+		Ma3 test = new Ma3();
 		test.initCash(accountDingTou);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(moneyPeriod);
@@ -125,29 +124,11 @@ protected Log log = LogFactory.getLog(getClass());
 	}
 	
 
-	
-	public void test3MaTrend(List<StockDO> stockList){
-		Ma3Dt test = new Ma3One();
-		test.initCash(account);
-		test.initMaParam(p1, p2, p3);
-		test.setMoneyDingTou(0);
-		test.initStockList(stockList, stockList);
-		test.execute();
-		test.printReport();
-	}
-	
-	public void test3MaTrendPeriod(List<StockDO> stockList){
-		Ma3Dt test = new Ma3OnePeriod();
-		test.initCash(account);
-		test.initMaParam(p1, p2, p3);
-		test.setMoneyDingTou(0);
-		test.initStockList(stockList, stockList);
-		test.execute();
-		test.printReport();
-	}
+
+
 	
 	public void test3MaTrendTouCunDT(List<StockDO> stockList){
-		Ma3Dt test = new Ma3TcDt();
+		Ma3 test = new Ma3Tc();
 		test.initCash(accountDingTou);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(moneyPeriod);
@@ -157,7 +138,7 @@ protected Log log = LogFactory.getLog(getClass());
 	}
 	
 	public void test3MaTrendKongTouCunDT(List<StockDO> stockList){
-		Ma3Dt test = new KongMa3TcDt();
+		Ma3 test = new Ma3KongTc();
 		test.initCash(accountDingTou);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(moneyPeriod);
@@ -166,8 +147,21 @@ protected Log log = LogFactory.getLog(getClass());
 		test.printReport();
 	}
 	
-	public void test3MaTrendKongTouCunOne(List<StockDO> stockList){
-		Ma3Dt test = new KongMa3TcOne();
+	public void kongMa3TcDtLLV(List<StockDO> stockList){
+		Ma3 test = new Ma3KongTcLLV();
+		test.initCash(account);
+		test.initMaParam(p1, p2, p3);
+		test.initStockList(stockList, stockList);
+		test.execute();
+		test.printReport();
+	}
+	
+	
+	
+	
+	
+	public void test3MaTrendKongTouCunOnePeriod(List<StockDO> stockList){
+		Ma3 test = new KongMa3TcOnePeriod();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(0);
@@ -176,8 +170,8 @@ protected Log log = LogFactory.getLog(getClass());
 		test.printReport();
 	}
 	
-	public void test3MaTrendKongTouCunOnePeriod(List<StockDO> stockList){
-		Ma3Dt test = new KongMa3TcOnePeriod();
+	public void ma3DtLLV(List<StockDO> stockList){
+		Ma3 test = new Ma3LLV();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(0);
