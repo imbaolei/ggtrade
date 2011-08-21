@@ -1,16 +1,14 @@
-package com.baolei.trade.test.trend.ma.period;
+package com.baolei.trade.test.trend.kong.ma.period;
 
 import com.baolei.ghost.common.CalendarUtil;
 import com.baolei.ghost.dal.dataobject.StockDO;
-import com.baolei.trade.test.trend.ma.Test3MaTrendDT;
+import com.baolei.trade.test.trend.kong.ma.KongMa3TcOne;
 
 /**
  * @author baolei
- * 定投 + 趋势 + 时间过滤
+ * 趋势 + 一次投入 + 时间过滤
  */
-public class Test3MaTrendDTPeriod extends Test3MaTrendDT {
-
-	
+public class KongMa3TcOnePeriod extends KongMa3TcOne{
 	@Override
 	public boolean needBuy(String dateString) {
 		StockDO stockDO = pdStockMap.get(dateString);

@@ -1,6 +1,7 @@
 package com.baolei.trade.test.trend.kong.ma;
 
-public class Test3MaTrendKongTouCunOne extends Test3MaTrendKongTouCunDT {
+
+public class KongMa3TcOne extends KongMa3TcDt {
 	@Override
 	public boolean needDingTou(String dateString) {
 		return false;
@@ -9,4 +10,7 @@ public class Test3MaTrendKongTouCunOne extends Test3MaTrendKongTouCunDT {
 	@Override
 	public void dingTou(String dateString) {
 	}
+	
+	
+	
 }

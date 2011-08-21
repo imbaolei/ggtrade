@@ -6,7 +6,7 @@ package com.baolei.trade.test.trend.ma;
  * @author baolei
  *
  */
-public class Test3MaTrendOne extends Test3MaTrendDT{
+public class Ma3One extends Ma3Dt{
 	@Override
 	public boolean needDingTou(String dateString) {
 		return false;

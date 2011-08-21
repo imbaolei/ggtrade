@@ -23,14 +23,14 @@ import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.trade.test.Test;
 import com.baolei.trade.test.none.TestNone;
 import com.baolei.trade.test.none.TestNoneDingTou;
-import com.baolei.trade.test.trend.kong.ma.Test3MaTrendKongTouCunDT;
-import com.baolei.trade.test.trend.kong.ma.Test3MaTrendKongTouCunOne;
-import com.baolei.trade.test.trend.kong.ma.period.Test3MaTrendKongTouCunOnePeriod;
-import com.baolei.trade.test.trend.ma.Test3MaTrendDT;
-import com.baolei.trade.test.trend.ma.Test3MaTrendOne;
-import com.baolei.trade.test.trend.ma.Test3MaTrendTouCunDT;
-import com.baolei.trade.test.trend.ma.period.Test3MaTrendDTPeriod;
-import com.baolei.trade.test.trend.ma.period.Test3MaTrendOnePeriod;
+import com.baolei.trade.test.trend.kong.ma.KongMa3TcDt;
+import com.baolei.trade.test.trend.kong.ma.KongMa3TcOne;
+import com.baolei.trade.test.trend.kong.ma.period.KongMa3TcOnePeriod;
+import com.baolei.trade.test.trend.ma.Ma3Dt;
+import com.baolei.trade.test.trend.ma.Ma3One;
+import com.baolei.trade.test.trend.ma.Ma3TcDt;
+import com.baolei.trade.test.trend.ma.period.Ma3DtPeriod;
+import com.baolei.trade.test.trend.ma.period.Ma3OnePeriod;
 
 
 @Controller
@@ -76,6 +76,7 @@ protected Log log = LogFactory.getLog(getClass());
 //		mt.test3MaTrendKongTouCunDT(stockList);
 		mt.test3MaTrendKongTouCunOne(stockList);
 //		mt.test3MaTrendKongTouCunOnePeriod(stockList);
+//		mt.test3MaTrendKongTouCunOne2(stockList);
 		
 		
 	}
@@ -104,7 +105,7 @@ protected Log log = LogFactory.getLog(getClass());
 	
 	
 	public void test3MaDingTouTrendPeriod(List<StockDO> stockList){
-		Test3MaTrendDT test = new Test3MaTrendDTPeriod();
+		Ma3Dt test = new Ma3DtPeriod();
 		test.initCash(accountDingTou);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(moneyPeriod);
@@ -114,7 +115,7 @@ protected Log log = LogFactory.getLog(getClass());
 	}
 	
 	public void test3MaDingTouTrend(List<StockDO> stockList){
-		Test3MaTrendDT test = new Test3MaTrendDT();
+		Ma3Dt test = new Ma3Dt();
 		test.initCash(accountDingTou);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(moneyPeriod);
@@ -126,7 +127,7 @@ protected Log log = LogFactory.getLog(getClass());
 
 	
 	public void test3MaTrend(List<StockDO> stockList){
-		Test3MaTrendDT test = new Test3MaTrendOne();
+		Ma3Dt test = new Ma3One();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(0);
@@ -136,7 +137,7 @@ protected Log log = LogFactory.getLog(getClass());
 	}
 	
 	public void test3MaTrendPeriod(List<StockDO> stockList){
-		Test3MaTrendDT test = new Test3MaTrendOnePeriod();
+		Ma3Dt test = new Ma3OnePeriod();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(0);
@@ -146,7 +147,7 @@ protected Log log = LogFactory.getLog(getClass());
 	}
 	
 	public void test3MaTrendTouCunDT(List<StockDO> stockList){
-		Test3MaTrendDT test = new Test3MaTrendTouCunDT();
+		Ma3Dt test = new Ma3TcDt();
 		test.initCash(accountDingTou);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(moneyPeriod);
@@ -156,7 +157,7 @@ protected Log log = LogFactory.getLog(getClass());
 	}
 	
 	public void test3MaTrendKongTouCunDT(List<StockDO> stockList){
-		Test3MaTrendDT test = new Test3MaTrendKongTouCunDT();
+		Ma3Dt test = new KongMa3TcDt();
 		test.initCash(accountDingTou);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(moneyPeriod);
@@ -166,7 +167,7 @@ protected Log log = LogFactory.getLog(getClass());
 	}
 	
 	public void test3MaTrendKongTouCunOne(List<StockDO> stockList){
-		Test3MaTrendDT test = new Test3MaTrendKongTouCunOne();
+		Ma3Dt test = new KongMa3TcOne();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(0);
@@ -176,7 +177,7 @@ protected Log log = LogFactory.getLog(getClass());
 	}
 	
 	public void test3MaTrendKongTouCunOnePeriod(List<StockDO> stockList){
-		Test3MaTrendDT test = new Test3MaTrendKongTouCunOnePeriod();
+		Ma3Dt test = new KongMa3TcOnePeriod();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(0);
@@ -184,4 +185,5 @@ protected Log log = LogFactory.getLog(getClass());
 		test.execute();
 		test.printReport();
 	}
+	
 }

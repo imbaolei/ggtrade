@@ -9,7 +9,7 @@ import com.baolei.ghost.dal.dataobject.StockDO;
  *         如果走弱即卖出，非走弱即走强，走强时买入或持有
  */
 
-public class Test3MaTrendTouCunDT extends Test3MaTrendDT {
+public class Ma3TcDt extends Ma3Dt {
 
 
 	@Override
@@ -17,7 +17,7 @@ public class Test3MaTrendTouCunDT extends Test3MaTrendDT {
 		StockDO stockDO = pdStockMap.get(dateString);
 		// 如果判断没有头寸 而且 趋势不是走弱，即走强
 		// 如果有现金 就买入
-		if ((cash > 0) && !trendout(stockDO)) {
+		if ((cash > 0) && isMaReadyJy(stockDO) && !trendout(stockDO)) {
 			return true;
 		}
 
