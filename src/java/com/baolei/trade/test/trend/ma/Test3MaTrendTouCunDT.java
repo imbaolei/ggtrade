@@ -11,13 +11,6 @@ import com.baolei.ghost.dal.dataobject.StockDO;
 
 public class Test3MaTrendTouCunDT extends Test3MaTrendDT {
 
-	protected Integer p1;
-	protected Integer p2;
-	protected Integer p3;
-
-	
-
-	
 
 	@Override
 	public boolean needBuy(String dateString) {
@@ -39,7 +32,8 @@ public class Test3MaTrendTouCunDT extends Test3MaTrendDT {
 		toucunHR = toucunChange(dateString);
 		toucunHR = toucunHR + cash - fee;
 		cash = 0;
-
+		lastBuyStockDO = stockDO;
+		
 		// 设置report
 		float buyPoint = stockDO.getClose();
 		float account = toucunHR + cash;
@@ -51,18 +45,12 @@ public class Test3MaTrendTouCunDT extends Test3MaTrendDT {
 		stockDO.getReport().setStatus(Constant.REPORT_STATUS_BUY);
 		transCount = transCount + 1;
 		stockDO.getReport().setTransCount(transCount);
-
-//		jyDingTouMoney = 0;
-//		// 如果买入当天定投过 因为定投在买入之前，所以当天定投的钱要算入收益成本
-//		if (stockDO.getReport().getDingTou()) {
-//			jyDingTouMoney = moneyDingTou;
-//		}
-		lastBuyStockDO = stockDO;
+		
 	}
 
 	/**
 	 * @param dateString
-	 *            两次交易之间的头寸变化
+	 * 两次交易之间的头寸变化
 	 */
 	protected float toucunChange(String dateString) {
 		StockDO stockDO = jyStockMap.get(dateString);
@@ -94,12 +82,9 @@ public class Test3MaTrendTouCunDT extends Test3MaTrendDT {
 
 		if (Constant.REPORT_STATUS_CHICANG.equals(status)
 				|| Constant.REPORT_STATUS_BUY.equals(status)) {
-			fee = fee(toucunHR);
-			float buyPoint = lastBuyStockDO.getClose();
-			// 损益 只计算这次卖出的损益，不包含上次买入时的交易费用
-			float sunyi = (stockDO.getClose() - buyPoint) / buyPoint * toucunHR
-					- fee;
-			cash = cash + toucunHR + sunyi;
+			float toucunChange = toucunChange(dateString);
+			fee = fee(toucunChange);
+			cash = cash + toucunChange - fee;
 			toucunHR = 0;
 		} else {
 			// 应该不会遇到
@@ -120,8 +105,6 @@ public class Test3MaTrendTouCunDT extends Test3MaTrendDT {
 
 	}
 	
-	
-	
 
 	@Override
 	public void noBuyNoSale(String dateString) {
@@ -132,10 +115,8 @@ public class Test3MaTrendTouCunDT extends Test3MaTrendDT {
 			stockDO.getReport().setStatus(Constant.REPORT_STATUS_NOSTART);
 			return;
 		}
-		float buyPoint = lastBuyStockDO.getClose();
-		float tmpToucun = toucunHR + (stockDO.getClose() - buyPoint) / buyPoint
-				* toucunHR;
-		float account = tmpToucun + cash;
+		float toucunChange = toucunChange(dateString);
+		float account = toucunChange + cash;
 		account = NumberUtil.roundDown(account, 2);
 		stockDO.getReport().setAccount(account);
 		if (toucunHR > 0) {
