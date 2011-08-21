@@ -23,10 +23,11 @@ import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.trade.test.Test;
 import com.baolei.trade.test.none.TestNone;
 import com.baolei.trade.test.none.TestNoneDingTou;
-import com.baolei.trade.test.trend.ma.Test3MaTrendOne;
 import com.baolei.trade.test.trend.ma.Test3MaTrendDT;
-import com.baolei.trade.test.trend.ma.period.Test3MaTrendOnePeriod;
+import com.baolei.trade.test.trend.ma.Test3MaTrendOne;
+import com.baolei.trade.test.trend.ma.Test3MaTrendTouCunDT;
 import com.baolei.trade.test.trend.ma.period.Test3MaTrendDTPeriod;
+import com.baolei.trade.test.trend.ma.period.Test3MaTrendOnePeriod;
 
 
 @Controller
@@ -67,7 +68,8 @@ protected Log log = LogFactory.getLog(getClass());
 //		mt.test3MaDingTouTrend(stockList);
 //		mt.testNoneDingTou(stockList);
 //		mt.test3MaTrendPeriod(stockList);
-		mt.test3MaDingTouTrendPeriod(stockList);
+//		mt.test3MaDingTouTrendPeriod(stockList);
+		mt.test3MaTrendTouCunDT(stockList);
 		
 		
 	}
@@ -132,6 +134,16 @@ protected Log log = LogFactory.getLog(getClass());
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(0);
+		test.initStockList(stockList, stockList);
+		test.execute();
+		test.printReport();
+	}
+	
+	public void test3MaTrendTouCunDT(List<StockDO> stockList){
+		Test3MaTrendTouCunDT test = new Test3MaTrendTouCunDT();
+		test.initCash(accountDingTou);
+		test.initMaParam(p1, p2, p3);
+		test.setMoneyDingTou(moneyPeriod);
 		test.initStockList(stockList, stockList);
 		test.execute();
 		test.printReport();

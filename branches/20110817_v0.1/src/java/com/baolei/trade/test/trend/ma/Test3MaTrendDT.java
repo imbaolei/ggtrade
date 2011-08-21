@@ -64,7 +64,7 @@ public class Test3MaTrendDT extends Test {
 	 * @param p3
 	 * @return
 	 */
-	private boolean trendout(StockDO stockDO) {
+	protected boolean trendout(StockDO stockDO) {
 		float ma1 = stockDO.getMa(p1.toString());
 		float ma2 = stockDO.getMa(p2.toString());
 		float ma3 = stockDO.getMa(p3.toString());
@@ -219,12 +219,6 @@ public class Test3MaTrendDT extends Test {
 		transCount = transCount + 1;
 		stockDO.getReport().setTransCount(transCount);
 
-		//如果是第一次买入 则
-//		jyDingTouMoney = moneyDingTou;
-//		// 如果买入当天定投过 因为定投在买入之前，所以当天定投的钱要算入收益成本
-//		if (stockDO.getReport().getDingTou()) {
-//			jyDingTouMoney = moneyDingTou;
-//		}
 
 	}
 
