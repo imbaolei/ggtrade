@@ -1,7 +1,5 @@
 package com.baolei.trade.test.trend.ma;
 
-import com.baolei.ghost.common.NumberUtil;
-import com.baolei.ghost.dal.dataobject.StockDO;
 
 /**
  * 一次投入 无定投 追随趋势

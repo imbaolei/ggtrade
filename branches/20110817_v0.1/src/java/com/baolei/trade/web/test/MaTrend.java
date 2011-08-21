@@ -23,6 +23,9 @@ import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.trade.test.Test;
 import com.baolei.trade.test.none.TestNone;
 import com.baolei.trade.test.none.TestNoneDingTou;
+import com.baolei.trade.test.trend.kong.ma.Test3MaTrendKongTouCunDT;
+import com.baolei.trade.test.trend.kong.ma.Test3MaTrendKongTouCunOne;
+import com.baolei.trade.test.trend.kong.ma.period.Test3MaTrendKongTouCunOnePeriod;
 import com.baolei.trade.test.trend.ma.Test3MaTrendDT;
 import com.baolei.trade.test.trend.ma.Test3MaTrendOne;
 import com.baolei.trade.test.trend.ma.Test3MaTrendTouCunDT;
@@ -69,7 +72,10 @@ protected Log log = LogFactory.getLog(getClass());
 //		mt.testNoneDingTou(stockList);
 //		mt.test3MaTrendPeriod(stockList);
 //		mt.test3MaDingTouTrendPeriod(stockList);
-		mt.test3MaTrendTouCunDT(stockList);
+//		mt.test3MaTrendTouCunDT(stockList);
+//		mt.test3MaTrendKongTouCunDT(stockList);
+		mt.test3MaTrendKongTouCunOne(stockList);
+//		mt.test3MaTrendKongTouCunOnePeriod(stockList);
 		
 		
 	}
@@ -140,10 +146,40 @@ protected Log log = LogFactory.getLog(getClass());
 	}
 	
 	public void test3MaTrendTouCunDT(List<StockDO> stockList){
-		Test3MaTrendTouCunDT test = new Test3MaTrendTouCunDT();
+		Test3MaTrendDT test = new Test3MaTrendTouCunDT();
 		test.initCash(accountDingTou);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(moneyPeriod);
+		test.initStockList(stockList, stockList);
+		test.execute();
+		test.printReport();
+	}
+	
+	public void test3MaTrendKongTouCunDT(List<StockDO> stockList){
+		Test3MaTrendDT test = new Test3MaTrendKongTouCunDT();
+		test.initCash(accountDingTou);
+		test.initMaParam(p1, p2, p3);
+		test.setMoneyDingTou(moneyPeriod);
+		test.initStockList(stockList, stockList);
+		test.execute();
+		test.printReport();
+	}
+	
+	public void test3MaTrendKongTouCunOne(List<StockDO> stockList){
+		Test3MaTrendDT test = new Test3MaTrendKongTouCunOne();
+		test.initCash(account);
+		test.initMaParam(p1, p2, p3);
+		test.setMoneyDingTou(0);
+		test.initStockList(stockList, stockList);
+		test.execute();
+		test.printReport();
+	}
+	
+	public void test3MaTrendKongTouCunOnePeriod(List<StockDO> stockList){
+		Test3MaTrendDT test = new Test3MaTrendKongTouCunOnePeriod();
+		test.initCash(account);
+		test.initMaParam(p1, p2, p3);
+		test.setMoneyDingTou(0);
 		test.initStockList(stockList, stockList);
 		test.execute();
 		test.printReport();

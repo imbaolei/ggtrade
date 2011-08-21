@@ -134,7 +134,6 @@ public class Test3MaTrendDT extends Test {
 			if (tmpStockDO.getReport().getDingTou()) {
 				jyDingTouMoney = jyDingTouMoney + moneyDingTou;
 			}
-
 		}
 		return jyDingTouMoney;
 	}
@@ -184,7 +183,6 @@ public class Test3MaTrendDT extends Test {
 		if ((share > 0) && !trendout(stockDO)) {
 			return true;
 		}
-
 		return false;
 	}
 
@@ -192,9 +190,6 @@ public class Test3MaTrendDT extends Test {
 	public void buy(String dateString) {
 		StockDO stockDO = jyStockMap.get(dateString);
 		// 如果是空仓后 第一次买入 则 更新lastBuyStockDO 否则是加仓
-		if (shareHR == 0) {
-			lastBuyStockDO = stockDO;
-		}
 		float fee = 0;
 		float buyPoint = stockDO.getClose();
 		fee = fee(cash);
@@ -203,10 +198,10 @@ public class Test3MaTrendDT extends Test {
 		cash = availCash - share * buyPoint;
 		cash = NumberUtil.roundDown(cash, 2);
 		shareHR = shareHR + share;
+		lastBuyStockDO = stockDO;
 
 		// 设置report
 		float account = shareHR * buyPoint + cash;
-		// account = Float.parseFloat(decimalFormat.format(account));
 		account = NumberUtil.roundDown(account, 2);
 		stockDO.getReport().setAccount(account);
 		shareHR = NumberUtil.roundDown(shareHR, 2);
@@ -261,8 +256,6 @@ public class Test3MaTrendDT extends Test {
 		stockDO.getReport().setShouyi(shouyi);
 		Float shouyiPersent = shouyiPersent(dateString);
 		stockDO.getReport().setShouyiPercent(shouyiPersent);
-//		jyDingTouMoney = 0;
-
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.baolei.ghost.common.Constant;
+import com.baolei.ghost.common.NumberUtil;
 import com.baolei.ghost.common.StockUtil;
 import com.baolei.ghost.dal.dataobject.StockDO;
 
@@ -64,7 +65,7 @@ public abstract class Test {
 
 	protected float fee(float money) {
 		float fee = money * rateHR;
-		fee = Float.parseFloat(decimalFormat.format(fee));
+		fee = NumberUtil.roundDown(fee, 2);
 		return fee;
 	}
 
