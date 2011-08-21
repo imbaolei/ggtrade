@@ -30,7 +30,7 @@ public abstract class Test {
 	protected List<StockDO> jyStockList;
 	protected Map<String, StockDO> pdStockMap;
 	protected Map<String, StockDO> jyStockMap;
-	protected float moneyDingTou; // 每个周期定投的数额
+	protected float moneyDingTou=0; // 每个周期定投的数额
 	protected float rateHR = 0.0135f;
 	protected float cash; // 现金
 	protected float toucunHR; // HighRisk高风险头寸
@@ -46,6 +46,8 @@ public abstract class Test {
 	protected float totalMoney;
 	protected float jyDingTouMoney = 0; // 一次买入和卖出 期间 定投的金额
 	protected boolean reportFilterSwitch = true;
+	
+	protected String startDateString = "2000/1/1";
 
 	public float getRateHR() {
 		return rateHR;

@@ -2,13 +2,13 @@ package com.baolei.trade.test.trend.kong.ma;
 
 import com.baolei.ghost.common.NumberUtil;
 import com.baolei.ghost.dal.dataobject.StockDO;
-import com.baolei.trade.test.trend.ma.Ma3TcDt;
+import com.baolei.trade.test.trend.ma.Ma3Tc;
 
 /**
  * @author baolei
  * 做空时的 趋势 + 定投
  */
-public class KongMa3TcDt extends Ma3TcDt {
+public class Ma3KongTc extends Ma3Tc {
 
 	@Override
 	public boolean needBuy(String dateString) {

@@ -1,18 +1,20 @@
 package com.baolei.trade.test.trend.ma.period;
 
-import com.baolei.ghost.common.CalendarUtil;
+import com.baolei.ghost.common.StockUtil;
 import com.baolei.ghost.dal.dataobject.StockDO;
-import com.baolei.trade.test.trend.ma.Ma3One;
+import com.baolei.trade.test.trend.ma.Ma3;
 
 /**
  * @author baolei
- * 趋势 + 一次投入 + 时间过滤
+ * 定投 + 趋势 + 时间过滤
  */
-public class Ma3OnePeriod extends Ma3One{
+public class Ma3Period extends Ma3 {
+
+	
 	@Override
 	public boolean needBuy(String dateString) {
 		StockDO stockDO = pdStockMap.get(dateString);
-		boolean isFirstDay =  CalendarUtil.isFirstDayOfMonth(pdStockList, stockDO,firstDay);
+		boolean isFirstDay =  StockUtil.isFirstDayOfMonth(pdStockList, stockDO,firstDay);
 		if(super.needBuy(dateString)&& isFirstDay){
 			return true;
 		}
@@ -22,7 +24,7 @@ public class Ma3OnePeriod extends Ma3One{
 	@Override
 	public boolean needSale(String dateString) {
 		StockDO stockDO = pdStockMap.get(dateString);
-		boolean isFirstDay =  CalendarUtil.isFirstDayOfMonth(pdStockList, stockDO,firstDay);
+		boolean isFirstDay =  StockUtil.isFirstDayOfMonth(pdStockList, stockDO,firstDay);
 		if(super.needSale(dateString)&&isFirstDay){
 			return true;
 		}

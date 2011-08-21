@@ -20,7 +20,7 @@ public class InitStockDB2 {
 	
 	protected Log log = LogFactory.getLog(getClass());
 
-	private static String code = "SZ399300";
+	private static String code = "SH999999";
 	
 	public static void main(String[] args) throws IOException, ParseException {
 		InitStockDB2 isd2 = new InitStockDB2();

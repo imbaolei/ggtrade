@@ -1,7 +1,7 @@
 package com.baolei.trade.test.none;
 
-import com.baolei.ghost.common.CalendarUtil;
 import com.baolei.ghost.common.Constant;
+import com.baolei.ghost.common.StockUtil;
 import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.trade.test.Test;
 
@@ -95,7 +95,7 @@ public class TestNoneDingTou extends Test {
 	@Override
 	public boolean needDingTou(String dateString) {
 		StockDO stockDO = pdStockMap.get(dateString);
-		if (CalendarUtil.isFirstDayOfMonth(pdStockList, stockDO,firstDay)) {
+		if (StockUtil.isFirstDayOfMonth(pdStockList, stockDO,firstDay)) {
 			return true;
 		}
 		return false;
