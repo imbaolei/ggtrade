@@ -6,7 +6,7 @@ import com.baolei.trade.test.trend.kong.ma.Ma3KongTc;
 
 public class Ma3KongTcLLV extends Ma3KongTc{
 	
-	protected int llvCount = 50;
+	protected int llvCount = 20;
 	protected int hhvCount = 20;
 	
 	protected boolean isLLV(String dateString){

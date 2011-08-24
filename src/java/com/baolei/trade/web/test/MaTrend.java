@@ -62,18 +62,18 @@ protected Log log = LogFactory.getLog(getClass());
 		ApplicationContext context = new ClassPathXmlApplicationContext(
 		"beans.xml");
 		StockDAO stockDAO = (StockDAO) context.getBean("stockDAO");
-		String code = "SZ399300";
-//		String code = "SH999999";
+//		String code = "SZ399300";
+		String code = "SH999999";
 		List<StockDO> stockList = stockDAO.selectStockByCodeAndPeriod(code, Constant.STOCK_PERIOD_DAY);
 		MaTrend mt = new MaTrend();
 //		mt.testNone(stockList);
 //		mt.test3MaDingTouTrend(stockList);
 //		mt.testNoneDingTou(stockList);
-//		mt.test3MaDingTouTrendPeriod(stockList);
+//		mt.test3MaPeriod(stockList);
 //		mt.test3MaTrendTouCunDT(stockList);
 //		mt.test3MaTrendKongTouCunDT(stockList);
 //		mt.test3MaTrendKongTouCunOnePeriod(stockList);
-//		mt.ma3DtLLV(stockList);
+//		mt.ma3DtLLV(stockList);	
 		mt.kongMa3TcDtLLV(stockList);
 		
 		
@@ -103,7 +103,7 @@ protected Log log = LogFactory.getLog(getClass());
 	
 	
 	
-	public void test3MaDingTouTrendPeriod(List<StockDO> stockList){
+	public void test3MaPeriod(List<StockDO> stockList){
 		Ma3 test = new Ma3Period();
 		test.initCash(accountDingTou);
 		test.initMaParam(p1, p2, p3);
