@@ -15,10 +15,12 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
 
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.dal.dataobject.StockDO;
 
+@Service("txdFileParser")
 public class TxdFileParser implements DataParser {
 	protected Log log = LogFactory.getLog(getClass());
 

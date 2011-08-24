@@ -37,13 +37,13 @@ public class InitStockDB2 {
 		DataParser sdp = new TxdFileParser();
 		log.info("start parse "  + new Date());
 		List<StockDO> stockDOList =  sdp.parse(code);
-		stockDAO.deleteStockByCode(code);
+//		stockDAO.deleteStockByCode(code);
 		log.info("start insert "  + new Date());
-		stockDAO.insertStocks(stockDOList);
+//		stockDAO.insertStocks(stockDOList);
 		log.info("end parse "  + new Date());
 		stockDOList = stockDAO.selectStockByCodeAndPeriod(code, Constant.STOCK_PERIOD_DAY);
 		stockDOList = tradeBO.maManage(stockDOList,"20,30,60,90,120");
-		stockDAO.updateStocksByIdBatch(stockDOList);
+//		stockDAO.updateStocksByIdBatch(stockDOList);
 		log.info("end ma "  + new Date());
 	}
 
