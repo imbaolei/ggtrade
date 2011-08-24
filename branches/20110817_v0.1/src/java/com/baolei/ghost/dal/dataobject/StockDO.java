@@ -30,6 +30,16 @@ public class StockDO {
 	
 	String ma;
 	
+	float atr;
+	
+	public float getAtr() {
+		return atr;
+	}
+
+	public void setAtr(float atr) {
+		this.atr = atr;
+	}
+
 	Report report = new Report();
 	
 	public Report getReport() {

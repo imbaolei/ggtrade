@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.dal.dataobject.StockDO;
 
-@Service("txdFileParser")
+@Service("dataParser")
 public class TxdFileParser implements DataParser {
 	protected Log log = LogFactory.getLog(getClass());
 
