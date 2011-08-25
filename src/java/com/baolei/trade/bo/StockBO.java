@@ -55,6 +55,9 @@ public class StockBO {
 	}
 	
 	public List<StockDO> initStockListAtr(List<StockDO> stockList,int time){
+		if(time <= 0){
+			time = 20;
+		}
 		for (StockDO stockDO : stockList) {
 			stockDO.setAtr(stockUtil.atr(stockList,stockDO, time));
 		}
