@@ -36,7 +36,7 @@ public class StockUtil {
 
 	public static String dateFormatString = "yyyy/MM/dd";
 
-	public static DecimalFormat decimalFormat = new DecimalFormat("#.000");
+	public static DecimalFormat decimalFormat = new DecimalFormat("#.00");
 
 	/**
 	 * 判断stockDO 是不是这个月的第 firstDay 个交易日
@@ -169,14 +169,22 @@ public class StockUtil {
 	public float atr(List<StockDO> stockList, StockDO stockDO, int day) {
 		List<Float> list = new ArrayList<Float>();
 		// ATR : MA(TR,m)
-		for (int i = 0; i < day; i++) {
-			list.add(tr(stockList, stockDO));
+		int index = stockList.indexOf(stockDO);
+		if(index+1-day >= 0 ){
+			for (int i = index; index - i < day; i--) {
+				StockDO tmpStockDO = stockList.get(i);
+				list.add(tr(stockList, tmpStockDO));
+			}
+			Float sum = new Float(0);
+			for (Float tmpfloat : list) {
+				sum = sum + tmpfloat;
+			}
+			return Float.parseFloat(decimalFormat.format(sum / list.size()));
+		}else{
+			return 0;
 		}
-		Float sum = new Float(0);
-		for (Float tmpfloat : list) {
-			sum = sum + tmpfloat;
-		}
-		return Float.parseFloat(decimalFormat.format(sum / list.size()));
+		
+		
 	}
 
 	public float tr(List<StockDO> stockList, StockDO stockDO) {
@@ -184,8 +192,12 @@ public class StockUtil {
 		// MAX(MAX((HIGH-LOW),ABS(REF(CLOSE,1)-HIGH)),ABS(REF(CLOSE,1)-LOW));
 		float theHL = Math.abs(stockDO.getHigh() - stockDO.getLow());
 		StockDO preStockDO = pre(stockList, stockDO);
-		float preCH = Math.abs(preStockDO.getClose() - stockDO.getHigh());
-		float preCL = Math.abs(preStockDO.getClose() - stockDO.getLow());
+		float preCH = 0 ;
+		float preCL = 0;
+		if(preStockDO != null){
+			preCH = Math.abs(preStockDO.getClose() - stockDO.getHigh());
+			preCL = Math.abs(preStockDO.getClose() - stockDO.getLow());
+		}
 		return Math.max(theHL, Math.max(preCH, preCL));
 	}
 
@@ -200,7 +212,7 @@ public class StockUtil {
 	public StockDO pre(List<StockDO> stockList, StockDO stockDO) {
 		int index = stockList.indexOf(stockDO);
 		if (index <= 0) {
-			return new StockDO();
+			return null;
 		}
 		StockDO preStockDO = stockList.get(index - 1);
 		return preStockDO;
