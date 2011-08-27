@@ -118,11 +118,22 @@ public class StockUtil {
 
 	public static boolean isLLV(List<StockDO> stockList, StockDO stockDO,
 			int count) {
+		float llv = getLLV(stockList,stockDO,count);
+		if(llv == 0 ){
+			return false;
+		}
+		if (stockDO.getLow() <= llv) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static float getLLV(List<StockDO> stockList, StockDO stockDO,int count){
 		List<StockDO> tmpStockList = getStockListOfPreCount(stockList, stockDO,
 				count);
 		// 如果不够count天，则不是count天内最低价
 		if (tmpStockList.size() < count) {
-			return false;
+			return 0;
 		}
 		float llv = tmpStockList.get(0).getLow();
 		for (StockDO tmpStock : tmpStockList) {
@@ -130,10 +141,7 @@ public class StockUtil {
 				llv = tmpStock.getLow();
 			}
 		}
-		if (stockDO.getLow() <= llv) {
-			return true;
-		}
-		return false;
+		return llv;
 	}
 
 	public static boolean isHHV(List<StockDO> stockList, StockDO stockDO,

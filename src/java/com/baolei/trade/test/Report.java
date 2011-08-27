@@ -18,8 +18,31 @@ public class Report {
 	
 	private Float shouyi; // 买入 卖出 两次交易 中的收益
 	
-	private boolean dingTou = false;
+	private boolean dingTouFlag = false;
 	
+	private Float buyPoint;
+	
+	private boolean jiacangFlag = false;
+	
+	
+	
+
+	public Float getBuyPoint() {
+		return buyPoint;
+	}
+
+	public boolean getJiacangFlag() {
+		return jiacangFlag;
+	}
+
+	public void setJiacangFlag(boolean jiacangFlag) {
+		this.jiacangFlag = jiacangFlag;
+	}
+
+	public void setBuyPoint(Float buyPoint) {
+		this.buyPoint = buyPoint;
+	}
+
 	private Float shareHR;
 	
 	private Float shouyiPercent;
@@ -40,12 +63,12 @@ public class Report {
 		this.shareHR = shareHR;
 	}
 
-	public boolean getDingTou() {
-		return dingTou;
+	public boolean getDingTouFlag() {
+		return dingTouFlag;
 	}
 
-	public void setDingTou(boolean dingTou) {
-		this.dingTou = dingTou;
+	public void setDingTouFlag(boolean dingTou) {
+		this.dingTouFlag = dingTou;
 	}
 
 	public Float getShouyi() {

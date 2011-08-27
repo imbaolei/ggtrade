@@ -16,6 +16,8 @@ public class Ma3KongTc extends Ma3Tc {
 		// 如果判断没有头寸 而且 趋势不是走弱，即走强
 		// 如果有现金 就买入
 		if ((cash > 0) && trendout(stockDO)) {
+			planBuyPoint = stockDO.getClose();
+			planBuyToucun = cash;
 			return true;
 		}
 
