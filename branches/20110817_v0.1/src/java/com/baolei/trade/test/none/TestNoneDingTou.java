@@ -112,7 +112,7 @@ public class TestNoneDingTou extends Test {
 			totalMoney = totalMoney + moneyDingTou;
 		}
 		stockDO.getReport().setTotalMoney(totalMoney);
-		stockDO.getReport().setDingTou(true);
+		stockDO.getReport().setDingTouFlag(true);
 		jyDingTouMoney = jyDingTouMoney + moneyDingTou;
 	}
 

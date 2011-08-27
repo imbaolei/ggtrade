@@ -37,6 +37,8 @@ public abstract class Test {
 	protected float shareHR; // HighRisk高风险份额
 	protected int transCount = 0;
 	protected float totalFee = 0;
+	protected float planBuyPoint;
+	protected float planBuyToucun;
 	/**
 	 * lastBuyStockDO 上次买入时stockDO 用来计算上次买入到这次交易之间的 资金变化情况
 	 * 如果其他业务逻辑需要用，不能影响上述逻辑
@@ -141,9 +143,15 @@ public abstract class Test {
 			if (report.getShareHR() != null && report.getShareHR() > 0) {
 				shareHR = " 持有份额 ： " + report.getShareHR();
 			}
+			String buyPoint = "";
+			if(Constant.REPORT_STATUS_BUY.equals(stockDO.getReport()
+					.getStatus())){
+				buyPoint = " 买点： " + report.getBuyPoint();
+			}
+			
 			StringBuffer sb = new StringBuffer();
 			sb.append(date).append(close).append(shareHR).append(account)
-					.append(status).append(fee).append(note).append(transCount).append(totalFee).append(totalMoney);
+					.append(status).append(fee).append(buyPoint).append(note).append(transCount).append(totalFee).append(totalMoney);
 			log.info(sb.toString());
 			if (Constant.REPORT_STATUS_SALE.equals(stockDO.getReport()
 					.getStatus())) {

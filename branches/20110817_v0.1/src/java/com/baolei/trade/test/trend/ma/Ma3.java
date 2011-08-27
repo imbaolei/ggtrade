@@ -48,7 +48,7 @@ public class Ma3 extends Test {
 			totalMoney = totalMoney + moneyDingTou;
 		}
 		stockDO.getReport().setTotalMoney(totalMoney);
-		stockDO.getReport().setDingTou(true);// 设置今天是定投日
+		stockDO.getReport().setDingTouFlag(true);// 设置今天是定投日
 		
 
 	}
@@ -136,7 +136,7 @@ public class Ma3 extends Test {
 					|| Constant.REPORT_STATUS_NOSTART.equals(status)) {
 				break;
 			}
-			if (tmpStockDO.getReport().getDingTou()) {
+			if (tmpStockDO.getReport().getDingTouFlag()) {
 				jyDingTouMoney = jyDingTouMoney + moneyDingTou;
 			}
 		}
@@ -196,7 +196,8 @@ public class Ma3 extends Test {
 		StockDO stockDO = jyStockMap.get(dateString);
 		// 如果是空仓后 第一次买入 则 更新lastBuyStockDO 否则是加仓
 		float fee = 0;
-		float buyPoint = stockDO.getClose();
+		float buyPoint = planBuyPoint;
+		stockDO.getReport().setBuyPoint(buyPoint);
 		fee = fee(cash);
 		float availCash = cash - fee;
 		float share = buyShare(availCash, buyPoint);
