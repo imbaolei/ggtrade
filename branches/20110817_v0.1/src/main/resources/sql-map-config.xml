@@ -3,4 +3,5 @@
     "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
 <sqlMapConfig>
 	<sqlMap resource="com/baolei/ghost/dal/dataobject/sqlmap_stock.xml" />
+	<sqlMap resource="com/baolei/ghost/dal/dataobject/sqlmap_report.xml" />
 </sqlMapConfig>

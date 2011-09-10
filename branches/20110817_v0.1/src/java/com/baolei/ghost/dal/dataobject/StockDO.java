@@ -4,33 +4,37 @@ import java.util.Date;
 
 import net.sf.json.JSONObject;
 
-import com.baolei.trade.test.Report;
 
 public class StockDO {
 	
-	String code;
+	private String code;
 	
-	int id;
+	private int id;
 	
-	Date time;
+	private Date time;
 
-	float open;
+	private float open;
 
-	float high;
+	private float high;
 
-	float low;
+	private float low;
 
-	float close;
+	private float close;
 
-	float vol;
+	private float vol;
 	
-	float bbi;
+	private float bbi;
 	
-	String period;
+	private String period;
 	
-	String ma;
+	private String ma;
 	
-	float atr;
+	private float atr;
+	
+
+	private Date gmtCreate;
+
+    private Date gmtModified;
 	
 	public float getAtr() {
 		return atr;
@@ -40,13 +44,13 @@ public class StockDO {
 		this.atr = atr;
 	}
 
-	Report report = new Report();
+	ReportDO report = new ReportDO();
 	
-	public Report getReport() {
+	public ReportDO getReport() {
 		return report;
 	}
 
-	public void setReport(Report report) {
+	public void setReport(ReportDO report) {
 		this.report = report;
 	}
 
@@ -67,9 +71,6 @@ public class StockDO {
 		this.ma = ma;
 	}
 
-	private Date gmtCreate;
-
-    private Date gmtModified;
 
 	public float getBbi() {
 		return bbi;

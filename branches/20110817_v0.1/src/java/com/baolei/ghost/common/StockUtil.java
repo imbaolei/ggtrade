@@ -3,8 +3,13 @@ package com.baolei.ghost.common;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -16,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Queue;
 import java.util.Set;
 import java.util.TreeMap;
@@ -37,6 +43,37 @@ public class StockUtil {
 	public static String dateFormatString = "yyyy/MM/dd";
 
 	public static DecimalFormat decimalFormat = new DecimalFormat("#.00");
+	
+	public static String codePropertiesPath = "/resources/code.properties";
+	
+	public void saveCodeProperties(Properties   props){
+		URL url = this.getClass().getClassLoader().getResource(codePropertiesPath);
+        try {
+			OutputStream output = new FileOutputStream(new File(url.toURI()));
+			props.store(output, "");
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} 
+	}
+	
+	public Properties getCodeProperties(){
+		Properties   props   =   new   Properties(); 
+		URL url = this.getClass().getClassLoader().getResource(codePropertiesPath);
+        try {
+        	InputStream   input=   new FileInputStream(new File(url.toURI()));
+			props.load(input);
+			input.close();
+			return props;
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		return props;
+	}
 
 	/**
 	 * 判断stockDO 是不是这个月的第 firstDay 个交易日
