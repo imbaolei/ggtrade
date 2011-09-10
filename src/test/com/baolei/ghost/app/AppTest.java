@@ -173,7 +173,7 @@ public class AppTest extends AbstractTestCase {
 					.getStatus();
 			if (Constant.REPORT_STATUS_SALE.equals(status) || Constant.REPORT_STATUS_BUY.equals(status)) {
 				ReportDO reportDO = stockDO.getReport();
-				reportDO.setCode(code);
+				reportDO.setCode(stockDO.getCode());
 				reportList.add(reportDO);
 			}
 		}
