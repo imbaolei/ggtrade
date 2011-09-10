@@ -3,6 +3,7 @@ package com.baolei.ghost.dal.daoimpl.ibatis;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.orm.ibatis.SqlMapClientCallback;
 import org.springframework.stereotype.Repository;
@@ -63,5 +64,22 @@ public class ReportDAOImpl extends BaseDAO implements ReportDAO {
 		int rows = getSqlMapClientTemplate().delete("SQL_DELETE_REPORT_BY_CODE",
 				key);
 		return rows;
+	}
+
+	@Override
+	public List<ReportDO> seleteReportsByConditions(Map param) {
+		List<ReportDO> reportList = (List<ReportDO>)getSqlMapClientTemplate().queryForList("SQL_SELECT_REPORT_BY_CONDITIONS",param);
+		return reportList;
+	}
+
+	@Override
+	public List<String> seleteCodesFromReport(Map param) {
+		List<String> codeList = (List<String>)getSqlMapClientTemplate().queryForList("SQL_SELECT_CODE_FROM_REPORT",param);
+		return codeList;
+	}
+
+	@Override
+	public int countCodesFromReport(Map param) {
+		return (Integer) getSqlMapClientTemplate().queryForObject("SQL_COUNT_CODE_FROM_REPORT",param);
 	}
 }
