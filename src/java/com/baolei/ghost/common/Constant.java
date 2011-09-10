@@ -4,9 +4,9 @@ public class Constant {
 
 	public static String PLAN_ACTION_BUY = "BUY";
 	
-	public static String REPORT_STATUS_BUY = "买入";
-	
-	public static String REPORT_STATUS_SALE = "卖出";
+	public static String REPORT_STATUS_BUY = "BUY"; //买入
+	 
+	public static String REPORT_STATUS_SALE = "SALE"; //卖出
 	
 	public static String REPORT_STATUS_NOSTART = "未开始"; //持有
 	
@@ -22,10 +22,16 @@ public class Constant {
 	
 	public static String EXIT_STATUS_STOPLOST = "STOPLOST"; //止损
 	
+	public static String REPORT_TYPE_DUO = "DUO"; //做多
+	
+	public static String REPORT_TYPE_KONG = "KONG";  //做空
+	
 	public static String STOCK_PERIOD_DAY = "DAY";
 	
 	public static String STOCK_PERIOD_WEEK = "WEEK";
 	
 	public static String STOCK_PERIOD_MONTH = "MONTH";
+	
+
 
 }

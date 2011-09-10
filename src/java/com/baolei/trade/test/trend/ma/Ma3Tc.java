@@ -91,12 +91,13 @@ public class Ma3Tc extends Test {
 		float buyPoint = stockDO.getClose();
 		float account = toucunHR + cash;
 		stockDO.getReport().setAccount(account);
-		stockDO.getReport().setNotes(" - 买点 ： " + buyPoint);
 		totalFee = totalFee + stockDO.getReport().getFee();
 		stockDO.getReport().setTotalFee(totalFee);
 		stockDO.getReport().setStatus(Constant.REPORT_STATUS_BUY);
 		transCount = transCount + 1;
 		stockDO.getReport().setTransCount(transCount);
+		stockDO.getReport().setPrice(buyPoint);
+		stockDO.getReport().setTime(stockDO.getTime());
 	}
 
 	/**
@@ -128,11 +129,11 @@ public class Ma3Tc extends Test {
 		StockDO stockDO = jyStockMap.get(dateString);
 		int index = jyStockList.indexOf(stockDO);
 		StockDO preStockDO = jyStockList.get(index - 1);
-		String status = preStockDO.getReport().getStatus();
+		String preStatus = preStockDO.getReport().getStatus();
 		float fee = 0;
 
-		if (Constant.REPORT_STATUS_CHICANG.equals(status)
-				|| Constant.REPORT_STATUS_BUY.equals(status)) {
+		if (Constant.REPORT_STATUS_CHICANG.equals(preStatus)
+				|| Constant.REPORT_STATUS_BUY.equals(preStatus)) {
 			float toucunChange = toucunChange(dateString);
 			fee = fee(toucunChange);
 			cash = cash + toucunChange - fee;
@@ -153,7 +154,9 @@ public class Ma3Tc extends Test {
 		float shouyi = shouyi(dateString);
 		stockDO.getReport().setShouyi(shouyi);
 		Float shouyiPersent = shouyiPersent(dateString);
-		stockDO.getReport().setShouyiPercent(shouyiPersent);
+		stockDO.getReport().setPercent(shouyiPersent);
+		stockDO.getReport().setPrice(stockDO.getClose());
+		stockDO.getReport().setTime(stockDO.getTime());
 
 	}
 	
@@ -276,6 +279,7 @@ public class Ma3Tc extends Test {
 		} else {
 			stockDO.getReport().setStatus(Constant.REPORT_STATUS_KONGCANG);
 		}
+		stockDO.getReport().setTime(stockDO.getTime());
 	}
 
 	@Override

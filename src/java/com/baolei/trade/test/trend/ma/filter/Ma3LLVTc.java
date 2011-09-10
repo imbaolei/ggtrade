@@ -59,6 +59,13 @@ public class Ma3LLVTc extends Ma3Tc {
 		}
 		return false;
 	}
+	
+	@Override
+	public void buy(String dateString) {
+		super.buy(dateString);
+		StockDO stockDO = jyStockMap.get(dateString);
+		stockDO.getReport().setType(Constant.REPORT_TYPE_DUO);
+	}
 
 	@Override
 	public boolean needSale(String dateString) {
@@ -66,6 +73,13 @@ public class Ma3LLVTc extends Ma3Tc {
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public void sale(String dateString){
+		super.sale(dateString);
+		StockDO stockDO = jyStockMap.get(dateString);
+		stockDO.getReport().setType(Constant.REPORT_TYPE_DUO);
 	}
 	
 	

@@ -18,7 +18,7 @@ public class Ma3LLVTcAtr extends Ma3LLVTc {
 	protected void setJiacangPlan(String dateString) {
 		jiacangNextPlanCount++;
 		StockDO stockDO = jyStockMap.get(dateString);
-		float buyPoint = stockDO.getReport().getBuyPoint();
+		float buyPoint = stockDO.getReport().getPrice();
 		planBuyPoint = buyPoint + jiacangAtrRate * stockDO.getAtr();
 		planBuyPoint = NumberUtil.roundDown(planBuyPoint, 2);
 	}
@@ -84,17 +84,18 @@ public class Ma3LLVTcAtr extends Ma3LLVTc {
 		fee = fee(planBuyToucun);
 		stockDO.getReport().setFee(fee);
 		float buyPoint = planBuyPoint;
-		stockDO.getReport().setBuyPoint(buyPoint);
+		stockDO.getReport().setPrice(buyPoint);
 		toucunHR = toucunChange(dateString);
 		toucunHR = toucunHR + planBuyToucun - fee;
 		cash = cash - planBuyToucun;
 		cash = NumberUtil.roundDown(cash, 2);
 		lastBuyStockDO = stockDO;
+		stockDO.getReport().setTime(stockDO.getTime());
 	}
 
 	protected void setBuyReport(String dateString) {
 		StockDO stockDO = jyStockMap.get(dateString);
-		float buyPoint = stockDO.getReport().getBuyPoint();
+		float buyPoint = stockDO.getReport().getPrice();
 		float fee = stockDO.getReport().getFee();
 		float account = toucunHR + cash;
 		stockDO.getReport().setAccount(account);

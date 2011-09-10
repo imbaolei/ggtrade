@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="stock" >
+  <resultMap id="RM-Report" class="com.baolei.ghost.dal.dataobject.ReportDO" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="REAL" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="percent" property="percent" jdbcType="REAL" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <select id="SQL_SELECT_REPORT_BY_ID" resultMap="RM-Report" parameterClass="com.baolei.ghost.dal.dataobject.ReportDO" >
+    select *
+    from report
+    where id = #id#
+  </select>
+  <select id="SQL_SELECT_REPORT_BY_CODE" resultMap="RM-Report" parameterClass="com.baolei.ghost.dal.dataobject.ReportDO" >
+    select *
+    from report
+    where code = #code#
+  </select>
+  
+  <delete id="SQL_DELETE_REPORT_BY_ID" parameterClass="com.baolei.ghost.dal.dataobject.ReportDO" >
+    delete from report
+    where id = #id#
+  </delete>
+  <delete id="SQL_DELETE_REPORT_BY_CODE" parameterClass="com.baolei.ghost.dal.dataobject.ReportDO" >
+    delete from report
+    where code = #code#
+  </delete>
+  <delete id="SQL_DELETE_REPORT_BY_CODE_AND_TIME" parameterClass="com.baolei.ghost.dal.dataobject.ReportDO" >
+    delete from report
+    where code = #code# and time = #time#
+  </delete>
+  <insert id="SQL_INSERT_REPORT" parameterClass="com.baolei.ghost.dal.dataobject.ReportDO" >
+    insert into report (code, price, time,  percent, type, status,gmt_create, gmt_modified)
+    values (#code#, #price#, #time#,  #percent#, #type#, #status#,#gmtCreate#,
+      #gmtModified#)
+    <selectKey resultClass="java.lang.Integer" keyProperty="id" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+  
+</sqlMap>

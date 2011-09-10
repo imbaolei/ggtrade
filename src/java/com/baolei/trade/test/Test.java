@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.common.NumberUtil;
 import com.baolei.ghost.common.StockUtil;
+import com.baolei.ghost.dal.dataobject.ReportDO;
 import com.baolei.ghost.dal.dataobject.StockDO;
 
 /**
@@ -31,7 +32,7 @@ public abstract class Test {
 	protected Map<String, StockDO> pdStockMap;
 	protected Map<String, StockDO> jyStockMap;
 	protected float moneyDingTou=0; // 每个周期定投的数额
-	protected float rateHR = 0.008f;
+	protected float rateHR = 0f;
 	protected float cash; // 现金
 	protected float toucunHR; // HighRisk高风险头寸
 	protected float shareHR; // HighRisk高风险份额
@@ -111,7 +112,7 @@ public abstract class Test {
 			if(reportFilter(stockDO)&&reportFilterSwitch){
 				continue ;
 			}
-			Report report = stockDO.getReport();
+			ReportDO report = stockDO.getReport();
 			String date = dateFormat.format(stockDO.getTime());
 			String account = " - account: " + report.getAccount().toString();
 			String status = " ";
@@ -143,22 +144,24 @@ public abstract class Test {
 			if (report.getShareHR() != null && report.getShareHR() > 0) {
 				shareHR = " 持有份额 ： " + report.getShareHR();
 			}
-			String buyPoint = "";
+			String buyPrice = "";
 			if(Constant.REPORT_STATUS_BUY.equals(stockDO.getReport()
 					.getStatus())){
-				buyPoint = " 买点： " + report.getBuyPoint();
+				buyPrice = " 买点： " + report.getPrice();
 			}
 			
 			StringBuffer sb = new StringBuffer();
 			sb.append(date).append(close).append(shareHR).append(account)
-					.append(status).append(fee).append(buyPoint).append(note).append(transCount).append(totalFee).append(totalMoney);
+					.append(status).append(fee).append(buyPrice).append(note).append(transCount).append(totalFee).append(totalMoney);
 			log.info(sb.toString());
 			if (Constant.REPORT_STATUS_SALE.equals(stockDO.getReport()
 					.getStatus())) {
 				sb = new StringBuffer();
+				String salePrice = " - 卖点 ：" + report.getPrice();;
+				sb.append(salePrice);
 				String shouyi = " - 这次交易收益 ：" + report.getShouyi();
 				sb.append(shouyi);
-				String shouyiPersent =  " - 这次交易收益率 ：" + report.getShouyiPercent() +"%";
+				String shouyiPersent =  " - 这次交易收益率 ：" + report.getPercent() +"%";
 				sb.append(shouyiPersent);
 				log.info(sb.toString());
 			}
@@ -166,7 +169,7 @@ public abstract class Test {
 	}
 	
 	public boolean reportFilter(StockDO stockDO){
-		Report report  = stockDO.getReport();
+		ReportDO report  = stockDO.getReport();
 		String status = report.getStatus();
 		if(Constant.REPORT_STATUS_BUY.equals(status)){
 			log.info("");

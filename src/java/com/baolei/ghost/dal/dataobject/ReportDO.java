@@ -1,6 +1,10 @@
-package com.baolei.trade.test;
+package com.baolei.ghost.dal.dataobject;
 
-public class Report {
+import java.util.Date;
+
+public class ReportDO {
+	
+	private int id;
 	
 	private Float account; //资金账户
 	
@@ -20,15 +24,79 @@ public class Report {
 	
 	private boolean dingTouFlag = false;
 	
-	private Float buyPoint;
+	private Float price;
 	
 	private boolean jiacangFlag = false;
 	
+	private Date time;
+
+	private Float shareHR;
+	
+	private Float percent;
+	
+
+	private Date gmtCreate;
+
+	private Date gmtModified;
+	
+	private String code;
+	
+	
+	private String type;
 	
 	
 
-	public Float getBuyPoint() {
-		return buyPoint;
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Date getGmtCreate() {
+		return gmtCreate;
+	}
+
+	public void setGmtCreate(Date gmtCreate) {
+		this.gmtCreate = gmtCreate;
+	}
+
+	public Date getGmtModified() {
+		return gmtModified;
+	}
+
+	public void setGmtModified(Date gmtModified) {
+		this.gmtModified = gmtModified;
+	}
+
+	public Date getTime() {
+		return time;
+	}
+
+	public void setTime(Date time) {
+		this.time = time;
+	}
+
+	public Float getPrice() {
+		return price;
 	}
 
 	public boolean getJiacangFlag() {
@@ -39,20 +107,16 @@ public class Report {
 		this.jiacangFlag = jiacangFlag;
 	}
 
-	public void setBuyPoint(Float buyPoint) {
-		this.buyPoint = buyPoint;
+	public void setPrice(Float price) {
+		this.price = price;
+	}
+	
+	public Float getPercent() {
+		return percent;
 	}
 
-	private Float shareHR;
-	
-	private Float shouyiPercent;
-	
-	public Float getShouyiPercent() {
-		return shouyiPercent;
-	}
-
-	public void setShouyiPercent(Float shouyiPercent) {
-		this.shouyiPercent = shouyiPercent;
+	public void setPercent(Float percent) {
+		this.percent = percent;
 	}
 
 	public Float getShareHR() {
@@ -134,8 +198,5 @@ public class Report {
 	public void setTotalFee(Float totalFee) {
 		this.totalFee = totalFee;
 	}
-
-
-	
 
 }

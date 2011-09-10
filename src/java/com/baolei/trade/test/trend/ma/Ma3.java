@@ -197,7 +197,7 @@ public class Ma3 extends Test {
 		// 如果是空仓后 第一次买入 则 更新lastBuyStockDO 否则是加仓
 		float fee = 0;
 		float buyPoint = planBuyPoint;
-		stockDO.getReport().setBuyPoint(buyPoint);
+		stockDO.getReport().setPrice(buyPoint);
 		fee = fee(cash);
 		float availCash = cash - fee;
 		float share = buyShare(availCash, buyPoint);
@@ -261,7 +261,7 @@ public class Ma3 extends Test {
 		float shouyi = shouyi(dateString);
 		stockDO.getReport().setShouyi(shouyi);
 		Float shouyiPersent = shouyiPersent(dateString);
-		stockDO.getReport().setShouyiPercent(shouyiPersent);
+		stockDO.getReport().setPercent(shouyiPersent);
 	}
 
 	@Override
