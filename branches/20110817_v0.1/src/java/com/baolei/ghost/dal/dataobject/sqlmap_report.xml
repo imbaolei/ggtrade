@@ -19,10 +19,15 @@
 		where id = #id#
 	</select>
 	<select id="SQL_SELECT_REPORT_BY_CODE" resultMap="RM-Report"
-		parameterClass="com.baolei.ghost.dal.dataobject.ReportDO">
+		parameterClass="java.util.Map">
 		select *
 		from report
 		where code = #code#
+		<dynamic>
+			<isNotNull property="order">
+				order by $order$ 
+			</isNotNull>
+		</dynamic>
 	</select>
 	<select id="SQL_SELECT_REPORT_BY_CODES" resultMap="RM-Report"
 		parameterClass="java.util.List">

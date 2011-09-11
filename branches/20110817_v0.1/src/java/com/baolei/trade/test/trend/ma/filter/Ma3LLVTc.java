@@ -22,44 +22,44 @@ public class Ma3LLVTc extends Ma3Tc {
 
 	@Override
 	public boolean needBuy(String dateString) {
-		if(canBuyFirst(dateString)){
+		if (canBuyFirst(dateString)) {
 			return true;
 		}
-		if(canBuyDingTou(dateString)){
+		if (canBuyDingTou(dateString)) {
 			return true;
 		}
 		return false;
 	}
-	
-	protected boolean canBuyFirst(String dateString){
+
+	protected boolean canBuyFirst(String dateString) {
 		StockDO lastJyStock = findLastJyStock(dateString);
-		if(lastJyStock == null){
+		if (lastJyStock == null) {
 			return false;
 		}
 		String lastJyStatus = lastJyStock.getReport().getStatus();
-		if(!Constant.REPORT_STATUS_BUY.equals(lastJyStatus)){
-			if(super.needBuy(dateString) && isHHV(dateString)){
+		if (!Constant.REPORT_STATUS_BUY.equals(lastJyStatus)) {
+			if (super.needBuy(dateString) && isHHV(dateString)) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
-	protected boolean canBuyDingTou(String dateString){
+
+	protected boolean canBuyDingTou(String dateString) {
 		StockDO lastJyStock = findLastJyStock(dateString);
-		if(lastJyStock == null){
+		if (lastJyStock == null) {
 			return false;
 		}
 		String lastJyStatus = lastJyStock.getReport().getStatus();
-		if(Constant.REPORT_STATUS_BUY.equals(lastJyStatus)){
-			if(super.needBuy(dateString)){
+		if (Constant.REPORT_STATUS_BUY.equals(lastJyStatus)) {
+			if (super.needBuy(dateString)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void buy(String dateString) {
 		super.buy(dateString);
@@ -74,14 +74,12 @@ public class Ma3LLVTc extends Ma3Tc {
 		}
 		return false;
 	}
-	
+
 	@Override
-	public void sale(String dateString){
+	public void sale(String dateString) {
 		super.sale(dateString);
 		StockDO stockDO = jyStockMap.get(dateString);
 		stockDO.getReport().setType(Constant.REPORT_TYPE_DUO);
 	}
-	
-	
-	
+
 }
