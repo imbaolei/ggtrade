@@ -2,6 +2,7 @@ package com.baolei.ghost.dal.daoimpl.ibatis;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import com.baolei.ghost.dal.daointerface.BaseDAO;
 import com.baolei.ghost.dal.daointerface.ReportDAO;
 import com.baolei.ghost.dal.dataobject.ReportDO;
-import com.baolei.ghost.dal.dataobject.StockDO;
 import com.ibatis.sqlmap.client.SqlMapExecutor;
 
 @Repository("reportDAO")
@@ -50,11 +50,12 @@ public class ReportDAOImpl extends BaseDAO implements ReportDAO {
 		return (Integer) newKey;
 	}
 	
-	public StockDO selectReportByCode(String code) {
-		ReportDO key = new ReportDO();
-		key.setCode(code);
-		StockDO record = (StockDO) getSqlMapClientTemplate().queryForObject(
-				"SQL_SELECT_REPORT_BY_CODE", key);
+	public List<ReportDO> selectReportByCode(String code,String order) {
+		Map map = new HashMap();
+		map.put("code", code);
+		map.put("order", order);
+		List<ReportDO> record = (List<ReportDO>) getSqlMapClientTemplate().queryForList(
+				"SQL_SELECT_REPORT_BY_CODE", map);
 		return record;
 	}
 

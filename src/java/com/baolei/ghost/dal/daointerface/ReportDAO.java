@@ -10,7 +10,7 @@ public interface ReportDAO {
 
 	public void insertReports(final List<ReportDO> recordList) ;
 	public Integer insertReport(ReportDO record) ;
-	public StockDO selectReportByCode(String code);
+	public List<ReportDO> selectReportByCode(String code,String order);
 	public int deleteReportByCode(String code);
 	List<ReportDO> seleteReportsByConditions(Map param);
 	List<String> seleteCodesFromReport(Map param);

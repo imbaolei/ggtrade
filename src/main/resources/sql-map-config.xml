@@ -4,4 +4,5 @@
 <sqlMapConfig>
 	<sqlMap resource="com/baolei/ghost/dal/dataobject/sqlmap_stock.xml" />
 	<sqlMap resource="com/baolei/ghost/dal/dataobject/sqlmap_report.xml" />
+	<sqlMap resource="com/baolei/ghost/dal/dataobject/sqlmap_report_stats.xml" /><!--  -->
 </sqlMapConfig>

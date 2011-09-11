@@ -44,7 +44,7 @@ public class StockUtil {
 
 	public static DecimalFormat decimalFormat = new DecimalFormat("#.00");
 	
-	public static String codePropertiesPath = "/resources/code.properties";
+	public static String codePropertiesPath = "code.properties";
 	
 	public void saveCodeProperties(Properties   props){
 		URL url = this.getClass().getClassLoader().getResource(codePropertiesPath);

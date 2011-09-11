@@ -17,57 +17,88 @@
         table th,table td {border:solid #999;border-width:1px 1px 1px 1px;padding:2px;align:center;}
     </style>
     <body>
-		
         <table >
-			#set($count = 20) 
+            #set($count = 20) 
             <tr>
                 <td >code</td>
                 <td >名称</td>
                 #foreach($i in [1..$count])
-					<td >$i</td>
-				#end
+                    <td >$i</td>
+                #end
             </tr>
             #foreach($entry in $reportMap.entrySet())
-				#set($reports = $entry.value)
+                #set($reports = $entry.value)
                 <tr>
                     <td>$entry.key</td>
-					<td></td>
-					#foreach($report in $reports)
-						#if("SALE" == "$!{report.status}")
+                    <td>$props.get($entry.key)</td>
+                    #foreach($report in $reports)
+                        #if("SALE" == "$!{report.status}")
+                            <td>
+                                #set($j = $velocityCount - 2)
+                                #set($buyReport =  $reports.get($j))
+                                $dateTool.format("yyyy-MM-dd",$!{buyReport.time})~<br/>
+                                $dateTool.format("yyyy-MM-dd",$!{report.time})  
+                            </td>
+						#end
+						#if("BUY" == "$!{report.status}" && $velocityCount == $reports.size())
 							<td>
-								#set($j = $velocityCount - 2)
-								#set($buyReport =  $reports.get($j))
-								$dateTool.format("yyyy-MM-dd",$!{buyReport.time})~<br/> 
-								$dateTool.format("yyyy-MM-dd",$!{report.time})  
-							</td>
+                                #set($j = $velocityCount - 1)
+                                #set($buyReport =  $reports.get($j))
+                                <b> $dateTool.format("yyyy-MM-dd",$!{buyReport.time})~ </b><br/>
+                            </td>
 						#end
-					#end
-				</tr>
-				<tr>
+                    #end
+                </tr>
+                <tr>
                     <td></td>
-					<td></td>
-					#foreach($report in $reports)
+                    <td></td>
+                    #foreach($report in $reports)
 						#if("SALE" == "$!{report.status}")
-							<td>$!{report.percent}  </td>
+                            <td>
+                                #set($j = $velocityCount - 2)
+                                #set($buyReport =  $reports.get($j))
+								#setPercentStyle($!{report.percent})%<br/>
+								($!{buyReport.price} ~ <br/> $!{report.price})
+								
+                            </td>
 						#end
-					#end
-				</tr>
-					<!--
-					#foreach($i in [1..$count])
-						
-						#set($j = $i - 1)
-						#if($reports.size() >= $i)
-							#set($report = $reports.get($j))
-							<td>$dateTool.format("yyyy-MM-dd",$!{report.time})  </td>
-						#else	
-                            <td></td>
+						#if("BUY" == "$!{report.status}" && $velocityCount == $reports.size())
+							<td>
+                                #set($j = $velocityCount - 1)
+                                #set($buyReport =  $reports.get($j))
+								($!{buyReport.price} - )
+                            </td>
 						#end
-    				#end
-				    -->
-					
-                   
-                
+                    #end
+                </tr>
+                <!--
+                #foreach($i in [1..$count])
+                #set($j = $i - 1)
+                #if($reports.size() >= $i)
+                #set($report = $reports.get($j))
+                <td>$dateTool.format("yyyy-MM-dd",$!{report.time})  </td>
+                #else	
+                <td></td>
+                #end
+                #end
+                -->
             #end 
         </table>
-    </body>
+        #macro ( setPercentStyle $percent ) 
+			#if("$!{percent}" != "")
+                #if($!{percent} >= 0 && $!{percent} < 5) 
+                        <font color="#990000">$!{percent}</font>
+                #end 
+                #if($!{percent} >= 5 ) 
+    				<font color="#ff0000"><b>$!{percent}</b></font>
+                #end 
+                #if($!{percent} < 0 && $!{percent} > -5) 
+    					<font color="#330066">$!{percent}</font>
+                #end 
+                #if($!{percent} <= -5 ) 
+    				<font color="#0000ff"><b>$!{percent}</b></font>
+                #end 
+			#end
+        #end 
+</body>
 </html>
