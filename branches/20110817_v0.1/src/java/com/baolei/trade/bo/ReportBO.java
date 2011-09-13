@@ -16,7 +16,7 @@ import com.baolei.ghost.dal.daointerface.ReportDAO;
 import com.baolei.ghost.dal.dataobject.ReportDO;
 import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.trade.test.trend.ma.Ma3Tc;
-import com.baolei.trade.test.trend.ma.filter.Ma3LLVTc;
+import com.baolei.trade.test.trend.ma.filter.Ma3LLVStopTc;
 
 @Service("reportBO")
 public class ReportBO {
@@ -70,7 +70,8 @@ public class ReportBO {
 	
 	
 	public void executeTrade(String code) {
-		Ma3Tc test = new Ma3LLVTc();
+//		Ma3Tc test = new Ma3LLVTc();
+		Ma3Tc test = new Ma3LLVStopTc();
 		float account = 100000;
 		Integer p1 = 20;
 		Integer p2 = 60;

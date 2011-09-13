@@ -44,8 +44,10 @@ public class ReportStatsBO {
 		ReportStatsDO reportStatsDO = new ReportStatsDO();
 		int winNum = 0;
 		float winPercent = 0f;
+		float win = 0f;
 		int lossNum = 0;
 		float lossPercent = 0f;
+		float loss = 0f;
 		int totalNum = 0;
 		float totalPercent = 0f;
 		float averagePercent = 0f;
@@ -58,16 +60,25 @@ public class ReportStatsBO {
 			ReportDO reportDO = reportList.get(i);
 			if (Constant.REPORT_STATUS_SALE.equals(reportDO.getStatus())) {
 				totalNum++;
-				totalPercent = totalPercent + reportDO.getPercent();
+//				totalPercent = totalPercent + reportDO.getPercent();
 				if (reportDO.getPercent() > 0) {
 					winNum++;
-					winPercent = winPercent + reportDO.getPercent();
+					if(win == 0){
+						win = 1+reportDO.getPercent()*0.01f;
+					}else{
+						win = win*(1+reportDO.getPercent()*0.01f);
+					}
 					if (reportDO.getPercent() > maxWinPercent) {
 						maxWinPercent = reportDO.getPercent();
 					}
 				} else {
 					lossNum++;
-					lossPercent = lossPercent + reportDO.getPercent();
+//					lossPercent = lossPercent + reportDO.getPercent();
+					if(loss == 0){
+						loss = 1+reportDO.getPercent()*0.01f;
+					}else{
+						loss = loss*(1+reportDO.getPercent()*0.01f);
+					}
 					if (reportDO.getPercent() < maxLossPercent) {
 						maxLossPercent = reportDO.getPercent();
 					}
@@ -90,7 +101,23 @@ public class ReportStatsBO {
 			averagePercent = totalPercent / totalNum;
 			averagePercent = NumberUtil.roundDown(averagePercent, 2);
 		}
-		
+		float total = 0;
+		if(loss == 0){
+			total = win;
+		}else if(win == 0){
+			total = loss;
+		}else{
+			total = loss*win;
+		}
+		if(loss != 0 ){
+			lossPercent = NumberUtil.roundDown((1-loss)*100, 2);
+		}
+		if(win != 0 ){
+			winPercent = NumberUtil.roundDown((win-1)*100, 2);
+		}
+		if(total != 0 ){
+			totalPercent = NumberUtil.roundDown((total-1)*100, 2);
+		}
 		String name = dataParser.getStockName(code);
 		reportStatsDO.setName(name);
 		reportStatsDO.setCode(code);

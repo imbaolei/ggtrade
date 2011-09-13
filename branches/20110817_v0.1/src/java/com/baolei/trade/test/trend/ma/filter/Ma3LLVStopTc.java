@@ -4,8 +4,7 @@ import com.baolei.ghost.dal.dataobject.StockDO;
 
 public class Ma3LLVStopTc extends Ma3LLVTc {
 
-	protected int hhvCount = 20;
-	protected float stopLoss = 0.08f;
+	protected float stopLoss = 0.15f;
 
 	@Override
 	public boolean needSale(String dateString) {
@@ -24,13 +23,11 @@ public class Ma3LLVStopTc extends Ma3LLVTc {
 		if (lastBuyStockDO == null) {
 			return false;
 		}
-		if ((toucunHR > 0) && trendout(stockDO)) {
-			StockDO startStockDO = findStartStock(dateString);
-			float startBuyPoint = startStockDO.getClose();
-			float change = 1 - buyPoint / startBuyPoint;
-			if (change > stopLoss) {
-				return true;
-			}
+		StockDO startStockDO = findStartStock(dateString);
+		float startBuyPoint = startStockDO.getClose();
+		float change = 1 - buyPoint / startBuyPoint;
+		if (change > stopLoss) {
+			return true;
 		}
 		return false;
 	}
