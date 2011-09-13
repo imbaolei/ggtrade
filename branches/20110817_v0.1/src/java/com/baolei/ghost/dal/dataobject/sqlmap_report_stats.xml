@@ -4,6 +4,7 @@
 	<resultMap id="RM-ReportStats" class="com.baolei.ghost.dal.dataobject.ReportStatsDO">
 		<result column="id" property="id" jdbcType="INTEGER" />
 		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
 		<result column="win_num" property="winNum" jdbcType="INTEGER" />
 		<result column="win_percent" property="winPercent" jdbcType="REAL" />
 		<result column="loss_num" property="lossNum" jdbcType="INTEGER" />
@@ -61,9 +62,9 @@
 
 	<insert id="SQL_INSERT_REPORT_STATS" parameterClass="com.baolei.ghost.dal.dataobject.ReportStatsDO">
 		insert into report_stats 
-		(code, win_num, win_percent, loss_num, loss_percent,total_num,total_percent,average_percent,last_trade_time,last_trade_price,last_percent,max_win_percent,max_loss_percent,gmt_create, gmt_modified)
+		(code,name, win_num, win_percent, loss_num, loss_percent,total_num,total_percent,average_percent,last_trade_time,last_trade_price,last_percent,max_win_percent,max_loss_percent,gmt_create, gmt_modified)
 		values 
-		(#code#, #winNum#, #winPercent#, #lossNum#, #lossPercent#,#totalNum#,#totalPercent#,#averagePercent#,#lastTradeTime#,#lastTradePrice#,#lastPercent#,#maxWinPercent#,#maxLossPercent#,#gmtCreate#, #gmtModified#)
+		(#code#,#name#, #winNum#, #winPercent#, #lossNum#, #lossPercent#,#totalNum#,#totalPercent#,#averagePercent#,#lastTradeTime#,#lastTradePrice#,#lastPercent#,#maxWinPercent#,#maxLossPercent#,#gmtCreate#, #gmtModified#)
 		<selectKey resultClass="java.lang.Integer" keyProperty="id">
 			SELECT LAST_INSERT_ID()
 		</selectKey>

@@ -37,9 +37,9 @@ public class ReportList {
 		List<String> codes = reportBO.getCodesFromReport(0, defaultPageSize);
 		Map<String, List<ReportDO>> reportMap = reportBO
 				.listReportByCodes(codes);
-		Properties props  = stockUtil.getCodeProperties(); 
+//		Properties props  = stockUtil.getCodeProperties(); 
 		model.addAttribute("reportMap", reportMap);
-		model.addAttribute("props", props);
+//		model.addAttribute("props", props);
 		return "report/report_list";
 	}
 	
@@ -49,9 +49,9 @@ public class ReportList {
 		List<ReportDO> reportList = reportDAO.seleteReportsByConditions(param);
 		Map<String, List<ReportDO>> reportMap = reportBO
 				.listReportByReportList(reportList);
-		Properties props  = stockUtil.getCodeProperties(); 
+//		Properties props  = stockUtil.getCodeProperties(); 
 		model.addAttribute("reportMap", reportMap);
-		model.addAttribute("props", props);
+//		model.addAttribute("props", props);
 		return "report/report_list";
 	}
 

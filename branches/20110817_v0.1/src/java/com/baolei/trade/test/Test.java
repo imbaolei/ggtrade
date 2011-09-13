@@ -2,7 +2,9 @@ package com.baolei.trade.test;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +33,7 @@ public abstract class Test {
 	protected List<StockDO> jyStockList;
 	protected Map<String, StockDO> pdStockMap;
 	protected Map<String, StockDO> jyStockMap;
-	protected float moneyDingTou=0; // 每个周期定投的数额
+	protected float moneyDingTou = 0; // 每个周期定投的数额
 	protected float rateHR = 0f;
 	protected float cash; // 现金
 	protected float toucunHR; // HighRisk高风险头寸
@@ -41,15 +43,14 @@ public abstract class Test {
 	protected float planBuyPoint;
 	protected float planBuyToucun;
 	/**
-	 * lastBuyStockDO 上次买入时stockDO 用来计算上次买入到这次交易之间的 资金变化情况
-	 * 如果其他业务逻辑需要用，不能影响上述逻辑
+	 * lastBuyStockDO 上次买入时stockDO 用来计算上次买入到这次交易之间的 资金变化情况 如果其他业务逻辑需要用，不能影响上述逻辑
 	 */
-	protected StockDO lastBuyStockDO; 
-	protected Integer firstDay =1 ; //第几天定投
+	protected StockDO lastBuyStockDO;
+	protected Integer firstDay = 1; // 第几天定投
 	protected float totalMoney;
 	protected float jyDingTouMoney = 0; // 一次买入和卖出 期间 定投的金额
 	protected boolean reportFilterSwitch = true;
-	
+
 	protected String startDateString = "2000/1/1";
 
 	public float getRateHR() {
@@ -88,8 +89,34 @@ public abstract class Test {
 		jyStockMap = StockUtil.toStockMap(jyStockList);
 	}
 
+	private Date getStartDate() {
+		Date startDate = null;
+		try {
+			startDate = dateFormat.parse(startDateString);
+			int i = jyStockList.size()-1;
+			for(; i >=0;i--){
+				StockDO jyStockDO = jyStockList.get(i);
+				if(jyStockDO.getLow() <= 0){
+					break;
+				}
+			}
+			StockDO nextDayJyStock = jyStockList.get(i+1);
+			if(nextDayJyStock.getTime().after(startDate)){
+				startDate = nextDayJyStock.getTime();
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return startDate;
+	}
+
 	public void execute() {
+		Date startDate = getStartDate();
 		for (StockDO stockDO : pdStockList) {
+			// 从startDate开始计算
+			if (stockDO.getTime().before(startDate)) {
+				continue;
+			}
 			String dateString = dateFormat.format(stockDO.getTime());
 			if (needDingTou(dateString)) {
 				dingTou(dateString);
@@ -104,13 +131,12 @@ public abstract class Test {
 				noBuyNoSale(dateString);
 			}
 		}
-
 	}
 
 	public void printReport() {
 		for (StockDO stockDO : jyStockList) {
-			if(reportFilter(stockDO)&&reportFilterSwitch){
-				continue ;
+			if (reportFilter(stockDO) && reportFilterSwitch) {
+				continue;
 			}
 			ReportDO report = stockDO.getReport();
 			String date = dateFormat.format(stockDO.getTime());
@@ -145,43 +171,45 @@ public abstract class Test {
 				shareHR = " 持有份额 ： " + report.getShareHR();
 			}
 			String buyPrice = "";
-			if(Constant.REPORT_STATUS_BUY.equals(stockDO.getReport()
-					.getStatus())){
+			if (Constant.REPORT_STATUS_BUY.equals(stockDO.getReport()
+					.getStatus())) {
 				buyPrice = " 买点： " + report.getPrice();
 			}
-			
+
 			StringBuffer sb = new StringBuffer();
 			sb.append(date).append(close).append(shareHR).append(account)
-					.append(status).append(fee).append(buyPrice).append(note).append(transCount).append(totalFee).append(totalMoney);
+					.append(status).append(fee).append(buyPrice).append(note)
+					.append(transCount).append(totalFee).append(totalMoney);
 			log.info(sb.toString());
 			if (Constant.REPORT_STATUS_SALE.equals(stockDO.getReport()
 					.getStatus())) {
 				sb = new StringBuffer();
-				String salePrice = " - 卖点 ：" + report.getPrice();;
+				String salePrice = " - 卖点 ：" + report.getPrice();
+				;
 				sb.append(salePrice);
 				String shouyi = " - 这次交易收益 ：" + report.getShouyi();
 				sb.append(shouyi);
-				String shouyiPersent =  " - 这次交易收益率 ：" + report.getPercent() +"%";
+				String shouyiPersent = " - 这次交易收益率 ：" + report.getPercent()
+						+ "%";
 				sb.append(shouyiPersent);
 				log.info(sb.toString());
 			}
 		}
 	}
-	
-	public boolean reportFilter(StockDO stockDO){
-		ReportDO report  = stockDO.getReport();
+
+	public boolean reportFilter(StockDO stockDO) {
+		ReportDO report = stockDO.getReport();
 		String status = report.getStatus();
-		if(Constant.REPORT_STATUS_BUY.equals(status)){
-			log.info("");
+		if (Constant.REPORT_STATUS_BUY.equals(status)) {
 			return false;
 		}
-		
-		if(Constant.REPORT_STATUS_SALE.equals(status)){
+
+		if (Constant.REPORT_STATUS_SALE.equals(status)) {
 			return false;
 		}
-			
+
 		return true;
-		
+
 	}
 
 	public abstract boolean needDingTou(String dateString);

@@ -36,7 +36,7 @@ import com.baolei.trade.test.trend.ma.filter.Ma3LLVTcAtr;
 public class AppTest extends AbstractTestCase {
 
 	// private String code = "SZ399300";
-	private String code = "SH600036";
+	private String code = "SH600596";
 	float account = 100000;
 	float moneyPeriod = 1000;
 	float accountDingTou = 1000;
