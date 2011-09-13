@@ -35,6 +35,7 @@ public class InitDB {
 	
 	public static void main(String[] args) throws IOException, ParseException {
 		InitDB isd2 = new InitDB();
+//		isd2.initTradeReport();
 		isd2.initTradeReprotStats();
 	}
 
