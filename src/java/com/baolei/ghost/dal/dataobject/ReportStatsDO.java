@@ -8,6 +8,8 @@ public class ReportStatsDO {
 	
 	private String code;
 	
+	private String name;
+	
 	private int winNum;
 	
 	private float winPercent;
@@ -35,6 +37,14 @@ public class ReportStatsDO {
 	private float maxWinPercent;
 	
 	private float maxLossPercent;
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public float getMaxWinPercent() {
 		return maxWinPercent;

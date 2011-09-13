@@ -91,7 +91,8 @@ public class ReportStatsBO {
 			averagePercent = NumberUtil.roundDown(averagePercent, 2);
 		}
 		
-
+		String name = dataParser.getStockName(code);
+		reportStatsDO.setName(name);
 		reportStatsDO.setCode(code);
 		reportStatsDO.setWinNum(winNum);
 		reportStatsDO.setWinPercent(winPercent);

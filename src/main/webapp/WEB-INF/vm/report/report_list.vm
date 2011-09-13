@@ -30,7 +30,7 @@
                 #set($reports = $entry.value)
                 <tr>
                     <td>$entry.key</td>
-                    <td>$props.get($entry.key)</td>
+                    <td><!--$!props.get(${entry.key}) --></td>
                     #foreach($report in $reports)
                         #if("SALE" == "$!{report.status}")
                             <td>
