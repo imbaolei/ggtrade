@@ -52,6 +52,7 @@ public class ReportStatsBO {
 		float totalPercent = 0f;
 		float averagePercent = 0f;
 		Date lastTradeTime = null;
+		Date startTradeTime = null;
 		float lastTradePrice = 0;
 		float lastPercent = 0;
 		float maxWinPercent = 0;
@@ -85,22 +86,24 @@ public class ReportStatsBO {
 				}
 			}
 		}
-		ReportDO lastReportDO = reportList.get(reportList.size() - 1);
-		// 如果最后一个report的状态是buy，那证明还没平仓，计算收益
-		if (Constant.REPORT_STATUS_BUY.equals(lastReportDO.getStatus())) {
-			StockDO lastStockDO = dataParser.getLastPrice(code);
-			lastPercent = (lastStockDO.getClose() - lastReportDO.getPrice())
-					/ lastReportDO.getPrice() * 100;
-			lastPercent = NumberUtil.roundDown(lastPercent, 2);
+		if(reportList.size() > 0 ){
+			ReportDO lastReportDO = reportList.get(reportList.size() - 1);
+			// 如果最后一个report的状态是buy，那证明还没平仓，计算收益
+			if (Constant.REPORT_STATUS_BUY.equals(lastReportDO.getStatus())) {
+				StockDO lastStockDO = dataParser.getLastPrice(code);
+				lastPercent = (lastStockDO.getClose() - lastReportDO.getPrice())
+						/ lastReportDO.getPrice() * 100;
+				lastPercent = NumberUtil.roundDown(lastPercent, 2);
 
-			lastTradeTime = lastReportDO.getTime();
-			lastTradePrice = lastReportDO.getPrice();
+				lastTradeTime = lastReportDO.getTime();
+				lastTradePrice = lastReportDO.getPrice();
+			}
+			ReportDO startReportDO = reportList.get(0);
+			startTradeTime = startReportDO.getTime();
 		}
-
-		if(totalNum > 0 ){
-			averagePercent = totalPercent / totalNum;
-			averagePercent = NumberUtil.roundDown(averagePercent, 2);
-		}
+		
+		
+		
 		float total = 0;
 		if(loss == 0){
 			total = win;
@@ -117,6 +120,10 @@ public class ReportStatsBO {
 		}
 		if(total != 0 ){
 			totalPercent = NumberUtil.roundDown((total-1)*100, 2);
+		}
+		if(totalNum > 0 ){
+			averagePercent = totalPercent / totalNum;
+			averagePercent = NumberUtil.roundDown(averagePercent, 2);
 		}
 		String name = dataParser.getStockName(code);
 		reportStatsDO.setName(name);

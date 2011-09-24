@@ -99,6 +99,10 @@ public abstract class Test {
 				if(jyStockDO.getLow() <= 0){
 					break;
 				}
+				float change = Math.abs(jyStockDO.getClose()/jyStockDO.getOpen());
+				if(change < 0.85 || change > 1.15){
+					break;
+				}
 			}
 			StockDO nextDayJyStock = jyStockList.get(i+1);
 			if(nextDayJyStock.getTime().after(startDate)){
