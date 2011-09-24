@@ -33,7 +33,7 @@ public class InitDB {
 	ApplicationContext context = new ClassPathXmlApplicationContext(
 			"beans.xml");
 	
-	public static void main(String[] args) throws IOException, ParseException {
+	public static void main(String[] args)  {
 		InitDB isd2 = new InitDB();
 //		isd2.initTradeReport();
 		isd2.initTradeReprotStats();
