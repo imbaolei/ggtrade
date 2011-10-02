@@ -29,7 +29,7 @@
 			<artifactId>spring-test</artifactId>
 			<version>2.5.6</version>
 		</dependency>
-		
+
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -48,6 +48,11 @@
 			<version>1.5</version>
 		</dependency>
 		<dependency>
+			<groupId>velocity-tools</groupId>
+			<artifactId>velocity-tools-generic</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
 			<groupId>commons-httpclient</groupId>
 			<artifactId>commons-httpclient</artifactId>
 			<version>3.1</version>
@@ -61,7 +66,6 @@
 			<groupId>net.sf.json-lib</groupId>
 			<artifactId>json-lib</artifactId>
 			<version>2.3</version>
-			<classifier>jdk15</classifier>
 		</dependency>
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
@@ -104,11 +108,11 @@
 			<artifactId>commons-lang</artifactId>
 			<version>2.5</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>org.apache.poi</groupId>
-		    <artifactId>poi-ooxml</artifactId>
-		    <version>3.6</version>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.6</version>
 		</dependency>
 
 
@@ -127,7 +131,7 @@
 			<version>1.2.8</version>
 		</dependency>
 
-	
+
 
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
@@ -136,9 +140,9 @@
 		</dependency>
 
 		<dependency>
-		    <groupId>net.sf.ezmorph</groupId>
-		    <artifactId>ezmorph</artifactId>
-		    <version>1.0.6</version>
+			<groupId>net.sf.ezmorph</groupId>
+			<artifactId>ezmorph</artifactId>
+			<version>1.0.6</version>
 		</dependency>
 
 
