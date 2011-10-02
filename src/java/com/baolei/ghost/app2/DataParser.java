@@ -5,6 +5,7 @@ import java.util.List;
 import com.baolei.ghost.dal.dataobject.StockDO;
 
 public interface DataParser {
-	List<String> reader(String code);
 	List<StockDO> parse(String code);
+	String getStockName(String code);
+	StockDO getLastPrice(String code);
 }

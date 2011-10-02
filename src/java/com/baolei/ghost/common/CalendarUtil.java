@@ -11,60 +11,34 @@ import com.baolei.ghost.dal.dataobject.StockDO;
 
 @Service("calendarUtil")
 public class CalendarUtil {
-	
-	
+
 	/**
 	 * 判断stockDO 是不是这个月的第一个交易日
+	 * 
 	 * @param stockList
 	 * @param stockDO
 	 * @return
 	 */
-	public boolean isFirstDayOfMonth(List<StockDO> stockList,StockDO stockDO){
+	public boolean isFirstDayOfMonth(List<StockDO> stockList, StockDO stockDO) {
 		int index = stockList.indexOf(stockDO);
-		if(index>0){
-			StockDO preStockDO = stockList.get(index-1);
+		if (index > 0) {
+			StockDO preStockDO = stockList.get(index - 1);
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(stockDO.getTime());
 			int month = calendar.get(Calendar.MONTH);
 			Calendar preCalendar = Calendar.getInstance();
 			preCalendar.setTime(preStockDO.getTime());
 			int premonth = preCalendar.get(Calendar.MONTH);
-			if(month > premonth){
+			if (month > premonth) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
-	/**
-	 * 得到这个stockDO日期之前的 在 这个月的stockList
-	 * @param stockList
-	 * @param stockDO
-	 * @return
-	 */
-	public List<StockDO> getStockListOfMonth(List<StockDO> stockList,StockDO stockDO){
-		List<StockDO> tmpStockList = new ArrayList<StockDO>();
-		int index = tmpStockList.indexOf(stockDO);
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(stockDO.getTime());
-		int month = calendar.get(Calendar.MONTH);
-		for(int i  = index ; i> 0 ;i--){
-			StockDO tmpStockDO = stockList.get(i);
-			Calendar tmpCalendar = Calendar.getInstance();
-			tmpCalendar.setTime(tmpStockDO.getTime());
-			int tmpMonth = tmpCalendar.get(Calendar.MONTH);
-			if(tmpMonth == month){
-				tmpStockList.add(tmpStockDO);
-			}else {
-				break;
-			}
-		}
-		return tmpStockList;
-	}
-	
 
 	/**
 	 * 得到这一周所有的日期,以星期日为第一天
+	 * 
 	 * @param time
 	 * @return
 	 */
@@ -73,7 +47,7 @@ public class CalendarUtil {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(time);
 		cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-		//cal.add(Calendar.DATE, 7);   
+		// cal.add(Calendar.DATE, 7);
 		weekDays.add(cal.getTime());
 		for (int i = 1; i <= 6; i++) {
 			cal.add(Calendar.DATE, 1);
@@ -84,6 +58,7 @@ public class CalendarUtil {
 
 	/**
 	 * 得到这一周所有的日期,以星期日为第一天
+	 * 
 	 * @param time
 	 * @return
 	 */
@@ -98,9 +73,9 @@ public class CalendarUtil {
 		resetHMS(calnow);
 		resetHMS(calfirst);
 		resetHMS(callast);
-		//now   是今天在本月的第几天  
+		// now 是今天在本月的第几天
 		int now = calnow.get(Calendar.DAY_OF_MONTH);
-		//max是本月一共有多少天  
+		// max是本月一共有多少天
 		int max = calnow.getActualMaximum(Calendar.DAY_OF_MONTH);
 		calfirst.add(Calendar.DATE, 1 - now);
 		callast.add(Calendar.DATE, max - now);
@@ -118,7 +93,7 @@ public class CalendarUtil {
 		resetHMS(calendar);
 		return calendar.getTime();
 	}
-	
+
 	public static Date getLastDayOfLastMonth(Date time) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(time);
@@ -139,10 +114,10 @@ public class CalendarUtil {
 		Date now = new Date();
 		Date laststart = getLastDayOfLastMonth(now);
 		System.out.println(laststart);
-//		List weekDays = getMonthDays(now);
-//		for (int i = 0; i < weekDays.size(); i++) {
-//			System.out.println(weekDays.get(i));
-//		}
+		// List weekDays = getMonthDays(now);
+		// for (int i = 0; i < weekDays.size(); i++) {
+		// System.out.println(weekDays.get(i));
+		// }
 	}
 
 }
