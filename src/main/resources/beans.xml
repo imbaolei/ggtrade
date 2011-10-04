@@ -31,7 +31,41 @@
                 classpath:sql-map-config.xml
             </value>
         </property>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
+    
+    
+    <bean id="dataSourceMssql"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName">
+			<value>com.microsoft.sqlserver.jdbc.SQLServerDriver</value>
+		</property>
+		<property name="username">
+			<value>sa</value>
+		</property>
+		<property name="password">
+			<value></value>
+		</property>
+		<property name="url">
+			<value>jdbc:sqlserver://localhost:1433;DatabaseName=Turtle2
+			</value>
+		</property>
+	</bean>
+
+	<bean id="sqlMapClientMssql" 
+        class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+        <property name="configLocation">
+            <value> 
+                classpath:sql-map-mssql-config.xml
+            </value>
+        </property>
+        <property name="dataSource" ref="dataSourceMssql"/>
+    </bean>
+    
+    <bean id="dayRecordDAO" 
+        class="com.baolei.ghost.dal.daoimpl.ibatis.DayRecordDAOImpl">
+    </bean>
+    
 	<bean
 		class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
 </beans>
