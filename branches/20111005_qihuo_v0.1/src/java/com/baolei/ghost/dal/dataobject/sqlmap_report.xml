@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="stock">
+	<resultMap id="RM-Report" class="com.baolei.ghost.dal.dataobject.ReportDO">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="price" property="price" jdbcType="REAL" />
+		<result column="time" property="time" jdbcType="TIMESTAMP" />
+		<result column="percent" property="percent" jdbcType="REAL" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+		<result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<select id="SQL_SELECT_REPORT_BY_ID" resultMap="RM-Report"
+		parameterClass="com.baolei.ghost.dal.dataobject.ReportDO">
+		select *
+		from report
+		where id = #id#
+	</select>
+	<select id="SQL_SELECT_REPORT_BY_CODE" resultMap="RM-Report"
+		parameterClass="java.util.Map">
+		select *
+		from report
+		where code = #code#
+		<dynamic>
+			<isNotNull property="order">
+				order by $order$ 
+			</isNotNull>
+		</dynamic>
+	</select>
+	<select id="SQL_SELECT_REPORT_BY_CODES" resultMap="RM-Report"
+		parameterClass="java.util.List">
+		select *
+		from report
+		<dynamic prepend="where">
+			<isNotNull prepend="and">
+				code IN
+				<iterate property="codes" open="(" close=")" conjunction=",">
+					#codes[]#
+				</iterate>
+			</isNotNull>
+		</dynamic>
+	</select>
+	<select id="SQL_SELECT_CODE_FROM_REPORT" resultClass="java.lang.String"
+		parameterClass="java.util.Map">
+		SELECT DISTINCT code FROM report order by code
+		<dynamic prepend="limit">
+			<isNotNull property="start">
+				#start#,#count#
+			</isNotNull>
+		</dynamic>
+	</select>
+	<select id="SQL_COUNT_CODE_FROM_REPORT" resultClass="int"
+		parameterClass="java.util.Map">
+		SELECT count(DISTINCT code) FROM report;
+	</select>
+	<select id="SQL_SELECT_REPORT_BY_CONDITIONS" resultMap="RM-Report"
+		parameterClass="java.util.Map">
+		select * from report where 1=1
+		<dynamic>
+			<isNotEmpty prepend="AND" property="code">
+				code = #code#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="type">
+				type = #type#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				status = #status#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="startTime">
+   			<![CDATA[ time >= #startTime# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="endTime">
+   			<![CDATA[ time <= #endTime# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="codes">
+				code in
+				<iterate property="codes" open="(" close=")" conjunction=",">
+					#codes[]#
+				</iterate>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic>
+			<isNotNull property="order">
+				order by $order$ desc
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="limit">
+			<isNotNull property="start">
+				#start#,#count#
+			</isNotNull>
+		</dynamic>
+	</select>
+
+	<delete id="SQL_DELETE_REPORT_BY_ID" parameterClass="com.baolei.ghost.dal.dataobject.ReportDO">
+		delete from report
+		where id = #id#
+	</delete>
+	<delete id="SQL_DELETE_REPORT_BY_CODE" parameterClass="com.baolei.ghost.dal.dataobject.ReportDO">
+		delete from report
+		where code = #code#
+	</delete>
+	<delete id="SQL_DELETE_REPORT_BY_CODE_AND_TIME" parameterClass="com.baolei.ghost.dal.dataobject.ReportDO">
+		delete from report
+		where code = #code# and time = #time#
+	</delete>
+	<insert id="SQL_INSERT_REPORT" parameterClass="com.baolei.ghost.dal.dataobject.ReportDO">
+		insert into report (code, price, time, percent, type,
+		status,gmt_create, gmt_modified)
+		values (#code#, #price#, #time#, #percent#, #type#, #status#,#gmtCreate#,
+		#gmtModified#)
+		<selectKey resultClass="java.lang.Integer" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+</sqlMap>

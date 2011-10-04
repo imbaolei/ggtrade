@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="stock">
+	<resultMap id="RM-ReportStats" class="com.baolei.ghost.dal.dataobject.ReportStatsDO">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="win_num" property="winNum" jdbcType="INTEGER" />
+		<result column="win_percent" property="winPercent" jdbcType="REAL" />
+		<result column="loss_num" property="lossNum" jdbcType="INTEGER" />
+		<result column="loss_percent" property="lossPercent" jdbcType="REAL" />
+		<result column="total_num" property="totalNum" jdbcType="INTEGER" />
+		<result column="total_percent" property="totalPercent" jdbcType="REAL" />
+		<result column="average_percent" property="averagePercent" jdbcType="REAL" />
+		<result column="last_trade_time" property="lastTradeTime" jdbcType="TIMESTAMP" />
+		<result column="last_trade_price" property="lastTradePrice" jdbcType="REAL" />
+		<result column="last_percent" property="lastPercent" jdbcType="REAL" />
+		<result column="max_win_percent" property="maxWinPercent" jdbcType="REAL" />
+		<result column="max_loss_percent" property="maxLossPercent" jdbcType="REAL" />
+		<result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+		<result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<select id="SQL_SELECT_REPORT_STATS_BY_ID" resultMap="RM-ReportStats"
+		parameterClass="com.baolei.ghost.dal.dataobject.ReportStatsDO">
+		select *
+		from report_stats
+		where id = #id#
+	</select>
+	<delete id="SQL_DELETE_REPORT_STATS_BY_ID" parameterClass="com.baolei.ghost.dal.dataobject.ReportStatsDO">
+		delete from report_stats
+		where id = #id#
+	</delete>
+	<delete id="SQL_DELETE_REPORT_STATS_BY_CODE" parameterClass="com.baolei.ghost.dal.dataobject.ReportStatsDO">
+		delete from report_stats
+		where code = #code#
+	</delete>
+	<select id="SQL_SELECT_REPORT_STATS_BY_CODE" resultMap="RM-ReportStats"
+		parameterClass="com.baolei.ghost.dal.dataobject.ReportStatsDO">
+		select *
+		from report_stats
+		where code = #code#
+	</select>
+	<select id="SQL_SELECT_REPORT_STATS_BY_CONDITIONS" resultMap="RM-ReportStats"
+		parameterClass="java.util.Map">
+		select * from report_stats where 1=1
+		<dynamic>
+			<isNotEmpty prepend="AND" property="code">
+				code = #code#
+			</isNotEmpty>
+		</dynamic>
+		<dynamic>
+			<isNotNull property="order">
+				order by $order$ desc
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="limit">
+			<isNotNull property="start">
+				#start#,#count#
+			</isNotNull>
+		</dynamic>
+	</select>
+
+	<insert id="SQL_INSERT_REPORT_STATS" parameterClass="com.baolei.ghost.dal.dataobject.ReportStatsDO">
+		insert into report_stats 
+		(code,name, win_num, win_percent, loss_num, loss_percent,total_num,total_percent,average_percent,last_trade_time,last_trade_price,last_percent,max_win_percent,max_loss_percent,gmt_create, gmt_modified)
+		values 
+		(#code#,#name#, #winNum#, #winPercent#, #lossNum#, #lossPercent#,#totalNum#,#totalPercent#,#averagePercent#,#lastTradeTime#,#lastTradePrice#,#lastPercent#,#maxWinPercent#,#maxLossPercent#,#gmtCreate#, #gmtModified#)
+		<selectKey resultClass="java.lang.Integer" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+</sqlMap>
