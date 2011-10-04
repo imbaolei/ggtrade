@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.baolei.ghost.app2.DataParser;
@@ -20,6 +21,7 @@ import com.baolei.ghost.dal.dataobject.StockDO;
 public class StockBO {
 
 	@Autowired
+	@Qualifier("txdFileParser") 
 	DataParser dataParser;
 	
 	@Autowired
