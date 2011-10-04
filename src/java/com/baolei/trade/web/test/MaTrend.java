@@ -32,7 +32,6 @@ import com.baolei.trade.test.trend.ma.filter.Ma3LLVTc;
 import com.baolei.trade.test.trend.ma.period.Ma3Period;
 
 
-
 @Controller
 @RequestMapping("/test/ma_trend.do")
 public class MaTrend {
@@ -68,9 +67,6 @@ protected Log log = LogFactory.getLog(getClass());
 		List<StockDO> stockList = stockDAO.selectStockByCodeAndPeriod(code, Constant.STOCK_PERIOD_DAY);
 		MaTrend mt = new MaTrend();
 //		mt.testNone(stockList);
-
-//		mt.test3MaTrend2Stock(stockList);
-
 //		mt.test3MaDingTouTrend(stockList);
 //		mt.testNoneDingTou(stockList);
 //		mt.test3MaPeriod(stockList);
@@ -79,7 +75,6 @@ protected Log log = LogFactory.getLog(getClass());
 //		mt.test3MaTrendKongTouCunOnePeriod(stockList);
 //		mt.ma3DtLLV(stockList);	
 		mt.kongMa3TcDtLLV(stockList);
-
 		
 		
 		
@@ -103,7 +98,6 @@ protected Log log = LogFactory.getLog(getClass());
 		test.printReport();
 	}
 	
-
 	
 
 	
@@ -119,7 +113,6 @@ protected Log log = LogFactory.getLog(getClass());
 		test.printReport();
 	}
 	
-
 	public void test3MaDingTouTrend(List<StockDO> stockList){
 		Ma3 test = new Ma3();
 		test.initCash(accountDingTou);

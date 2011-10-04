@@ -1,11 +1,5 @@
 package com.baolei.ghost.app2;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,52 +14,20 @@ import org.springframework.stereotype.Service;
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.dal.dataobject.StockDO;
 
-@Service("txdFileParser")
-public class TxdFileParser implements DataParser {
+@Service("dzhTxtParser")
+public class DzhTxtParser implements DataParser{
+	
 	protected Log log = LogFactory.getLog(getClass());
 
-	private String filePath = "D:/java/project/data/tdx";
-	private String dateFormatString = "yyyy/MM/dd";
-
-	public List<String> reader(String code, int num) {
-		List<String> stockList = new ArrayList<String>();
-		String filePath = this.filePath + code + ".txt";
-		BufferedReader br;
-		try {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(
-					filePath), "GBK"));
-			String temp = null;
-
-			if (num > 0) {
-				for (int i = 0; i < num; i++) {
-					temp = br.readLine();
-					stockList.add(temp);
-				}
-			} else {
-				temp = br.readLine();
-				while (temp != null) {
-					stockList.add(temp);
-					temp = br.readLine();
-				}
-			}
-
-			br.close();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return stockList;
-	}
+	private String filePath = "D:/java/project/data/dzh/txt/";
+	private String dateFormatString = "yyyy-MM-dd";
 
 	@Override
 	public List<StockDO> parse(String code) {
 		List<StockDO> stockDOList = new ArrayList<StockDO>();
-		List<String> sDataList = reader(code, 0);
+		List<String> sDataList = ParserUtil.reader(filePath,code, 0);
 		for (String temp : sDataList) {
-			// 如果这行数据没有 小数点 则不是价格数据
+			// 如果这行数据有中文 时间  则不是价格数据
 			if (!temp.contains(".")) {
 				continue;
 			}
@@ -75,9 +37,9 @@ public class TxdFileParser implements DataParser {
 		}
 		return stockDOList;
 	}
-
+	
 	private StockDO parseDataLine(String dataLine) {
-		String[] data = dataLine.split(" ");
+		String[] data = dataLine.split("\\t");
 		// [0]日期 [1]open [2]high; [3]low [4]close [5] vol
 		StockDO stockDO = new StockDO();
 		DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
@@ -98,17 +60,13 @@ public class TxdFileParser implements DataParser {
 
 	@Override
 	public String getStockName(String code) {
-		List<String> sDataList = reader(code, 1);
-		String stockName = "";
-		for (String tmp : sDataList) {
-			stockName = tmp.split(" ")[1];
-		}
-		return stockName;
+		
+		return code;
 	}
 
 	@Override
 	public StockDO getLastPrice(String code) {
-		List<String> sDataList = reader(code, 0);
+		List<String> sDataList = ParserUtil.reader(filePath,code, 0);
 		String lastLine = sDataList.get(sDataList.size()-1);
 		StockDO stockDO = parseDataLine(lastLine);
 		return stockDO;

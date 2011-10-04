@@ -33,7 +33,7 @@ import com.baolei.trade.test.trend.ma.filter.Ma3LLVTcAtr;
 /**
  * Unit test for simple App.
  */
-public class AppTest extends AbstractTestCase {
+public class StockTest extends AbstractTestCase {
 
 //	 private String code = "SZ399300";
 	private String code = "SH600000";
@@ -46,7 +46,7 @@ public class AppTest extends AbstractTestCase {
 
 	protected Log log = LogFactory.getLog(getClass());
 	DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
-	private String filePath = "D:/java/project/data/";
+//	private String filePath = "D:/java/project/data/";
 	@Autowired
 	private TradeBO tradeBO;
 
@@ -137,27 +137,27 @@ public class AppTest extends AbstractTestCase {
 		return stockList;
 	}
 
-	public List<String> getAllCodes() {
-		File file = new File(filePath);
-		List<String> fileList = new ArrayList<String>();
-		String[] files = file.list();
-		System.out.println(files.length);
-		for (String filename : files) {
-			filename = filename.replace(".TXT", "");
-			fileList.add(filename);
-		}
-		return fileList;
-	}
+//	public List<String> getAllCodes() {
+//		File file = new File(filePath);
+//		List<String> fileList = new ArrayList<String>();
+//		String[] files = file.list();
+//		System.out.println(files.length);
+//		for (String filename : files) {
+//			filename = filename.replace(".TXT", "");
+//			fileList.add(filename);
+//		}
+//		return fileList;
+//	}
 
 	
-	public void testMa3TcToTradeReport() {
-		List<String> codes = getAllCodes();
-		for (String code : codes) {
-			log.info("start execute " + code + " ...");
-			executeTrade(code);
-			log.info("end execute " + code + " ...");
-		}
-	}
+//	public void testMa3TcToTradeReport() {
+//		List<String> codes = getAllCodes();
+//		for (String code : codes) {
+//			log.info("start execute " + code + " ...");
+//			executeTrade(code);
+//			log.info("end execute " + code + " ...");
+//		}
+//	}
 
 	public void executeTrade(String code) {
 		List<StockDO> stockList = getInitStockList(code);

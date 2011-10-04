@@ -198,6 +198,7 @@ public abstract class Test {
 				sb.append(shouyiPersent);
 				log.info(sb.toString());
 			}
+			
 		}
 	}
 
@@ -209,6 +210,9 @@ public abstract class Test {
 		}
 
 		if (Constant.REPORT_STATUS_SALE.equals(status)) {
+			return false;
+		}
+		if(jyStockList.indexOf(stockDO) == (jyStockList.size()-1)){
 			return false;
 		}
 
