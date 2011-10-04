@@ -13,6 +13,7 @@ import java.util.concurrent.Executors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -26,7 +27,7 @@ public class InitDB {
 	
 	protected Log log = LogFactory.getLog(getClass());
 	
-	private String filePath = "D:/java/project/data/";
+	private String filePath = "D:/java/project/data/tdx";
 	
 	int threadNum = 20;
 	
@@ -35,7 +36,7 @@ public class InitDB {
 	
 	public static void main(String[] args)  {
 		InitDB isd2 = new InitDB();
-//		isd2.initTradeReport();
+		isd2.initTradeReport();
 		isd2.initTradeReprotStats();
 	}
 
@@ -67,7 +68,7 @@ public class InitDB {
 	
 	public void initStockName(){
 		List<String> codes = getAllCodes();
-		DataParser dataParser = (DataParser) context.getBean("dataParser");
+		DataParser dataParser = (DataParser) context.getBean("txdFileParser");
 		StockUtil stockUtil = (StockUtil) context.getBean("stockUtil");
 		Properties props = stockUtil.getCodeProperties();
 		for (int i  = 0 ; i < codes.size() ; i++) {
