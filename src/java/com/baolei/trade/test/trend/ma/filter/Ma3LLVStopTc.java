@@ -2,6 +2,10 @@ package com.baolei.trade.test.trend.ma.filter;
 
 import com.baolei.ghost.dal.dataobject.StockDO;
 
+/**
+ * 在LLV的基础上再加上一个 比如亏村15%时止损的条件
+ *
+ */
 public class Ma3LLVStopTc extends Ma3LLVTc {
 
 	protected float stopLoss = 0.15f;

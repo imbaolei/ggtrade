@@ -24,7 +24,7 @@ import com.baolei.ghost.dal.dataobject.StockDO;
 public class TxdFileParser implements DataParser {
 	protected Log log = LogFactory.getLog(getClass());
 
-	private String filePath = "D:/java/project/data/tdx";
+	private String filePath = "D:/java/project/data/tdx/";
 	private String dateFormatString = "yyyy/MM/dd";
 
 	public List<String> reader(String code, int num) {

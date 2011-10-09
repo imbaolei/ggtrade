@@ -8,7 +8,7 @@ import com.baolei.trade.test.trend.ma.Ma3Tc;
 public class Ma3LLVTc extends Ma3Tc {
 
 	protected int llvCount = 20;
-	protected int hhvCount = 50;
+	protected int hhvCount = 20;
 
 	protected boolean isLLV(String dateString) {
 		StockDO stockDO = pdStockMap.get(dateString);
