@@ -23,6 +23,8 @@ import com.baolei.trade.bo.ReportBO;
 import com.baolei.trade.bo.StockBO;
 import com.baolei.trade.bo.TradeBO;
 import com.baolei.trade.test.trend.ma.Ma3Tc;
+import com.baolei.trade.test.trend.ma.filter.Ma200Hg55LLVTcAtr;
+import com.baolei.trade.test.trend.ma.filter.Ma2Hg55LLVTcAtr;
 import com.baolei.trade.test.trend.ma.filter.Ma3LLVStopTc;
 import com.baolei.trade.test.trend.ma.filter.Ma3LLVTc;
 import com.baolei.trade.test.trend.ma.filter.Ma3LLVTcAtr;
@@ -82,7 +84,7 @@ public class StockTest extends AbstractTestCase {
 		test.printReport();
 	}
 
-	@Test
+	
 	public void testMa3LLVTc() {
 		List<StockDO> stockList = getInitStockList(code);
 		Ma3Tc test = new Ma3LLVTc();
@@ -118,9 +120,33 @@ public class StockTest extends AbstractTestCase {
 		test.printReport();
 	}
 
+	
 	public void testMa3LLVTcAtr() {
 		List<StockDO> stockList = getInitStockList(code);
 		Ma3Tc test = new Ma3LLVTcAtr();
+		test.initCash(account);
+		test.initMaParam(p1, p2, p3);
+		test.setMoneyDingTou(0);
+		test.initStockList(stockList, stockList);
+		test.execute();
+		test.printReport();
+	}
+	
+	public void testMa200Hg55LLVTcAtr() {
+		List<StockDO> stockList = getInitStockList(code);
+		Ma3Tc test = new Ma200Hg55LLVTcAtr();
+		test.initCash(account);
+		test.initMaParam(p1, p2, p3);
+		test.setMoneyDingTou(0);
+		test.initStockList(stockList, stockList);
+		test.execute();
+		test.printReport();
+	}
+	
+	
+	public void testMa2Hg55LLVTcAtr() {
+		List<StockDO> stockList = getInitStockList(code);
+		Ma3Tc test = new Ma2Hg55LLVTcAtr();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(0);
