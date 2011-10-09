@@ -1,9 +1,7 @@
 package com.baolei.ghost.app;
 
-import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,19 +22,19 @@ import com.baolei.ghost.dal.dataobject.StockDO;
 import com.baolei.trade.bo.ReportBO;
 import com.baolei.trade.bo.StockBO;
 import com.baolei.trade.bo.TradeBO;
-import com.baolei.trade.test.trend.kong.ma.filter.Ma3KongTcLLV;
 import com.baolei.trade.test.trend.ma.Ma3Tc;
 import com.baolei.trade.test.trend.ma.filter.Ma3LLVStopTc;
 import com.baolei.trade.test.trend.ma.filter.Ma3LLVTc;
 import com.baolei.trade.test.trend.ma.filter.Ma3LLVTcAtr;
+import com.baolei.trade.test.trend.ma.filter.Ma3UpLLVTc;
 
 /**
  * Unit test for simple App.
  */
 public class StockTest extends AbstractTestCase {
 
-//	 private String code = "SZ399300";
-	private String code = "SH600000";
+	 private String code = "SZ000001";
+//	private String code = "SH600000";
 	float account = 100000;
 	float moneyPeriod = 1000;
 	float accountDingTou = 1000;
@@ -96,9 +94,10 @@ public class StockTest extends AbstractTestCase {
 		test.printReport();
 	}
 
-	public void testMa3KongTcLLV() {
+	@Test
+	public void testMa3UpLLVTc() {
 		List<StockDO> stockList = getInitStockList(code);
-		Ma3Tc test = new Ma3KongTcLLV();
+		Ma3Tc test = new Ma3UpLLVTc();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(0);

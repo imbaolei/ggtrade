@@ -51,7 +51,7 @@ public abstract class Test {
 	protected float jyDingTouMoney = 0; // 一次买入和卖出 期间 定投的金额
 	protected boolean reportFilterSwitch = true;
 
-	protected String startDateString = "2000/1/1";
+	protected String startDateString = "1996/1/1";
 
 	public float getRateHR() {
 		return rateHR;
