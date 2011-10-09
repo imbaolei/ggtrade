@@ -43,12 +43,13 @@ public class StockUtil {
 	public static String dateFormatString = "yyyy/MM/dd";
 
 	public static DecimalFormat decimalFormat = new DecimalFormat("#.00");
-	
+
 	public static String codePropertiesPath = "code.properties";
-	
-	public void saveCodeProperties(Properties   props){
-		URL url = this.getClass().getClassLoader().getResource(codePropertiesPath);
-        try {
+
+	public void saveCodeProperties(Properties props) {
+		URL url = this.getClass().getClassLoader()
+				.getResource(codePropertiesPath);
+		try {
 			OutputStream output = new FileOutputStream(new File(url.toURI()));
 			props.store(output, "");
 			output.close();
@@ -56,14 +57,15 @@ public class StockUtil {
 			e.printStackTrace();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
-		} 
+		}
 	}
-	
-	public Properties getCodeProperties(){
-		Properties   props   =   new   Properties(); 
-		URL url = this.getClass().getClassLoader().getResource(codePropertiesPath);
-        try {
-        	InputStream   input=   new FileInputStream(new File(url.toURI()));
+
+	public Properties getCodeProperties() {
+		Properties props = new Properties();
+		URL url = this.getClass().getClassLoader()
+				.getResource(codePropertiesPath);
+		try {
+			InputStream input = new FileInputStream(new File(url.toURI()));
 			props.load(input);
 			input.close();
 			return props;
@@ -132,7 +134,7 @@ public class StockUtil {
 	}
 
 	/**
-	 * 得到这个stockDO日期之前 count天的List 包含stockDO 这天
+	 * 得到这个stockDO日期之前 count天的List 不包含stockDO 这天
 	 * 
 	 * @param stockList
 	 * @param stockDO
@@ -146,26 +148,33 @@ public class StockUtil {
 			return tmpStockList;
 		}
 		int startIndex = 0;
-		if ((index + 1) >= count) {
-			startIndex = index + 1 - count;
+		/**
+		 * 得到这个stockDO日期之前 count天的List 包含stockDO 这天
+		 * 
+		 * if ((index + 1) >= count) { startIndex = index + 1 - count; }
+		 * tmpStockList = stockList.subList(startIndex, index + 1);
+		 */
+		if ((index + 1) > count) {
+			startIndex = index - count;
 		}
-		tmpStockList = stockList.subList(startIndex, index + 1);
+		tmpStockList = stockList.subList(startIndex, index);
 		return tmpStockList;
 	}
 
 	public static boolean isLLV(List<StockDO> stockList, StockDO stockDO,
 			int count) {
-		float llv = getLLV(stockList,stockDO,count);
-		if(llv == 0 ){
+		float llv = getLLV(stockList, stockDO, count);
+		if (llv == 0) {
 			return false;
 		}
-		if (stockDO.getLow() <= llv) {
+		if (stockDO.getLow() < llv) {
 			return true;
 		}
 		return false;
 	}
-	
-	public static float getLLV(List<StockDO> stockList, StockDO stockDO,int count){
+
+	public static float getLLV(List<StockDO> stockList, StockDO stockDO,
+			int count) {
 		List<StockDO> tmpStockList = getStockListOfPreCount(stockList, stockDO,
 				count);
 		// 如果不够count天，则不是count天内最低价
@@ -180,14 +189,14 @@ public class StockUtil {
 		}
 		return llv;
 	}
-
-	public static boolean isHHV(List<StockDO> stockList, StockDO stockDO,
+	
+	public static float getHHV(List<StockDO> stockList, StockDO stockDO,
 			int count) {
 		List<StockDO> tmpStockList = getStockListOfPreCount(stockList, stockDO,
 				count);
 		// 如果不够count天，则不是count天内最低价
 		if (tmpStockList.size() < count) {
-			return false;
+			return 0;
 		}
 		float hhv = tmpStockList.get(0).getHigh();
 		for (StockDO tmpStock : tmpStockList) {
@@ -195,7 +204,33 @@ public class StockUtil {
 				hhv = tmpStock.getHigh();
 			}
 		}
-		if (stockDO.getHigh() >= hhv) {
+		return hhv;
+	}
+
+	// public static boolean isHHV(List<StockDO> stockList, StockDO stockDO,
+	// int count) {
+	// List<StockDO> tmpStockList = getStockListOfPreCount(stockList, stockDO,
+	// count);
+	// // 如果不够count天，则不是count天内最低价
+	// if (tmpStockList.size() < count) {
+	// return false;
+	// }
+	// float hhv = tmpStockList.get(0).getHigh();
+	// for (StockDO tmpStock : tmpStockList) {
+	// if (tmpStock.getHigh() >= hhv) {
+	// hhv = tmpStock.getHigh();
+	// }
+	// }
+	// if (stockDO.getHigh() >= hhv) {
+	// return true;
+	// }
+	// return false;
+	// }
+
+	public static boolean isHHV(List<StockDO> stockList, StockDO stockDO,
+			int count) {
+		float hhv = getHHV(stockList,stockDO,count);
+		if (hhv!=0 && stockDO.getHigh() > hhv) {
 			return true;
 		}
 		return false;
@@ -215,7 +250,7 @@ public class StockUtil {
 		List<Float> list = new ArrayList<Float>();
 		// ATR : MA(TR,m)
 		int index = stockList.indexOf(stockDO);
-		if(index+1-day >= 0 ){
+		if (index + 1 - day >= 0) {
 			for (int i = index; index - i < day; i--) {
 				StockDO tmpStockDO = stockList.get(i);
 				list.add(tr(stockList, tmpStockDO));
@@ -225,11 +260,10 @@ public class StockUtil {
 				sum = sum + tmpfloat;
 			}
 			return Float.parseFloat(decimalFormat.format(sum / list.size()));
-		}else{
+		} else {
 			return 0;
 		}
-		
-		
+
 	}
 
 	public float tr(List<StockDO> stockList, StockDO stockDO) {
@@ -237,9 +271,9 @@ public class StockUtil {
 		// MAX(MAX((HIGH-LOW),ABS(REF(CLOSE,1)-HIGH)),ABS(REF(CLOSE,1)-LOW));
 		float theHL = Math.abs(stockDO.getHigh() - stockDO.getLow());
 		StockDO preStockDO = pre(stockList, stockDO);
-		float preCH = 0 ;
+		float preCH = 0;
 		float preCL = 0;
-		if(preStockDO != null){
+		if (preStockDO != null) {
 			preCH = Math.abs(preStockDO.getClose() - stockDO.getHigh());
 			preCL = Math.abs(preStockDO.getClose() - stockDO.getLow());
 		}

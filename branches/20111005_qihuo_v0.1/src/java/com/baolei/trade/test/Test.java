@@ -42,6 +42,7 @@ public abstract class Test {
 	protected float totalFee = 0;
 	protected float planBuyPoint;
 	protected float planBuyToucun;
+	protected float planSalePoint;
 	/**
 	 * lastBuyStockDO 上次买入时stockDO 用来计算上次买入到这次交易之间的 资金变化情况 如果其他业务逻辑需要用，不能影响上述逻辑
 	 */
@@ -51,7 +52,7 @@ public abstract class Test {
 	protected float jyDingTouMoney = 0; // 一次买入和卖出 期间 定投的金额
 	protected boolean reportFilterSwitch = true;
 
-	protected String startDateString = "1996/1/1";
+	protected String startDateString = "1997/1/1";
 
 	public float getRateHR() {
 		return rateHR;

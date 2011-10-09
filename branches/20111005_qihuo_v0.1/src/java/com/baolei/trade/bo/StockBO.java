@@ -37,7 +37,7 @@ public class StockBO {
 
 	public List<StockDO> initStockListMa(List<StockDO> stockList, String ma) {
 		if (StringUtils.isEmpty(ma)) {
-			ma = "20,30,60,90,120";
+			ma = "20,25,60,90,200,350";
 		}
 
 		for (StockDO stockDO : stockList) {
