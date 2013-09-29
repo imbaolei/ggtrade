@@ -96,7 +96,7 @@ public class StockTest extends AbstractTestCase {
 		test.printReport();
 	}
 
-	@Test
+	
 	public void testMa3UpLLVTc() {
 		List<StockDO> stockList = getInitStockList(code);
 		Ma3Tc test = new Ma3UpLLVTc();
@@ -132,6 +132,7 @@ public class StockTest extends AbstractTestCase {
 		test.printReport();
 	}
 	
+	@Test
 	public void testMa200Hg55LLVTcAtr() {
 		List<StockDO> stockList = getInitStockList(code);
 		Ma3Tc test = new Ma200Hg55LLVTcAtr();

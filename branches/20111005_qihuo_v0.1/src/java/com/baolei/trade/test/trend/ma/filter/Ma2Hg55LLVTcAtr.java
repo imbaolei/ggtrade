@@ -52,6 +52,7 @@ public class Ma2Hg55LLVTcAtr extends Ma3Tc {
 		planBuyPoint = NumberUtil.roundDown(planBuyPoint, 2);
 		planSalePoint = buyPoint - saleAtrRate * stockDO.getAtr();
 		planSalePoint = NumberUtil.roundDown(planSalePoint, 2);
+		log.info(dateString + " 计划买点："+ planBuyPoint + "计划卖点："+planSalePoint);
 	}
 
 	/**
@@ -185,17 +186,71 @@ public class Ma2Hg55LLVTcAtr extends Ma3Tc {
 
 	@Override
 	public void sale(String dateString) {
-		super.sale(dateString);
 		StockDO stockDO = jyStockMap.get(dateString);
+		int index = jyStockList.indexOf(stockDO);
+		StockDO preStockDO = jyStockList.get(index - 1);
+		String preStatus = preStockDO.getReport().getStatus();
+		float fee = 0;
+
+		if (Constant.REPORT_STATUS_CHICANG.equals(preStatus)
+				|| Constant.REPORT_STATUS_BUY.equals(preStatus)) {
+			float toucunChange = saleToucunChange(dateString);
+			fee = fee(toucunChange);
+			cash = cash + toucunChange - fee;
+			toucunHR = 0;
+			lastBuyStockDO = null;
+		} else {
+			// 应该不会遇到
+			// TODO log.error
+		}
+
+		float account = cash + toucunHR;
+		stockDO.getReport().setAccount(account);
+		stockDO.getReport().setNotes(" - 卖点 ： " + planSalePoint);
+		stockDO.getReport().setFee(fee);
+		totalFee = totalFee + fee;
+		stockDO.getReport().setTotalFee(totalFee);
+		stockDO.getReport().setStatus(Constant.REPORT_STATUS_SALE);
+		float shouyi = shouyi(dateString);
+		stockDO.getReport().setShouyi(shouyi);
+		Float shouyiPersent = shouyiPersent(dateString);
+		stockDO.getReport().setPercent(shouyiPersent);
+		stockDO.getReport().setPrice(stockDO.getClose());
+		stockDO.getReport().setTime(stockDO.getTime());
 		stockDO.getReport().setType(Constant.REPORT_TYPE_DUO);
 		clearJiacangPlan();
 	}
+	
+	
+	/**
+	 * @param dateString
+	 * 两次交易之间的头寸变化
+	 */
+	protected float saleToucunChange(String dateString) {
+		if(lastBuyStockDO == null){
+			return 0;
+		}
+		float touCunChange = toucunHR * (planSalePoint / lastBuyStockDO.getClose());
+		touCunChange = NumberUtil.roundDown(touCunChange, 2);
+		return touCunChange;
+	}
+	
+//	@Override
+//	public void sale(String dateString) {
+//		super.sale(dateString);
+//		StockDO stockDO = jyStockMap.get(dateString);
+//		stockDO.getReport().setType(Constant.REPORT_TYPE_DUO);
+//		clearJiacangPlan();
+//	}
 	
 	@Override
 	public boolean needSale(String dateString) {
 		StockDO stockDO = jyStockMap.get(dateString);
 		if(toucunHR > 0){
-			if (isLLV(dateString) || (stockDO.getLow() < planSalePoint)) {
+			if (isLLV(dateString) ) {
+				planSalePoint = getLLV(dateString);
+				return true;
+			}else if( stockDO.getLow() < planSalePoint ){
 				return true;
 			}
 		}
