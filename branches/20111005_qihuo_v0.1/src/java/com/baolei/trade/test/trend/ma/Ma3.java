@@ -2,8 +2,8 @@ package com.baolei.trade.test.trend.ma;
 
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.common.NumberUtil;
-import com.baolei.ghost.common.StockUtil;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.common.PriceUtil;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.baolei.trade.test.Test;
 
 /**
@@ -28,9 +28,9 @@ public class Ma3 extends Test {
 
 	@Override
 	public boolean needDingTou(String dateString) {
-		StockDO stockDO = pdStockMap.get(dateString);
+		PriceDO stockDO = pdStockMap.get(dateString);
 		// 每个月第firstDay 天定投
-		if (StockUtil.isFirstDayOfMonth(pdStockList, stockDO, firstDay)) {
+		if (PriceUtil.isFirstDayOfMonth(pdStockList, stockDO, firstDay)) {
 			return true;
 		}
 		return false;
@@ -38,7 +38,7 @@ public class Ma3 extends Test {
 
 	@Override
 	public void dingTou(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		cash = cash + moneyDingTou;
 		// 定投的时候 如果总定金额等于0，相当于还没开始计算总金额
 		if (totalMoney == 0) {
@@ -53,7 +53,7 @@ public class Ma3 extends Test {
 
 	}
 	
-	protected boolean isMaReadyJy(StockDO stockDO){
+	protected boolean isMaReadyJy(PriceDO stockDO){
 		float ma1 = stockDO.getMa(p1.toString());
 		float ma2 = stockDO.getMa(p2.toString());
 		float ma3 = stockDO.getMa(p3.toString());
@@ -72,7 +72,7 @@ public class Ma3 extends Test {
 	 * @param p3
 	 * @return
 	 */
-	protected boolean trendout(StockDO stockDO) {
+	protected boolean trendout(PriceDO stockDO) {
 		float ma1 = stockDO.getMa(p1.toString());
 		float ma2 = stockDO.getMa(p2.toString());
 		float ma3 = stockDO.getMa(p3.toString());
@@ -105,12 +105,12 @@ public class Ma3 extends Test {
 	 * @param dateString
 	 * @return
 	 */
-	protected StockDO findStartStock(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+	protected PriceDO findStartStock(String dateString) {
+		PriceDO stockDO = jyStockMap.get(dateString);
 		int index = jyStockList.indexOf(stockDO);
-		StockDO startStock = null;
+		PriceDO startStock = null;
 		for (int i = index - 1; i > 0; i--) {
-			StockDO tmpStockDO = jyStockList.get(i);
+			PriceDO tmpStockDO = jyStockList.get(i);
 			String status = tmpStockDO.getReport().getStatus();
 			if (Constant.REPORT_STATUS_SALE.equals(status)
 					|| Constant.REPORT_STATUS_NOSTART.equals(status)) {
@@ -125,11 +125,11 @@ public class Ma3 extends Test {
 	}
 	
 	protected float jyDingTouMoney(String dateString){
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		int index = jyStockList.indexOf(stockDO);
 		float jyDingTouMoney = 0;
 		for (int i = index - 1; i > 0; i--) {
-			StockDO tmpStockDO = jyStockList.get(i);
+			PriceDO tmpStockDO = jyStockList.get(i);
 			String status = tmpStockDO.getReport().getStatus();
 			
 			if (Constant.REPORT_STATUS_SALE.equals(status)
@@ -151,11 +151,11 @@ public class Ma3 extends Test {
 	 */
 	protected float shouyi(String dateString) {
 		// 用卖出这天的账户金额 减去 上次买入前的 账户金额
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		// 根据jyStockList 找到这次定投最开始的 那天的 stockDO
-		StockDO startStockDO = findStartStock(dateString);
+		PriceDO startStockDO = findStartStock(dateString);
 		int index = jyStockList.indexOf(startStockDO);
-		StockDO preStockDO = jyStockList.get(index - 1);
+		PriceDO preStockDO = jyStockList.get(index - 1);
 		float shouyi = stockDO.getReport().getAccount()
 				- preStockDO.getReport().getAccount() - jyDingTouMoney(dateString);
 		shouyi = NumberUtil.roundDown(shouyi, 2);
@@ -164,10 +164,10 @@ public class Ma3 extends Test {
 	
 	protected float shouyiPersent(String dateString) {
 		// 用卖出这天的账户金额 减去 上次买入前的 账户金额
-		StockDO stockDO = jyStockMap.get(dateString);
-		StockDO startStockDO = findStartStock(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
+		PriceDO startStockDO = findStartStock(dateString);
 		int index = jyStockList.indexOf(startStockDO);
-		StockDO preStockDO = jyStockList.get(index - 1);
+		PriceDO preStockDO = jyStockList.get(index - 1);
 		float preAccount = preStockDO.getReport().getAccount();
 		float shouyi = stockDO.getReport().getAccount() - preAccount
 				- jyDingTouMoney(dateString);
@@ -178,7 +178,7 @@ public class Ma3 extends Test {
 
 	@Override
 	public boolean needBuy(String dateString) {
-		StockDO stockDO = pdStockMap.get(dateString);
+		PriceDO stockDO = pdStockMap.get(dateString);
 		// 如果判断没有高风险头寸 而且 趋势不是走弱，即走强
 		// 计算 可以买入的份额，如果可以买入的份额大于0
 		float buyPoint = stockDO.getClose();
@@ -193,7 +193,7 @@ public class Ma3 extends Test {
 
 	@Override
 	public void buy(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		// 如果是空仓后 第一次买入 则 更新lastBuyStockDO 否则是加仓
 		float fee = 0;
 		float buyPoint = planBuyPoint;
@@ -225,7 +225,7 @@ public class Ma3 extends Test {
 
 	@Override
 	public boolean needSale(String dateString) {
-		StockDO stockDO = pdStockMap.get(dateString);
+		PriceDO stockDO = pdStockMap.get(dateString);
 		if ((shareHR > 0) && trendout(stockDO)) {
 			return true;
 		}
@@ -234,9 +234,9 @@ public class Ma3 extends Test {
 
 	@Override
 	public void sale(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		int index = jyStockList.indexOf(stockDO);
-		StockDO preStockDO = jyStockList.get(index - 1);
+		PriceDO preStockDO = jyStockList.get(index - 1);
 		String status = preStockDO.getReport().getStatus();
 		float fee = 0;
 		float reportShare = shareHR;
@@ -266,7 +266,7 @@ public class Ma3 extends Test {
 
 	@Override
 	public void noBuyNoSale(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		if (lastBuyStockDO == null) {
 			float account = cash;
 			stockDO.getReport().setAccount(account);

@@ -2,8 +2,8 @@ package com.baolei.trade.test.trend.ma.filter;
 
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.common.NumberUtil;
-import com.baolei.ghost.common.StockUtil;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.common.PriceUtil;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.baolei.trade.test.trend.ma.Ma3Tc;
 
 public class Ma2Hg55LLVTcAtr extends Ma3Tc {
@@ -22,23 +22,23 @@ public class Ma2Hg55LLVTcAtr extends Ma3Tc {
 	protected Integer ma2 = 200;
 
 	protected boolean isLLV(String dateString) {
-		StockDO stockDO = pdStockMap.get(dateString);
-		return StockUtil.isLLV(pdStockList, stockDO, llvCount);
+		PriceDO stockDO = pdStockMap.get(dateString);
+		return PriceUtil.isLLV(pdStockList, stockDO, llvCount);
 	}
 
 	protected boolean isHHV(String dateString) {
-		StockDO stockDO = pdStockMap.get(dateString);
-		return StockUtil.isHHV(pdStockList, stockDO, hhvCount);
+		PriceDO stockDO = pdStockMap.get(dateString);
+		return PriceUtil.isHHV(pdStockList, stockDO, hhvCount);
 	}
 	
 	protected float getLLV(String dateString) {
-		StockDO stockDO = pdStockMap.get(dateString);
-		return StockUtil.getLLV(pdStockList, stockDO, llvCount);
+		PriceDO stockDO = pdStockMap.get(dateString);
+		return PriceUtil.getLLV(pdStockList, stockDO, llvCount);
 	}
 
 	protected float getHHV(String dateString) {
-		StockDO stockDO = pdStockMap.get(dateString);
-		return StockUtil.getHHV(pdStockList, stockDO, hhvCount);
+		PriceDO stockDO = pdStockMap.get(dateString);
+		return PriceUtil.getHHV(pdStockList, stockDO, hhvCount);
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class Ma2Hg55LLVTcAtr extends Ma3Tc {
 	 */
 	protected void setJiacangPlan(String dateString) {
 		jiacangNextPlanCount++;
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		float buyPoint = stockDO.getReport().getPrice();
 		planBuyPoint = buyPoint + jiacangAtrRate * stockDO.getAtr();
 		planBuyPoint = NumberUtil.roundDown(planBuyPoint, 2);
@@ -85,7 +85,7 @@ public class Ma2Hg55LLVTcAtr extends Ma3Tc {
 	}
 	
 	protected boolean canBuyFirst(String dateString) {
-		StockDO lastJyStock = findLastJyStock(dateString);
+		PriceDO lastJyStock = findLastJyStock(dateString);
 		if (lastJyStock == null) {
 			return false;
 		}
@@ -100,7 +100,7 @@ public class Ma2Hg55LLVTcAtr extends Ma3Tc {
 	}
 
 	public boolean needBuyThis(String dateString) {
-		StockDO stockDO = pdStockMap.get(dateString);
+		PriceDO stockDO = pdStockMap.get(dateString);
 		// 如果判断没有头寸 而且 趋势不是走弱，即走强
 		// 如果有现金 就买入
 		if ((cash > 0) && isMaReadyJy(stockDO) && trendin(stockDO) && isHHV(dateString)) {
@@ -111,7 +111,7 @@ public class Ma2Hg55LLVTcAtr extends Ma3Tc {
 		return false;
 	}
 	
-	protected boolean trendin(StockDO stockDO){
+	protected boolean trendin(PriceDO stockDO){
 		float m1 = stockDO.getMa(ma1.toString());
 		float m2 = stockDO.getMa(ma2.toString());
 		if (m1 > m2) {
@@ -122,11 +122,11 @@ public class Ma2Hg55LLVTcAtr extends Ma3Tc {
 	
 	
 	protected boolean canJiacang(String dateString) {
-		StockDO lastJyStock = findLastJyStock(dateString);
+		PriceDO lastJyStock = findLastJyStock(dateString);
 		if(lastJyStock == null){
 			return false;
 		}
-		StockDO stockDO = pdStockMap.get(dateString);
+		PriceDO stockDO = pdStockMap.get(dateString);
 		String lastJyStatus = lastJyStock.getReport().getStatus();
 		if (Constant.REPORT_STATUS_BUY.equals(lastJyStatus)) {
 			if (cash > 0) {
@@ -148,7 +148,7 @@ public class Ma2Hg55LLVTcAtr extends Ma3Tc {
 	}
 
 	protected void executeBuy(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		float fee = 0;
 		fee = fee(planBuyToucun);
 		stockDO.getReport().setFee(fee);
@@ -163,7 +163,7 @@ public class Ma2Hg55LLVTcAtr extends Ma3Tc {
 	}
 
 	protected void setBuyReport(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		float buyPoint = stockDO.getReport().getPrice();
 		float fee = stockDO.getReport().getFee();
 		float account = toucunHR + cash;
@@ -186,9 +186,9 @@ public class Ma2Hg55LLVTcAtr extends Ma3Tc {
 
 	@Override
 	public void sale(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		int index = jyStockList.indexOf(stockDO);
-		StockDO preStockDO = jyStockList.get(index - 1);
+		PriceDO preStockDO = jyStockList.get(index - 1);
 		String preStatus = preStockDO.getReport().getStatus();
 		float fee = 0;
 
@@ -245,7 +245,7 @@ public class Ma2Hg55LLVTcAtr extends Ma3Tc {
 	
 	@Override
 	public boolean needSale(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		if(toucunHR > 0){
 			if (isLLV(dateString) ) {
 				planSalePoint = getLLV(dateString);

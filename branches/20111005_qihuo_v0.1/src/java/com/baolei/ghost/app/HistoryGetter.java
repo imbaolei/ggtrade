@@ -18,7 +18,7 @@ import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 
 public class HistoryGetter {
 
@@ -44,13 +44,13 @@ public class HistoryGetter {
 		parser.setEncoding("GBK");
 		filter = new NodeClassFilter(TableTag.class);
 		list = parser.extractAllNodesThatMatch(filter);
-		List<StockDO> stockList = new ArrayList<StockDO>();
+		List<PriceDO> stockList = new ArrayList<PriceDO>();
 
 		for (int i = 1; i <= list.size(); i++) {
 			TableTag tag = (TableTag) list.elementAt(i);
 			TableRow[] rows = tag.getRows();
 			for (int j = 1; j <= rows.length; j++) {
-				StockDO stockDO = new StockDO();
+				PriceDO stockDO = new PriceDO();
 				TableRow tr = rows[j];
 				TableColumn[] td = tr.getColumns();
 				for (int k = 1; k <= td.length; k++) {
@@ -89,7 +89,7 @@ public class HistoryGetter {
 			}
 		}
 		
-		for(StockDO stockDO : stockList){
+		for(PriceDO stockDO : stockList){
 			System.out.print(dateFormat.format(stockDO.getTime()));
 		}
 	}

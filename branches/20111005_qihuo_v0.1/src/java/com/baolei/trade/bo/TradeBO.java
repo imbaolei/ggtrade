@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baolei.ghost.app2.TxdFileParser;
-import com.baolei.ghost.common.StockUtil;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.common.PriceUtil;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 
 @Service("tradeBO")
 public class TradeBO {
@@ -24,27 +24,27 @@ public class TradeBO {
 	
 	protected Log log = LogFactory.getLog(getClass());
 	
-	public List<StockDO> getStockListByFile(String code){
-		List<StockDO> stockList = txdFileParser.parse(code);
+	public List<PriceDO> getStockListByFile(String code){
+		List<PriceDO> stockList = txdFileParser.parse(code);
 		return stockList;
 	}
 	
-	public List<StockDO> initStockListMa(List<StockDO> stockList){
+	public List<PriceDO> initStockListMa(List<PriceDO> stockList){
 		return stockList;
 		
 	}
 	
 	
 	
-	public List<StockDO> maManage(List<StockDO> stockList,String ma){
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
-		for(StockDO stockDO : stockList){
+	public List<PriceDO> maManage(List<PriceDO> stockList,String ma){
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
+		for(PriceDO stockDO : stockList){
 //			log.info(dateFormat.format(stockDO.getTime()));
 			JSONObject json = new JSONObject();
 			if(StringUtils.isNotEmpty(ma)){
 				String[] mas = ma.split(",");
 				for(String tmpma : mas){
-					float floatMa = StockUtil.MA(stockList, stockDO, Integer.parseInt(tmpma));
+					float floatMa = PriceUtil.MA(stockList, stockDO, Integer.parseInt(tmpma));
 					json.put(tmpma, floatMa);
 				}
 			}

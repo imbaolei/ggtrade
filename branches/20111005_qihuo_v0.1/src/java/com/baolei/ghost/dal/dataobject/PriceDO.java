@@ -5,7 +5,7 @@ import java.util.Date;
 import net.sf.json.JSONObject;
 
 
-public class StockDO {
+public class PriceDO {
 	
 	private String code;
 	

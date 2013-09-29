@@ -10,8 +10,8 @@ import java.util.List;
 import com.baolei.ghost.AccountDO;
 import com.baolei.ghost.DataPool;
 import com.baolei.ghost.common.Constant;
-import com.baolei.ghost.common.StockUtil;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.common.PriceUtil;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.baolei.ghost.plan.Plan;
 
 /**
@@ -41,7 +41,7 @@ public class HGPlan extends Plan {
 	}
 
 	@Override
-	public void execute(StockDO stockDO, AccountDO accountDO)
+	public void execute(PriceDO stockDO, AccountDO accountDO)
 			throws ParseException {
 		if (isBuy(stockDO, accountDO)) {
 			// 达到买点后,先制定操作计划,再进行买卖
@@ -59,10 +59,10 @@ public class HGPlan extends Plan {
 		}
 	}
 
-	public boolean isBuy(StockDO stockDO, AccountDO accountDO)
+	public boolean isBuy(PriceDO stockDO, AccountDO accountDO)
 			throws ParseException {
 		if (Constant.PLAN_ACTION_BUY.equals(this.getAction())) {
-			float hide = StockUtil.preHide(dataPool.getDayStockMap(), stockDO
+			float hide = PriceUtil.preHide(dataPool.getDayStockMap(), stockDO
 					.getTime(), 20);
 			if (hide != 0) {
 				if (stockDO.getHigh() > hide) {
@@ -73,7 +73,7 @@ public class HGPlan extends Plan {
 		return false;
 	}
 
-	public void setBuyPlan(StockDO stockDO, AccountDO accountDO)
+	public void setBuyPlan(PriceDO stockDO, AccountDO accountDO)
 			throws ParseException {
 		this.setPlanTrades(4);// 设置一共交易次数为4
 		// 如果空仓 根据现有总金额计算 atr 购买数量 加仓点 和 止损点
@@ -82,18 +82,18 @@ public class HGPlan extends Plan {
 
 		BigDecimal amount = new BigDecimal(this.getBalance());
 		// 如果一直以买点的atr为标准,则需要在这里设置好;否则在每次操作完资金后,取最新的atr重新计算。这里是以买点的atr为准
-		Float calatr = StockUtil.atr(dataPool.getDayStockMap(), stockDO
+		Float calatr = PriceUtil.atr(dataPool.getDayStockMap(), stockDO
 				.getTime());
 		this.setAtr(calatr);
 		int num = amount.divide(new BigDecimal(100)).divide(
 				new BigDecimal(calatr.floatValue()), 0, BigDecimal.ROUND_DOWN)
 				.divide(new BigDecimal(100), 0, BigDecimal.ROUND_DOWN)
 				.intValue() * 100;
-		float hide = StockUtil.preHide(dataPool.getDayStockMap(), stockDO
+		float hide = PriceUtil.preHide(dataPool.getDayStockMap(), stockDO
 				.getTime(), 20);
 		this.setBuyPoint(hide);
 		this.setTradeNum(new Float(num));
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		System.out.println(dateFormat.format(stockDO.getTime())
 				+ " Day买点" + this.getBuyPoint() + "出现,准备买入:"
 				+ this.getTradeNum() + "股");
@@ -109,7 +109,7 @@ public class HGPlan extends Plan {
 		}
 	}
 
-	public void executeBuy(StockDO stockDO, AccountDO accountDO)
+	public void executeBuy(PriceDO stockDO, AccountDO accountDO)
 			throws ParseException {
 		this.setTotalNum(this.getTradeNum());
 		this.setBalance(this.getBalance() - this.getBuyPoint()
@@ -118,7 +118,7 @@ public class HGPlan extends Plan {
 		this.setAction(Constant.PLAN_ACTION_JIACANG);
 	}
 
-	public boolean isStopLoss(StockDO stockDO, AccountDO accountDO) {
+	public boolean isStopLoss(PriceDO stockDO, AccountDO accountDO) {
 		if (!Constant.PLAN_ACTION_BUY.equals(this.getAction())) {
 			// System.out.println(StockUtil.dateFormat.format(stockDO.getTime())+":"+planDO.getStopLoss()+":"+stockDO.getLow());
 			// 如果止损点在最高和最低点之间或者开盘价就在止损点之下,都执行止损
@@ -132,7 +132,7 @@ public class HGPlan extends Plan {
 
 	}
 
-	public void executeStopLost(StockDO stockDO, AccountDO accountDO) {
+	public void executeStopLost(PriceDO stockDO, AccountDO accountDO) {
 		BigDecimal stopLoss = new BigDecimal(this.getStopLoss());
 		BigDecimal count = new BigDecimal(this.getTotalNum());
 		Float money = stopLoss.multiply(count).setScale(2,
@@ -140,7 +140,7 @@ public class HGPlan extends Plan {
 		// 止损之后,计划中操作的余额归还账户
 		this.setBalance(money + this.getBalance());
 		accountDO.setMoney(accountDO.getMoney() + this.getBalance());
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		System.out.println(dateFormat.format(stockDO.getTime())
 				+ " 止损点" + this.getStopLoss()
 				+ "出现,止损%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%:"
@@ -151,7 +151,7 @@ public class HGPlan extends Plan {
 		this.getExitStatus().add(Constant.EXIT_STATUS_STOPLOST);
 	}
 
-	public void setJiacangPlan(StockDO stockDO, AccountDO accountDO) {
+	public void setJiacangPlan(PriceDO stockDO, AccountDO accountDO) {
 		// 如果不是空仓 从新计算下一次加仓点 和止损点
 		Float atr = this.getAtr();
 		// 先计算止损
@@ -179,7 +179,7 @@ public class HGPlan extends Plan {
 							+ " 操作资金已经满仓,调整计划为止赢!!!!!!!!!!!!!!!!" + ";止损:"
 							+ this.getStopLoss());
 				} else {
-					DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+					DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 					System.out.println("=============>"
 							+ dateFormat.format(stockDO.getTime())
 							+ " 余额不够了,余额是" + this.getBalance() + " 需要:"
@@ -194,7 +194,7 @@ public class HGPlan extends Plan {
 				}
 
 			} else {
-				DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+				DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 				System.out.println("=============>"
 						+ dateFormat.format(stockDO.getTime())
 						+ "计划在" + this.getJcPoint() + "加仓:"
@@ -208,9 +208,9 @@ public class HGPlan extends Plan {
 
 	}
 
-	public boolean isJustWin(StockDO stockDO, AccountDO accountDO)
+	public boolean isJustWin(PriceDO stockDO, AccountDO accountDO)
 			throws ParseException {
-		float low = StockUtil.preLow(dataPool.getDayStockMap(), stockDO
+		float low = PriceUtil.preLow(dataPool.getDayStockMap(), stockDO
 				.getTime(), 10);
 		if (Constant.PLAN_ACTION_JUSTWIN.equals(this.getAction())) {
 			if (low != 0 && stockDO.getLow() <= low) {
@@ -220,12 +220,12 @@ public class HGPlan extends Plan {
 		return false;
 	}
 
-	public void executeJustWin(StockDO stockDO, AccountDO accountDO) {
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+	public void executeJustWin(PriceDO stockDO, AccountDO accountDO) {
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		System.out.println(dateFormat.format(stockDO.getTime())
 				+ " 止赢点" + stockDO.getClose() + "出现,止赢:" + this.getTotalNum()
 				+ "股");
-		float low = StockUtil.preLow(dataPool.getDayStockMap(), stockDO
+		float low = PriceUtil.preLow(dataPool.getDayStockMap(), stockDO
 				.getTime(), 10);
 		BigDecimal justWin = new BigDecimal(low);
 		BigDecimal count = new BigDecimal(this.getTotalNum());
@@ -239,7 +239,7 @@ public class HGPlan extends Plan {
 		this.getExitStatus().add(Constant.EXIT_STATUS_JUSTWIN);
 	}
 
-	public boolean isJiaCang(StockDO stockDO, AccountDO accountDO) {
+	public boolean isJiaCang(PriceDO stockDO, AccountDO accountDO) {
 		if (Constant.PLAN_ACTION_JIACANG.equals(this.getAction())
 				&& this.getTrades() < this.getPlanTrades()) {
 			if (this.getJcPoint() <= stockDO.getHigh()) {
@@ -249,9 +249,9 @@ public class HGPlan extends Plan {
 		return false;
 	}
 
-	public void executeJiaCang(StockDO stockDO, AccountDO accountDO)
+	public void executeJiaCang(PriceDO stockDO, AccountDO accountDO)
 			throws ParseException {
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		System.out.println(dateFormat.format(stockDO.getTime())
 				+ " 加仓点" + this.getJcPoint() + "出现,加仓:" + this.getTradeNum()
 				+ "股");
@@ -283,7 +283,7 @@ public class HGPlan extends Plan {
 
 	@Override
 	public boolean canTrade(Date time) throws ParseException {
-		List<Date> dateList = StockUtil
+		List<Date> dateList = PriceUtil
 				.pre(dataPool.getDayStockMap(), time, 20);
 		if (dateList != null) {
 			return true;

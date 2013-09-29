@@ -2,7 +2,7 @@ package com.baolei.ghost.app2;
 
 import java.util.List;
 
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 
 public interface DataParser {
 	/**
@@ -10,14 +10,14 @@ public interface DataParser {
 	 * @param code
 	 * @return
 	 */
-	List<StockDO> parse(String code);
+	List<PriceDO> parse(String code);
 	String getStockName(String code);
 	/**
 	 * 取最新的股票数据
 	 * @param code
 	 * @return
 	 */
-	StockDO getLastPrice(String code);
+	PriceDO getLastPrice(String code);
 	
 	/**
 	 * 取得股票数据的文件路径

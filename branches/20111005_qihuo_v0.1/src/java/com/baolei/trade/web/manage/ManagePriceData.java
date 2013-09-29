@@ -12,8 +12,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.baolei.ghost.common.Constant;
-import com.baolei.ghost.dal.daointerface.StockDAO;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.dal.daointerface.PriceDAO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.baolei.trade.bo.TradeBO;
 
 @Controller
@@ -22,7 +22,7 @@ public class ManagePriceData {
 	protected Log log = LogFactory.getLog(getClass());
 	
 	@Autowired
-	private StockDAO stockDAO;
+	private PriceDAO stockDAO;
 	
 	@Autowired
 	private TradeBO tradeBO;
@@ -31,9 +31,9 @@ public class ManagePriceData {
 	public String manage(HttpServletRequest request, ModelMap model) {
 		String code = request.getParameter("code");
 		String ma = request.getParameter("ma");
-		List<StockDO> stockList = stockDAO.selectStockByCodeAndPeriod(code, Constant.STOCK_PERIOD_DAY);
+		List<PriceDO> stockList = stockDAO.selectPriceByCodeAndPeriod(code, Constant.STOCK_PERIOD_DAY);
 		stockList = tradeBO.maManage(stockList,ma);
-		stockDAO.updateStocksByIdBatch(stockList);
+		stockDAO.updatePricesByIdBatch(stockList);
 		return "manage/manage_price_data";
 	}
 	

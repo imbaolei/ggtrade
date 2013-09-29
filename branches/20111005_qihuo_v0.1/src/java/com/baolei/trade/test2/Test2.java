@@ -14,9 +14,9 @@ import org.apache.commons.logging.LogFactory;
 
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.common.NumberUtil;
-import com.baolei.ghost.common.StockUtil;
+import com.baolei.ghost.common.PriceUtil;
 import com.baolei.ghost.dal.dataobject.ReportDO;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 
 /**
  * @author lei.baol 测试 两种 股票，一种用来做 买点买点的判断 pdStockList，一种是用来交易 jyStockList
@@ -27,10 +27,10 @@ public abstract class Test2 {
 
 	protected Log log = LogFactory.getLog(getClass());
 	protected DateFormat dateFormat = new SimpleDateFormat(
-			StockUtil.dateFormatString);
+			PriceUtil.dateFormatString);
 	protected DecimalFormat decimalFormat = new DecimalFormat("#.00");
-	protected List<StockDO> stockList;
-	protected Map<String, StockDO> stockMap;
+	protected List<PriceDO> stockList;
+	protected Map<String, PriceDO> stockMap;
 	protected float rate = 0f;
 	protected float cash; // 现金
 	protected float toucun; // HighRisk高风险头寸
@@ -44,7 +44,7 @@ public abstract class Test2 {
 	/**
 	 * lastBuyStockDO 上次买入时stockDO 用来计算上次买入到这次交易之间的 资金变化情况 如果其他业务逻辑需要用，不能影响上述逻辑
 	 */
-	protected StockDO lastBuyStockDO;
+	protected PriceDO lastBuyStockDO;
 	protected float totalMoney;
 	protected boolean reportFilterSwitch = true;
 
@@ -68,10 +68,10 @@ public abstract class Test2 {
 	 * @param jyStockList
 	 *            交易的stock
 	 */
-	public void initStockList(List<StockDO> pdStockList,
-			List<StockDO> jyStockList) {
+	public void initStockList(List<PriceDO> pdStockList,
+			List<PriceDO> jyStockList) {
 		this.stockList = jyStockList;
-		stockMap = StockUtil.toStockMap(jyStockList);
+		stockMap = PriceUtil.toStockMap(jyStockList);
 	}
 
 	private Date getStartDate() {
@@ -80,7 +80,7 @@ public abstract class Test2 {
 			startDate = dateFormat.parse(startDateString);
 			int i = stockList.size()-1;
 			for(; i >=0;i--){
-				StockDO jyStockDO = stockList.get(i);
+				PriceDO jyStockDO = stockList.get(i);
 				if(jyStockDO.getLow() <= 0){
 					break;
 				}
@@ -89,7 +89,7 @@ public abstract class Test2 {
 					break;
 				}
 			}
-			StockDO nextDayJyStock = stockList.get(i+1);
+			PriceDO nextDayJyStock = stockList.get(i+1);
 			if(nextDayJyStock.getTime().after(startDate)){
 				startDate = nextDayJyStock.getTime();
 			}
@@ -101,7 +101,7 @@ public abstract class Test2 {
 
 	public void execute() {
 		Date startDate = getStartDate();
-		for (StockDO stockDO : stockList) {
+		for (PriceDO stockDO : stockList) {
 			// 从startDate开始计算
 			if (stockDO.getTime().before(startDate)) {
 				continue;
@@ -120,7 +120,7 @@ public abstract class Test2 {
 	}
 
 	public void printReport() {
-		for (StockDO stockDO : stockList) {
+		for (PriceDO stockDO : stockList) {
 			if (reportFilter(stockDO) && reportFilterSwitch) {
 				continue;
 			}
@@ -184,7 +184,7 @@ public abstract class Test2 {
 		}
 	}
 
-	public boolean reportFilter(StockDO stockDO) {
+	public boolean reportFilter(PriceDO stockDO) {
 		ReportDO report = stockDO.getReport();
 		String status = report.getStatus();
 		if (Constant.REPORT_STATUS_BUY.equals(status)) {

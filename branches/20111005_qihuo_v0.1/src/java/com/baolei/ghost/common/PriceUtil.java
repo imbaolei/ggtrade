@@ -30,15 +30,15 @@ import org.springframework.stereotype.Service;
 
 import com.baolei.ghost.DataPool;
 import com.baolei.ghost.app.InitStockFile;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 
 /**
  * @author B
  * 
  */
 
-@Service("stockUtil")
-public class StockUtil {
+@Service("priceUtil")
+public class PriceUtil {
 
 	public static String dateFormatString = "yyyy/MM/dd";
 
@@ -85,11 +85,11 @@ public class StockUtil {
 	 * @param firstDay
 	 * @return
 	 */
-	public static boolean isFirstDayOfMonth(List<StockDO> stockList,
-			StockDO stockDO, int firstDay) {
+	public static boolean isFirstDayOfMonth(List<PriceDO> stockList,
+			PriceDO stockDO, int firstDay) {
 		int index = stockList.indexOf(stockDO);
 		if (index > 0) {
-			List<StockDO> monthList = getStockListOfMonth(stockList, stockDO);
+			List<PriceDO> monthList = getStockListOfMonth(stockList, stockDO);
 			int monthIndex = monthList.indexOf(stockDO);
 			if (monthIndex == (firstDay - 1)) {
 				return true;
@@ -105,9 +105,9 @@ public class StockUtil {
 	 * @param stockDO
 	 * @return
 	 */
-	public static List<StockDO> getStockListOfMonth(List<StockDO> stockList,
-			StockDO stockDO) {
-		List<StockDO> tmpStockList = new ArrayList<StockDO>();
+	public static List<PriceDO> getStockListOfMonth(List<PriceDO> stockList,
+			PriceDO stockDO) {
+		List<PriceDO> tmpStockList = new ArrayList<PriceDO>();
 		int index = stockList.indexOf(stockDO);
 		if (index <= 0) {
 			return tmpStockList;
@@ -118,7 +118,7 @@ public class StockUtil {
 		// 这个月的第一天 距离 stockDO的天数
 		int monthFirstIndex = 0;
 		for (int i = index - 1; i > 0; i--) {
-			StockDO tmpStockDO = stockList.get(i);
+			PriceDO tmpStockDO = stockList.get(i);
 			Calendar tmpCalendar = Calendar.getInstance();
 			tmpCalendar.setTime(tmpStockDO.getTime());
 			int tmpMonth = tmpCalendar.get(Calendar.MONTH);
@@ -140,9 +140,9 @@ public class StockUtil {
 	 * @param stockDO
 	 * @return
 	 */
-	public static List<StockDO> getStockListOfPreCount(List<StockDO> stockList,
-			StockDO stockDO, int count) {
-		List<StockDO> tmpStockList = new ArrayList<StockDO>();
+	public static List<PriceDO> getStockListOfPreCount(List<PriceDO> stockList,
+			PriceDO stockDO, int count) {
+		List<PriceDO> tmpStockList = new ArrayList<PriceDO>();
 		int index = stockList.indexOf(stockDO);
 		if (index <= 0) {
 			return tmpStockList;
@@ -161,7 +161,7 @@ public class StockUtil {
 		return tmpStockList;
 	}
 
-	public static boolean isLLV(List<StockDO> stockList, StockDO stockDO,
+	public static boolean isLLV(List<PriceDO> stockList, PriceDO stockDO,
 			int count) {
 		float llv = getLLV(stockList, stockDO, count);
 		if (llv == 0) {
@@ -173,16 +173,16 @@ public class StockUtil {
 		return false;
 	}
 
-	public static float getLLV(List<StockDO> stockList, StockDO stockDO,
+	public static float getLLV(List<PriceDO> stockList, PriceDO stockDO,
 			int count) {
-		List<StockDO> tmpStockList = getStockListOfPreCount(stockList, stockDO,
+		List<PriceDO> tmpStockList = getStockListOfPreCount(stockList, stockDO,
 				count);
 		// 如果不够count天，则不是count天内最低价
 		if (tmpStockList.size() < count) {
 			return 0;
 		}
 		float llv = tmpStockList.get(0).getLow();
-		for (StockDO tmpStock : tmpStockList) {
+		for (PriceDO tmpStock : tmpStockList) {
 			if (tmpStock.getLow() <= llv) {
 				llv = tmpStock.getLow();
 			}
@@ -190,16 +190,16 @@ public class StockUtil {
 		return llv;
 	}
 	
-	public static float getHHV(List<StockDO> stockList, StockDO stockDO,
+	public static float getHHV(List<PriceDO> stockList, PriceDO stockDO,
 			int count) {
-		List<StockDO> tmpStockList = getStockListOfPreCount(stockList, stockDO,
+		List<PriceDO> tmpStockList = getStockListOfPreCount(stockList, stockDO,
 				count);
 		// 如果不够count天，则不是count天内最低价
 		if (tmpStockList.size() < count) {
 			return 0;
 		}
 		float hhv = tmpStockList.get(0).getHigh();
-		for (StockDO tmpStock : tmpStockList) {
+		for (PriceDO tmpStock : tmpStockList) {
 			if (tmpStock.getHigh() >= hhv) {
 				hhv = tmpStock.getHigh();
 			}
@@ -227,7 +227,7 @@ public class StockUtil {
 	// return false;
 	// }
 
-	public static boolean isHHV(List<StockDO> stockList, StockDO stockDO,
+	public static boolean isHHV(List<PriceDO> stockList, PriceDO stockDO,
 			int count) {
 		float hhv = getHHV(stockList,stockDO,count);
 		if (hhv!=0 && stockDO.getHigh() > hhv) {
@@ -246,13 +246,13 @@ public class StockUtil {
 	 * @return
 	 * @throws ParseException
 	 */
-	public float atr(List<StockDO> stockList, StockDO stockDO, int day) {
+	public float atr(List<PriceDO> stockList, PriceDO stockDO, int day) {
 		List<Float> list = new ArrayList<Float>();
 		// ATR : MA(TR,m)
 		int index = stockList.indexOf(stockDO);
 		if (index + 1 - day >= 0) {
 			for (int i = index; index - i < day; i--) {
-				StockDO tmpStockDO = stockList.get(i);
+				PriceDO tmpStockDO = stockList.get(i);
 				list.add(tr(stockList, tmpStockDO));
 			}
 			Float sum = new Float(0);
@@ -266,11 +266,11 @@ public class StockUtil {
 
 	}
 
-	public float tr(List<StockDO> stockList, StockDO stockDO) {
+	public float tr(List<PriceDO> stockList, PriceDO stockDO) {
 		// TR :
 		// MAX(MAX((HIGH-LOW),ABS(REF(CLOSE,1)-HIGH)),ABS(REF(CLOSE,1)-LOW));
 		float theHL = Math.abs(stockDO.getHigh() - stockDO.getLow());
-		StockDO preStockDO = pre(stockList, stockDO);
+		PriceDO preStockDO = pre(stockList, stockDO);
 		float preCH = 0;
 		float preCL = 0;
 		if (preStockDO != null) {
@@ -288,20 +288,20 @@ public class StockUtil {
 	 * @return
 	 * @throws ParseException
 	 */
-	public StockDO pre(List<StockDO> stockList, StockDO stockDO) {
+	public PriceDO pre(List<PriceDO> stockList, PriceDO stockDO) {
 		int index = stockList.indexOf(stockDO);
 		if (index <= 0) {
 			return null;
 		}
-		StockDO preStockDO = stockList.get(index - 1);
+		PriceDO preStockDO = stockList.get(index - 1);
 		return preStockDO;
 	}
 
-	public static Date preWeekDay(Map<String, StockDO> stockMap, Date time)
+	public static Date preWeekDay(Map<String, PriceDO> stockMap, Date time)
 			throws ParseException {
 		Date pre = null;
 		Set<String> dayStringSet = stockMap.keySet();
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		for (String dayString : dayStringSet) {
 			// 如果dayString在time之后 则没有前一周
 			if (dateFormat.parse(dayString).compareTo(time) >= 0) {
@@ -322,11 +322,11 @@ public class StockUtil {
 		return pre;
 	}
 
-	public static Date preMonthDay(Map<String, StockDO> stockMap, Date theDay)
+	public static Date preMonthDay(Map<String, PriceDO> stockMap, Date theDay)
 			throws ParseException {
 		Date pre = null;
 		Set<String> dayStringSet = stockMap.keySet();
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		for (String dayString : dayStringSet) {
 			// 如果dayString在time之后 则没有前一周
 			if (dateFormat.parse(dayString).compareTo(theDay) >= 0) {
@@ -348,10 +348,10 @@ public class StockUtil {
 		return pre;
 	}
 
-	public static void initBbiMap(Map<String, StockDO> stockMap,
-			List<StockDO> stockList) throws ParseException {
+	public static void initBbiMap(Map<String, PriceDO> stockMap,
+			List<PriceDO> stockList) throws ParseException {
 		for (int i = 23; i < stockList.size(); i++) {
-			StockDO stockDO = stockList.get(i);
+			PriceDO stockDO = stockList.get(i);
 			if (stockDO.getBbi() != 0) {
 				// 如果该stock今天的bbi已经计算，则不用再计算了，因为计算bbi很费时
 				continue;
@@ -370,12 +370,12 @@ public class StockUtil {
 	 * @return
 	 * @throws ParseException
 	 */
-	private static Date pre(List<StockDO> stockList, Date time)
+	private static Date pre(List<PriceDO> stockList, Date time)
 			throws ParseException {
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		String timeString = dateFormat.format(time);
 		Date pre = null;
-		StockDO firstDay = stockList.get(0);
+		PriceDO firstDay = stockList.get(0);
 		// 如果是stockList的第一天，那么没有前一天
 		if (timeString.equals(dateFormat.format(firstDay.getTime()))) {
 			return null;
@@ -398,10 +398,10 @@ public class StockUtil {
 	 * @param count
 	 * @return
 	 */
-	public static List<Date> pre(List<StockDO> stockList, Date time, int count) {
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+	public static List<Date> pre(List<PriceDO> stockList, Date time, int count) {
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		String timeString = dateFormat.format(time);
-		StockDO firstDay = stockList.get(0);
+		PriceDO firstDay = stockList.get(0);
 		// 如果是stockList的第一天，那么没有前一天
 		if (timeString.equals(dateFormat.format(firstDay.getTime()))) {
 			return null;
@@ -425,8 +425,8 @@ public class StockUtil {
 		return null;
 	}
 
-	public static Date pre(Map<String, StockDO> stockMap, Date time) {
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+	public static Date pre(Map<String, PriceDO> stockMap, Date time) {
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		String timeString = dateFormat.format(time);
 		Date pre = null;
 		Set<String> dayStringSet = stockMap.keySet();
@@ -458,9 +458,9 @@ public class StockUtil {
 	 * @param count
 	 * @return
 	 */
-	public static List<Date> pre(Map<String, StockDO> stockMap, Date time,
+	public static List<Date> pre(Map<String, PriceDO> stockMap, Date time,
 			int count) {
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		String timeString = dateFormat.format(time);
 		Date pre = null;
 		Queue<Date> queue = new LinkedList<Date>();
@@ -508,16 +508,16 @@ public class StockUtil {
 	 * @param count
 	 * @return
 	 */
-	public static float preLow(Map<String, StockDO> stockMap, Date time,
+	public static float preLow(Map<String, PriceDO> stockMap, Date time,
 			int count) {
 		List<Date> dates = pre(stockMap, time, count);
 		if (dates == null || dates.size() < count) {
 			return 0;
 		}
 		float low = 0;
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		for (Date date : dates) {
-			StockDO stockDO = stockMap.get(dateFormat.format(date));
+			PriceDO stockDO = stockMap.get(dateFormat.format(date));
 			if (low == 0) {
 				low = stockDO.getLow();
 			} else {
@@ -536,16 +536,16 @@ public class StockUtil {
 	 * @param count
 	 * @return
 	 */
-	public static float preHide(Map<String, StockDO> stockMap, Date time,
+	public static float preHide(Map<String, PriceDO> stockMap, Date time,
 			int count) {
 		List<Date> dates = pre(stockMap, time, count);
 		if (dates == null || dates.size() < count) {
 			return 0;
 		}
 		float high = 0;
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		for (Date date : dates) {
-			StockDO stockDO = stockMap.get(dateFormat.format(date));
+			PriceDO stockDO = stockMap.get(dateFormat.format(date));
 			if (high == 0) {
 				high = stockDO.getHigh();
 			} else {
@@ -557,9 +557,9 @@ public class StockUtil {
 		return high;
 	}
 
-	private static Date off(List<StockDO> stockList, Date time)
+	private static Date off(List<PriceDO> stockList, Date time)
 			throws ParseException {
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		String timeString = dateFormat.format(time);
 		Date off = null;
 		for (int i = 0; i < stockList.size() - 1; i++) {
@@ -573,7 +573,7 @@ public class StockUtil {
 	}
 
 	public static void initDayStockMap(String filePath,
-			Map<String, StockDO> dayStockMap, List<StockDO> dayStockList)
+			Map<String, PriceDO> dayStockMap, List<PriceDO> dayStockList)
 			throws IOException, ParseException {
 		File read = new File(filePath);
 		BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -591,7 +591,7 @@ public class StockUtil {
 			}
 			String[] data = temp.split(" ");
 			// [0]日期 [1]open [2]high; [3]low [4]close [5] vol
-			StockDO stockDO = new StockDO();
+			PriceDO stockDO = new PriceDO();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 			Date date = dateFormat.parse(data[0]);
 			stockDO.setTime(date);
@@ -640,9 +640,9 @@ public class StockUtil {
 				String[] data = temp.split(" ");
 				// [0]日期 [1]open [2]high; [3]low [4]close [5] vol [6]bbi
 				// [7]period
-				StockDO stockDO = new StockDO();
+				PriceDO stockDO = new PriceDO();
 				DateFormat dateFormat = new SimpleDateFormat(
-						StockUtil.dateFormatString);
+						PriceUtil.dateFormatString);
 				Date date = dateFormat.parse(data[0]);
 				stockDO.setId(num);
 				num++;
@@ -689,17 +689,17 @@ public class StockUtil {
 	 * @param dayStockMap
 	 * @throws ParseException
 	 */
-	public static void initWeekStockMap(Map<String, StockDO> dayStockMap,
-			Map<String, StockDO> weekStockMap, List<StockDO> weekStockList)
+	public static void initWeekStockMap(Map<String, PriceDO> dayStockMap,
+			Map<String, PriceDO> weekStockMap, List<PriceDO> weekStockList)
 			throws ParseException {
-		Set<Entry<String, StockDO>> entrySet = dayStockMap.entrySet();
+		Set<Entry<String, PriceDO>> entrySet = dayStockMap.entrySet();
 		DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
-		for (Entry<String, StockDO> entry : entrySet) {
+		for (Entry<String, PriceDO> entry : entrySet) {
 			String dayString = entry.getKey();
-			StockDO dayStockDO = entry.getValue();
+			PriceDO dayStockDO = entry.getValue();
 			Date day = dateFormat.parse(dayString);
 			List<Date> periodDays = CalendarUtil.getWeekDays(day);
-			StockDO targetStockDO = getPeriodStockDO(dayStockMap, periodDays);
+			PriceDO targetStockDO = getPeriodStockDO(dayStockMap, periodDays);
 			if (targetStockDO != null) {
 				targetStockDO.setPeriod(Constant.STOCK_PERIOD_WEEK);
 				targetStockDO.setCode(dayStockDO.getCode());
@@ -714,7 +714,7 @@ public class StockUtil {
 				}
 			} else {
 				// 如果有了周数据，判断dayString天所属周的数据是否已经录入，已录入就跳过
-				StockDO lastWeekStockDO = weekStockList.get(weekStockList
+				PriceDO lastWeekStockDO = weekStockList.get(weekStockList
 						.size() - 1);
 				// 因为周的日期使用这一周最后一天为周日期，所有如果是新的数据肯定在最后lastWeekStockDO的日期之后
 				if (lastWeekStockDO != null
@@ -736,17 +736,17 @@ public class StockUtil {
 	 * @param dayStockMap
 	 * @throws ParseException
 	 */
-	public static void initMonthStockMap(Map<String, StockDO> dayStockMap,
-			Map<String, StockDO> monthStockMap, List<StockDO> monthStockList)
+	public static void initMonthStockMap(Map<String, PriceDO> dayStockMap,
+			Map<String, PriceDO> monthStockMap, List<PriceDO> monthStockList)
 			throws ParseException {
-		Set<Entry<String, StockDO>> entrySet = dayStockMap.entrySet();
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
-		for (Entry<String, StockDO> entry : entrySet) {
+		Set<Entry<String, PriceDO>> entrySet = dayStockMap.entrySet();
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
+		for (Entry<String, PriceDO> entry : entrySet) {
 			String dayString = entry.getKey();
-			StockDO dayStockDO = entry.getValue();
+			PriceDO dayStockDO = entry.getValue();
 			Date time = dateFormat.parse(dayString);
 			List<Date> periodDays = CalendarUtil.getMonthDays(time);
-			StockDO targetStockDO = getPeriodStockDO(dayStockMap, periodDays);
+			PriceDO targetStockDO = getPeriodStockDO(dayStockMap, periodDays);
 			targetStockDO.setPeriod(Constant.STOCK_PERIOD_MONTH);
 			targetStockDO.setCode(dayStockDO.getCode());
 			// 如果weekStockList的大小是0 那还没有周数据 weekStockDO可以直接填入weekStockList
@@ -759,7 +759,7 @@ public class StockUtil {
 				}
 			} else {
 				// 如果有了周数据，判断dayString天所属周的数据是否已经录入，已录入就跳过
-				StockDO lastStockDO = monthStockList
+				PriceDO lastStockDO = monthStockList
 						.get(monthStockList.size() - 1);
 				// 因为周的日期使用这一周最后一天为周日期，所有如果是新的数据肯定在最后lastWeekStockDO的日期之后
 				if (lastStockDO != null && time.after(lastStockDO.getTime())) {
@@ -775,15 +775,15 @@ public class StockUtil {
 	}
 
 	public static float getTheTimeBbiOfPeriod(
-			Map<String, StockDO> periodStockMap, StockDO stockDO)
+			Map<String, PriceDO> periodStockMap, PriceDO stockDO)
 			throws ParseException {
-		Set<Entry<String, StockDO>> entrySet = periodStockMap.entrySet();
-		Map<String, StockDO> newWeekStockMap = new TreeMap<String, StockDO>();
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
-		for (Entry<String, StockDO> entry : entrySet) {
+		Set<Entry<String, PriceDO>> entrySet = periodStockMap.entrySet();
+		Map<String, PriceDO> newWeekStockMap = new TreeMap<String, PriceDO>();
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
+		for (Entry<String, PriceDO> entry : entrySet) {
 			if (dateFormat.parse(entry.getKey()).compareTo(stockDO.getTime()) >= 0) {
 				entry.getValue().setClose(stockDO.getClose());
-				StockDO tmpStockDO = new StockDO();
+				PriceDO tmpStockDO = new PriceDO();
 				tmpStockDO.setTime(stockDO.getTime());
 				tmpStockDO.setOpen(entry.getValue().getOpen());
 				tmpStockDO.setClose(stockDO.getClose());
@@ -806,15 +806,15 @@ public class StockUtil {
 	 * @param time
 	 * @return
 	 */
-	private static StockDO getWeekStockDOByDate(
-			Map<String, StockDO> dayStockMap, Date time) {
-		StockDO weekStockDO = new StockDO();
+	private static PriceDO getWeekStockDOByDate(
+			Map<String, PriceDO> dayStockMap, Date time) {
+		PriceDO weekStockDO = new PriceDO();
 		List<Date> weekDays = CalendarUtil.getWeekDays(time);
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		// 根据日期设置周开盘价
 		for (int i = 0; i < weekDays.size(); i++) {
 			String dateString = dateFormat.format(weekDays.get(i));
-			StockDO dayStockDO = dayStockMap.get(dateString);
+			PriceDO dayStockDO = dayStockMap.get(dateString);
 			if (dayStockDO != null) {
 				weekStockDO.setOpen(dayStockDO.getOpen());
 				break;
@@ -823,7 +823,7 @@ public class StockUtil {
 		// 根据日期设置周收盘价 和周日期(这一周有价格的最后一天)
 		for (int i = weekDays.size() - 1; i >= 0; i--) {
 			String dateString = dateFormat.format(weekDays.get(i));
-			StockDO dayStockDO = dayStockMap.get(dateString);
+			PriceDO dayStockDO = dayStockMap.get(dateString);
 			if (dayStockDO != null) {
 				weekStockDO.setClose(dayStockDO.getClose());
 				weekStockDO.setTime(dayStockDO.getTime());
@@ -844,14 +844,14 @@ public class StockUtil {
 	 * @param periodDays
 	 * @return
 	 */
-	private static StockDO getPeriodStockDO(Map<String, StockDO> dayStockMap,
+	private static PriceDO getPeriodStockDO(Map<String, PriceDO> dayStockMap,
 			List<Date> periodDays) {
-		StockDO periodStockDO = new StockDO();
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		PriceDO periodStockDO = new PriceDO();
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		// 根据日期设置周开盘价
 		for (int i = 0; i < periodDays.size(); i++) {
 			String dateString = dateFormat.format(periodDays.get(i));
-			StockDO dayStockDO = dayStockMap.get(dateString);
+			PriceDO dayStockDO = dayStockMap.get(dateString);
 			if (dayStockDO != null) {
 				periodStockDO.setOpen(dayStockDO.getOpen());
 				break;
@@ -860,7 +860,7 @@ public class StockUtil {
 		// 根据日期设置周收盘价 和周日期(这一周有价格的最后一天)
 		for (int i = periodDays.size() - 1; i >= 0; i--) {
 			String dateString = dateFormat.format(periodDays.get(i));
-			StockDO dayStockDO = dayStockMap.get(dateString);
+			PriceDO dayStockDO = dayStockMap.get(dateString);
 			if (dayStockDO != null) {
 				periodStockDO.setClose(dayStockDO.getClose());
 				periodStockDO.setTime(dayStockDO.getTime());
@@ -874,7 +874,7 @@ public class StockUtil {
 		return periodStockDO;
 	}
 
-	private static float BBI(Map<String, StockDO> stockMap, Date time)
+	private static float BBI(Map<String, PriceDO> stockMap, Date time)
 			throws NumberFormatException, ParseException {
 		int m1 = 3;
 		int m2 = 6;
@@ -885,8 +885,8 @@ public class StockUtil {
 				stockMap, time, m4)) / 4));
 	}
 
-	private static float BBI(Map<String, StockDO> stockMap,
-			List<StockDO> stockList, Date time) throws NumberFormatException,
+	private static float BBI(Map<String, PriceDO> stockMap,
+			List<PriceDO> stockList, Date time) throws NumberFormatException,
 			ParseException {
 		int m1 = 3;
 		int m2 = 6;
@@ -909,7 +909,7 @@ public class StockUtil {
 	 * @return
 	 * @throws ParseException
 	 */
-	public static float atr(Map<String, StockDO> stockMap, Date time, int day)
+	public static float atr(Map<String, PriceDO> stockMap, Date time, int day)
 			throws ParseException {
 		// ATR : MA(TR,m)
 		List<Float> list = new ArrayList<Float>();
@@ -925,7 +925,7 @@ public class StockUtil {
 		return Float.parseFloat(decimalFormat.format(sum / list.size()));
 	}
 
-	public static float atr(Map<String, StockDO> stockMap, Date time)
+	public static float atr(Map<String, PriceDO> stockMap, Date time)
 			throws ParseException {
 		return atr(stockMap, time, 20);
 	}
@@ -938,15 +938,15 @@ public class StockUtil {
 	 * @param count
 	 * @return
 	 */
-	public static float MA(List<StockDO> stockList, StockDO stockDO, int count) {
+	public static float MA(List<PriceDO> stockList, PriceDO stockDO, int count) {
 		int index = stockList.indexOf(stockDO);
 		// 如果stockDO 所在的位置之前没有count数量的 数据
 		if (count > (index + 1)) {
 			return 0;
 		}
-		List<StockDO> subList = stockList.subList(index + 1 - count, index + 1);
+		List<PriceDO> subList = stockList.subList(index + 1 - count, index + 1);
 		Float sum = new Float(0);
-		for (StockDO tmpStock : subList) {
+		for (PriceDO tmpStock : subList) {
 			sum = sum + tmpStock.getClose();
 		}
 		return Float.parseFloat(decimalFormat.format(sum / subList.size()));
@@ -961,13 +961,13 @@ public class StockUtil {
 	 * @return
 	 * @throws ParseException
 	 */
-	public static float MA(Map<String, StockDO> stockMap, Date time, int count) {
+	public static float MA(Map<String, PriceDO> stockMap, Date time, int count) {
 		// list是day这个周期的所有close值
 		List<Float> list = new ArrayList<Float>();
 		Date theDate = time;
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		for (int i = 0; i < count; i++) {
-			StockDO stockDO = stockMap.get(dateFormat.format(theDate));
+			PriceDO stockDO = stockMap.get(dateFormat.format(theDate));
 			list.add(stockDO.getClose());
 			theDate = pre(stockMap, theDate);
 			// 如果没有pre Date,则返回说明没有ma
@@ -991,15 +991,15 @@ public class StockUtil {
 	 * @return
 	 * @throws ParseException
 	 */
-	public static float MA(Map<String, StockDO> stockMap,
-			List<StockDO> stockList, Date time, int count)
+	public static float MA(Map<String, PriceDO> stockMap,
+			List<PriceDO> stockList, Date time, int count)
 			throws ParseException {
 		// list是day这个周期的所有close值
 		List<Float> list = new ArrayList<Float>();
 		Date theDate = time;
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		for (int i = 0; i < count; i++) {
-			StockDO stockDO = stockMap.get(dateFormat.format(theDate));
+			PriceDO stockDO = stockMap.get(dateFormat.format(theDate));
 			list.add(stockDO.getClose());
 			theDate = pre(stockList, theDate);
 		}
@@ -1016,24 +1016,24 @@ public class StockUtil {
 	 * @param stockList
 	 * @return
 	 */
-	public static Map<String, StockDO> toStockMap(List<StockDO> stockList) {
-		Map<String, StockDO> stockMap = new TreeMap<String, StockDO>();
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
-		for (StockDO stockDO : stockList) {
+	public static Map<String, PriceDO> toStockMap(List<PriceDO> stockList) {
+		Map<String, PriceDO> stockMap = new TreeMap<String, PriceDO>();
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
+		for (PriceDO stockDO : stockList) {
 			stockMap.put(dateFormat.format(stockDO.getTime()), stockDO);
 		}
 		return stockMap;
 	}
 
-	public static float tr(Map<String, StockDO> stockMap, Date time)
+	public static float tr(Map<String, PriceDO> stockMap, Date time)
 			throws ParseException {
 		// TR :
 		// MAX(MAX((HIGH-LOW),ABS(REF(CLOSE,1)-HIGH)),ABS(REF(CLOSE,1)-LOW));
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		String timeString = dateFormat.format(time);
-		StockDO stockDO = stockMap.get(timeString);
+		PriceDO stockDO = stockMap.get(timeString);
 		float theHL = Math.abs(stockDO.getHigh() - stockDO.getLow());
-		StockDO preStockDO = stockMap.get(dateFormat.format(pre(stockMap,
+		PriceDO preStockDO = stockMap.get(dateFormat.format(pre(stockMap,
 				dateFormat.parse(timeString))));
 		float preCH = Math.abs(preStockDO.getClose() - stockDO.getHigh());
 		float preCL = Math.abs(preStockDO.getClose() - stockDO.getLow());

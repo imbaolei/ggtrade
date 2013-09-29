@@ -1,7 +1,7 @@
 package com.baolei.trade.test.none;
 
 import com.baolei.ghost.common.Constant;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.baolei.trade.test.Test;
 
 public class TestNone extends Test{
@@ -16,7 +16,7 @@ public class TestNone extends Test{
 
 	@Override
 	public void noBuyNoSale(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		float buyPoint = lastBuyStockDO.getClose();
 		if(buyPoint == 0){
 			stockDO.getReport().setAccount(cash+toucunHR);
@@ -36,7 +36,7 @@ public class TestNone extends Test{
 
 	@Override
 	public void buy(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		toucunHR = cash;
 		cash = 0;
 		lastBuyStockDO = stockDO;

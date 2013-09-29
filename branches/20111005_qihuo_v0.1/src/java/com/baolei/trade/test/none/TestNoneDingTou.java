@@ -1,8 +1,8 @@
 package com.baolei.trade.test.none;
 
 import com.baolei.ghost.common.Constant;
-import com.baolei.ghost.common.StockUtil;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.common.PriceUtil;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.baolei.trade.test.Test;
 
 public class TestNoneDingTou extends Test {
@@ -28,7 +28,7 @@ public class TestNoneDingTou extends Test {
 
 	@Override
 	public void noBuyNoSale(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		if (lastBuyStockDO == null) {
 			float account = cash + toucunHR;
 			stockDO.getReport().setAccount(account);
@@ -51,7 +51,7 @@ public class TestNoneDingTou extends Test {
 
 	@Override
 	public void buy(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		float fee = 0;
 		
 		//计算 上次定投 到 这次 定投 之间的收益
@@ -94,8 +94,8 @@ public class TestNoneDingTou extends Test {
 
 	@Override
 	public boolean needDingTou(String dateString) {
-		StockDO stockDO = pdStockMap.get(dateString);
-		if (StockUtil.isFirstDayOfMonth(pdStockList, stockDO,firstDay)) {
+		PriceDO stockDO = pdStockMap.get(dateString);
+		if (PriceUtil.isFirstDayOfMonth(pdStockList, stockDO,firstDay)) {
 			return true;
 		}
 		return false;
@@ -103,7 +103,7 @@ public class TestNoneDingTou extends Test {
 
 	@Override
 	public void dingTou(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		cash = cash + moneyDingTou;
 		// 定投的时候 如果总定金额等于0，相当于还没开始计算总金额
 		if (totalMoney == 0) {

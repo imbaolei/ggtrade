@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.baolei.ghost.common.StockUtil;
+import com.baolei.ghost.common.PriceUtil;
 import com.baolei.ghost.dal.daointerface.ReportDAO;
 import com.baolei.ghost.dal.dataobject.ReportDO;
 import com.baolei.trade.bo.ReportBO;
@@ -30,7 +30,7 @@ public class ReportList {
 	private ReportDAO reportDAO;
 	
 	@Autowired
-	private StockUtil stockUtil;
+	private PriceUtil stockUtil;
 
 	@RequestMapping(params = "m=list")
 	public String list(HttpServletRequest request, ModelMap model) {

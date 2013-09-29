@@ -10,8 +10,8 @@ import java.util.List;
 import com.baolei.ghost.AccountDO;
 import com.baolei.ghost.DataPool;
 import com.baolei.ghost.common.Constant;
-import com.baolei.ghost.common.StockUtil;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.common.PriceUtil;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.baolei.ghost.plan.Plan;
 
 /**
@@ -37,7 +37,7 @@ public class SimpleMonthBbiPlan extends Plan{
 	}
 
 	@Override
-	public void execute(StockDO stockDO, AccountDO accountDO)
+	public void execute(PriceDO stockDO, AccountDO accountDO)
 			throws ParseException {
 		if (isBuy(stockDO, accountDO)) {
 			// 达到买点后,先制定操作计划,再进行买卖
@@ -55,12 +55,12 @@ public class SimpleMonthBbiPlan extends Plan{
 		}
 	}
 
-	public boolean isBuy(StockDO stockDO, AccountDO accountDO)
+	public boolean isBuy(PriceDO stockDO, AccountDO accountDO)
 			throws ParseException {
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		if (Constant.PLAN_ACTION_BUY.equals(this.getAction())) {
-			Date preMonthDate = StockUtil.pre(dataPool.getMonthStockMap(), stockDO.getTime());
-			StockDO preMonthStock = dataPool.getMonthStockMap().get(dateFormat.format(preMonthDate));
+			Date preMonthDate = PriceUtil.pre(dataPool.getMonthStockMap(), stockDO.getTime());
+			PriceDO preMonthStock = dataPool.getMonthStockMap().get(dateFormat.format(preMonthDate));
 			if((preMonthStock.getBbi() != 0) && (preMonthStock.getBbi() < stockDO.getBbi())){
 				return true;
 			}
@@ -68,7 +68,7 @@ public class SimpleMonthBbiPlan extends Plan{
 		return false;
 	}
 
-	public void setBuyPlan(StockDO stockDO, AccountDO accountDO)
+	public void setBuyPlan(PriceDO stockDO, AccountDO accountDO)
 			throws ParseException {
 		this.setBalance(accountDO.getMoney());
 		accountDO.setMoney(0f);
@@ -79,13 +79,13 @@ public class SimpleMonthBbiPlan extends Plan{
 		float close = stockDO.getClose();
 		this.setBuyPoint(close);
 		this.setTradeNum(new Float(num));
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		System.out.println(dateFormat.format(stockDO.getTime())
 				+ " Day买点" + this.getBuyPoint() + "出现,准备买入:"
 				+ this.getTradeNum() + "股");
 	}
 
-	public void executeBuy(StockDO stockDO, AccountDO accountDO)
+	public void executeBuy(PriceDO stockDO, AccountDO accountDO)
 			throws ParseException {
 		this.setTotalNum(this.getTradeNum());
 		this.setBalance(this.getBalance() - this.getBuyPoint()
@@ -94,11 +94,11 @@ public class SimpleMonthBbiPlan extends Plan{
 		this.setAction(Constant.PLAN_ACTION_JIACANG);
 	}
 
-	public boolean isStopLoss(StockDO stockDO, AccountDO accountDO) {
+	public boolean isStopLoss(PriceDO stockDO, AccountDO accountDO) {
 		if (!Constant.PLAN_ACTION_BUY.equals(this.getAction())) {
-			DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
-				Date preMonthDate = StockUtil.pre(dataPool.getMonthStockMap(), stockDO.getTime());
-				StockDO preMonthStock = dataPool.getMonthStockMap().get(dateFormat.format(preMonthDate));
+			DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
+				Date preMonthDate = PriceUtil.pre(dataPool.getMonthStockMap(), stockDO.getTime());
+				PriceDO preMonthStock = dataPool.getMonthStockMap().get(dateFormat.format(preMonthDate));
 				if(preMonthStock.getBbi() > stockDO.getBbi()){
 					this.setStopLoss(stockDO.getClose());
 					return true;
@@ -108,7 +108,7 @@ public class SimpleMonthBbiPlan extends Plan{
 
 	}
 
-	public void executeStopLost(StockDO stockDO, AccountDO accountDO) {
+	public void executeStopLost(PriceDO stockDO, AccountDO accountDO) {
 		BigDecimal stopLoss = new BigDecimal(stockDO.getClose());
 		BigDecimal count = new BigDecimal(this.getTotalNum());
 		Float money = stopLoss.multiply(count).setScale(2,
@@ -116,7 +116,7 @@ public class SimpleMonthBbiPlan extends Plan{
 		// 止损之后,计划中操作的余额归还账户
 		this.setBalance(money + this.getBalance());
 		accountDO.setMoney(accountDO.getMoney() + this.getBalance());
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		System.out.println(dateFormat.format(stockDO.getTime())
 				+ " 止损点" + this.getStopLoss()
 				+ "出现,止损%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%:"
@@ -265,7 +265,7 @@ public class SimpleMonthBbiPlan extends Plan{
 
 	@Override
 	public boolean canTrade(Date time) throws ParseException {
-		List<Date> dateList = StockUtil
+		List<Date> dateList = PriceUtil
 				.pre(dataPool.getMonthStockMap(), time, 21);
 		if (dateList != null) {
 			return true;

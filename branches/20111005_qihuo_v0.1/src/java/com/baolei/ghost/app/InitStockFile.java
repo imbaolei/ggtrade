@@ -19,8 +19,8 @@ import java.util.concurrent.Semaphore;
 
 import com.baolei.ghost.DataPool;
 import com.baolei.ghost.common.Constant;
-import com.baolei.ghost.common.StockUtil;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.common.PriceUtil;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 
 public class InitStockFile {
 
@@ -92,27 +92,27 @@ public class InitStockFile {
 		System.out.println(code + " " + new Date() + " 开始读取！");
 		DataPool dataPool = new DataPool();
 		try {
-			StockUtil.initDayStockMap(filePath, dataPool.getDayStockMap(),
+			PriceUtil.initDayStockMap(filePath, dataPool.getDayStockMap(),
 					dataPool.getDayStockList());
 			System.out.println(code + " " + new Date() + " initDayStockMap完毕！");
-			StockUtil.initWeekStockMap(dataPool.getDayStockMap(),
+			PriceUtil.initWeekStockMap(dataPool.getDayStockMap(),
 					dataPool.getWeekStockMap(), dataPool.getWeekStockList());
 			System.out
 					.println(code + " " + new Date() + " initWeekStockMap完毕！");
-			StockUtil.initMonthStockMap(dataPool.getDayStockMap(),
+			PriceUtil.initMonthStockMap(dataPool.getDayStockMap(),
 					dataPool.getMonthStockMap(), dataPool.getMonthStockList());
 			System.out.println(code + " " + new Date()
 					+ " initMonthStockMap完毕！");
 			// 更新bbi
 			updateStockPool(dataPool);
 			System.out.println(code + " " + new Date() + " 更新bbi完毕！");
-			StockUtil.initBbiMap(dataPool.getDayStockMap(),
+			PriceUtil.initBbiMap(dataPool.getDayStockMap(),
 					dataPool.getDayStockList());
 			System.out.println(code + " " + new Date() + " 分析day bbi完毕！");
-			StockUtil.initBbiMap(dataPool.getWeekStockMap(),
+			PriceUtil.initBbiMap(dataPool.getWeekStockMap(),
 					dataPool.getWeekStockList());
 			System.out.println(code + " " + new Date() + " 分析week bbi完毕！");
-			StockUtil.initBbiMap(dataPool.getMonthStockMap(),
+			PriceUtil.initBbiMap(dataPool.getMonthStockMap(),
 					dataPool.getMonthStockList());
 			System.out.println(code + " " + new Date() + " 分析month bbi完毕！");
 			writeStockBbiFile(dataPool.getDayStockList());
@@ -137,12 +137,12 @@ public class InitStockFile {
 		// ".txt";
 		// StockUtil.initDayStockMap(fromfile, fromDataPool.getDayStockMap(),
 		// fromDataPool.getDayStockList());
-		DataPool toDataPool = StockUtil.initToStockPool(tofile);
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DataPool toDataPool = PriceUtil.initToStockPool(tofile);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		// 看看最新的数据对的上吗，对不上就减10，不行再减10
 		for (int stockType = 0; stockType <= 2; stockType++) {
-			List<StockDO> fromStockList = null;
-			Map<String, StockDO> toStockMap = null;
+			List<PriceDO> fromStockList = null;
+			Map<String, PriceDO> toStockMap = null;
 			if (stockType == 0) {
 				fromStockList = fromDataPool.getDayStockList();
 				toStockMap = toDataPool.getDayStockMap();
@@ -156,9 +156,9 @@ public class InitStockFile {
 
 			int count = fromStockList.size() - 1;
 			for (; count >= 0; count = count - 10) {
-				StockDO fromStock = fromStockList.get(count);
+				PriceDO fromStock = fromStockList.get(count);
 
-				StockDO toStock = toStockMap.get(dateFormat.format(fromStock
+				PriceDO toStock = toStockMap.get(dateFormat.format(fromStock
 						.getTime()));
 				if ((toStock != null)
 						&& (toStock.getClose() == fromStock.getClose())
@@ -169,8 +169,8 @@ public class InitStockFile {
 			if (count > 0) {
 				// fromStockList从count开始能对上了，那就从count开始算bbi,将count之前的bbi设置到fromDataPool
 				for (int i = 0; i < count; i++) {
-					StockDO fromStock = fromStockList.get(i);
-					StockDO toStock = toStockMap.get(dateFormat
+					PriceDO fromStock = fromStockList.get(i);
+					PriceDO toStock = toStockMap.get(dateFormat
 							.format(fromStock.getTime()));
 					if (toStock != null) {
 						fromStock.setBbi(toStock.getBbi());
@@ -189,7 +189,7 @@ public class InitStockFile {
 	 * 
 	 * @param stockList
 	 */
-	public static void writeStockBbiFile(List<StockDO> stockList) {
+	public static void writeStockBbiFile(List<PriceDO> stockList) {
 		if (stockList.size() > 0) {
 			String code = stockList.get(0).getCode();
 			String folder = code.substring(0, 2);
@@ -206,8 +206,8 @@ public class InitStockFile {
 				BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
 						new FileOutputStream(file, true), "GBK"));
 				DateFormat dateFormat = new SimpleDateFormat(
-						StockUtil.dateFormatString);
-				for (StockDO stock : stockList) {
+						PriceUtil.dateFormatString);
+				for (PriceDO stock : stockList) {
 					// [0]日期 [1]open [2]high; [3]low [4]close [5] vol [6]bbi
 					// [7]period
 					bw.write(dateFormat.format(stock.getTime()));

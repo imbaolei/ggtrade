@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.baolei.ghost.AccountDO;
 import com.baolei.ghost.DataPool;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 
 public class Plan {
 	
@@ -124,7 +124,7 @@ public class Plan {
 	 * @param accountDO
 	 * @throws ParseException
 	 */
-	public void execute(StockDO stockDO,AccountDO accountDO) throws ParseException{}
+	public void execute(PriceDO stockDO,AccountDO accountDO) throws ParseException{}
 	
 
 	

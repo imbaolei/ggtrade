@@ -14,9 +14,9 @@ import org.apache.commons.logging.LogFactory;
 
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.common.NumberUtil;
-import com.baolei.ghost.common.StockUtil;
+import com.baolei.ghost.common.PriceUtil;
 import com.baolei.ghost.dal.dataobject.ReportDO;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 
 /**
  * @author lei.baol 测试 两种 股票，一种用来做 买点买点的判断 pdStockList，一种是用来交易 jyStockList
@@ -27,12 +27,12 @@ public abstract class Test {
 
 	protected Log log = LogFactory.getLog(getClass());
 	protected DateFormat dateFormat = new SimpleDateFormat(
-			StockUtil.dateFormatString);
+			PriceUtil.dateFormatString);
 	protected DecimalFormat decimalFormat = new DecimalFormat("#.00");
-	protected List<StockDO> pdStockList;
-	protected List<StockDO> jyStockList;
-	protected Map<String, StockDO> pdStockMap;
-	protected Map<String, StockDO> jyStockMap;
+	protected List<PriceDO> pdStockList;
+	protected List<PriceDO> jyStockList;
+	protected Map<String, PriceDO> pdStockMap;
+	protected Map<String, PriceDO> jyStockMap;
 	protected float moneyDingTou = 0; // 每个周期定投的数额
 	protected float rateHR = 0f;
 	protected float cash; // 现金
@@ -46,7 +46,7 @@ public abstract class Test {
 	/**
 	 * lastBuyStockDO 上次买入时stockDO 用来计算上次买入到这次交易之间的 资金变化情况 如果其他业务逻辑需要用，不能影响上述逻辑
 	 */
-	protected StockDO lastBuyStockDO;
+	protected PriceDO lastBuyStockDO;
 	protected Integer firstDay = 1; // 第几天定投
 	protected float totalMoney;
 	protected float jyDingTouMoney = 0; // 一次买入和卖出 期间 定投的金额
@@ -82,12 +82,12 @@ public abstract class Test {
 	 * @param jyStockList
 	 *            交易的stock
 	 */
-	public void initStockList(List<StockDO> pdStockList,
-			List<StockDO> jyStockList) {
+	public void initStockList(List<PriceDO> pdStockList,
+			List<PriceDO> jyStockList) {
 		this.pdStockList = pdStockList;
 		this.jyStockList = jyStockList;
-		pdStockMap = StockUtil.toStockMap(pdStockList);
-		jyStockMap = StockUtil.toStockMap(jyStockList);
+		pdStockMap = PriceUtil.toStockMap(pdStockList);
+		jyStockMap = PriceUtil.toStockMap(jyStockList);
 	}
 
 	private Date getStartDate() {
@@ -96,7 +96,7 @@ public abstract class Test {
 			startDate = dateFormat.parse(startDateString);
 			int i = jyStockList.size()-1;
 			for(; i >=0;i--){
-				StockDO jyStockDO = jyStockList.get(i);
+				PriceDO jyStockDO = jyStockList.get(i);
 				if(jyStockDO.getLow() <= 0){
 					break;
 				}
@@ -105,7 +105,7 @@ public abstract class Test {
 					break;
 				}
 			}
-			StockDO nextDayJyStock = jyStockList.get(i+1);
+			PriceDO nextDayJyStock = jyStockList.get(i+1);
 			if(nextDayJyStock.getTime().after(startDate)){
 				startDate = nextDayJyStock.getTime();
 			}
@@ -117,7 +117,7 @@ public abstract class Test {
 
 	public void execute() {
 		Date startDate = getStartDate();
-		for (StockDO stockDO : pdStockList) {
+		for (PriceDO stockDO : pdStockList) {
 			// 从startDate开始计算
 			if (stockDO.getTime().before(startDate)) {
 				continue;
@@ -139,7 +139,7 @@ public abstract class Test {
 	}
 
 	public void printReport() {
-		for (StockDO stockDO : jyStockList) {
+		for (PriceDO stockDO : jyStockList) {
 			if (reportFilter(stockDO) && reportFilterSwitch) {
 				continue;
 			}
@@ -203,7 +203,7 @@ public abstract class Test {
 		}
 	}
 
-	public boolean reportFilter(StockDO stockDO) {
+	public boolean reportFilter(PriceDO stockDO) {
 		ReportDO report = stockDO.getReport();
 		String status = report.getStatus();
 		if (Constant.REPORT_STATUS_BUY.equals(status)) {
