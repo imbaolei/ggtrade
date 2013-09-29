@@ -9,8 +9,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.baolei.ghost.DataPool;
-import com.baolei.ghost.common.StockUtil;
-import com.baolei.ghost.dal.daointerface.StockDAO;
+import com.baolei.ghost.common.PriceUtil;
+import com.baolei.ghost.dal.daointerface.PriceDAO;
 
 public class InitStockDB {
 
@@ -20,31 +20,31 @@ public class InitStockDB {
 		System.out.println(new Date());
 		ApplicationContext context = new ClassPathXmlApplicationContext(
 				"applicationContext.xml");
-		StockDAO stockDAO = (StockDAO) context.getBean("stockDAO");
+		PriceDAO stockDAO = (PriceDAO) context.getBean("stockDAO");
 		DataPool dataPool = new DataPool();
-		StockUtil.initDayStockMap(filePath, dataPool.getDayStockMap(), dataPool
+		PriceUtil.initDayStockMap(filePath, dataPool.getDayStockMap(), dataPool
 				.getDayStockList());
-		StockUtil.initWeekStockMap(dataPool.getDayStockMap(), dataPool
+		PriceUtil.initWeekStockMap(dataPool.getDayStockMap(), dataPool
 				.getWeekStockMap(), dataPool.getWeekStockList());
-		StockUtil.initMonthStockMap(dataPool.getDayStockMap(), dataPool
+		PriceUtil.initMonthStockMap(dataPool.getDayStockMap(), dataPool
 				.getMonthStockMap(), dataPool.getMonthStockList());
 		
 		
-		StockUtil.initBbiMap(dataPool.getDayStockMap(), dataPool
+		PriceUtil.initBbiMap(dataPool.getDayStockMap(), dataPool
 				.getDayStockList());
-		StockUtil.initBbiMap(dataPool.getWeekStockMap(), dataPool
+		PriceUtil.initBbiMap(dataPool.getWeekStockMap(), dataPool
 				.getWeekStockList());
-		StockUtil.initBbiMap(dataPool.getMonthStockMap(), dataPool
+		PriceUtil.initBbiMap(dataPool.getMonthStockMap(), dataPool
 				.getMonthStockList());
 		
 		File read = new File(filePath);
 		String code = read.getName().split(".TXT")[0];;
-		stockDAO.deleteStockByCode(code);
+		stockDAO.deletePriceByCode(code);
 		System.out.println(new Date());
 
-		stockDAO.insertStocks(dataPool.getDayStockList());
-		stockDAO.insertStocks(dataPool.getWeekStockList());
-		stockDAO.insertStocks(dataPool.getMonthStockList());
+		stockDAO.insertPrices(dataPool.getDayStockList());
+		stockDAO.insertPrices(dataPool.getWeekStockList());
+		stockDAO.insertPrices(dataPool.getMonthStockList());
 		System.out.println(new Date());
 	}
 

@@ -19,25 +19,25 @@ import org.springframework.stereotype.Service;
 
 import com.baolei.ghost.app2.DataParser;
 import com.baolei.ghost.common.NumberUtil;
-import com.baolei.ghost.common.StockUtil;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.common.PriceUtil;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 
-@Service("stockBO")
-public class StockBO {
+@Service("priceBO")
+public class PriceBO {
 
 	@Autowired
 	@Qualifier("txdFileParser")
 	DataParser dataParser;
 
 	@Autowired
-	StockUtil stockUtil;
+	PriceUtil priceUtil;
 
-	DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+	DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 	protected Log log = LogFactory.getLog(getClass());
 
-	public List<StockDO> getStockListByFile(String code) {
-		List<StockDO> stockList = dataParser.parse(code);
-		return stockList;
+	public List<PriceDO> getPriceListByFile(String code) {
+		List<PriceDO> priceList = dataParser.parse(code);
+		return priceList;
 	}
 	
 	
@@ -73,62 +73,62 @@ public class StockBO {
 	/**
 	 * 计算 从startDateString 到 endDateString周期内的 ma均线的 在 period周期 内的涨跌幅
 	 * 
-	 * @param stockList
+	 * @param priceList
 	 * @param ma
 	 * @param period
 	 * @param startDateString
 	 * @param endDateString
 	 * @return
 	 */
-	public List<StockDO> calStockListMaRise(List<StockDO> stockList, String ma,
+	public List<PriceDO> calpriceListMaRise(List<PriceDO> priceList, String ma,
 			int period, String startDateString, String endDateString) {
 		try {
 			Date startDate = dateFormat.parse(startDateString);
 			Date endDate = dateFormat.parse(endDateString);
 			// 计算涨幅
-			for (StockDO stockDO : stockList) {
-				if (stockDO.getTime().after(startDate)
-						&& stockDO.getTime().before(endDate)) {
-					StockDO beforeStockDO = calBeforeTime(stockList, stockDO,
+			for (PriceDO priceDO : priceList) {
+				if (priceDO.getTime().after(startDate)
+						&& priceDO.getTime().before(endDate)) {
+					PriceDO beforePriceDO = calBeforeTime(priceList, priceDO,
 							period);
-					float rise = calMaRise(beforeStockDO, stockDO, ma);
-					stockDO.setRise(rise);
+					float rise = calMaRise(beforePriceDO, priceDO, ma);
+					priceDO.setRise(rise);
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return stockList;
+		return priceList;
 	}
 
-	public StockDO calStockMaRise(List<StockDO> stockList, StockDO stockDO,
+	public PriceDO calPriceMaRise(List<PriceDO> priceList, PriceDO priceDO,
 			String ma, int period) {
-		StockDO beforeStockDO = calBeforeTime(stockList, stockDO, period);
-		float rise = calMaRise(beforeStockDO, stockDO, ma);
-		stockDO.setRise(rise);
-		return stockDO;
+		PriceDO beforePriceDO = calBeforeTime(priceList, priceDO, period);
+		float rise = calMaRise(beforePriceDO, priceDO, ma);
+		priceDO.setRise(rise);
+		return priceDO;
 	}
 
-	private StockDO calBeforeTime(List<StockDO> stockList, StockDO stockDO,
+	private PriceDO calBeforeTime(List<PriceDO> priceList, PriceDO priceDO,
 			int period) {
-		int index = stockList.indexOf(stockDO);
+		int index = priceList.indexOf(priceDO);
 		if (index - period > 0) {
-			return stockList.get(index - period);
+			return priceList.get(index - period);
 		}
 		return null;
 	}
 
-	private float calMaRise(StockDO beforeStockDO, StockDO afterStockDO,
+	private float calMaRise(PriceDO beforePriceDO, PriceDO afterPriceDO,
 			String ma) {
-		if (beforeStockDO != null && afterStockDO != null) {
-			log.info(beforeStockDO.getCode() + " "
-					+ dateFormat.format(beforeStockDO.getTime()) + " "
-					+ beforeStockDO.getMa());
-			if (beforeStockDO.getMa(ma) <= 0 || afterStockDO.getMa(ma) <= 0) {
+		if (beforePriceDO != null && afterPriceDO != null) {
+			log.info(beforePriceDO.getCode() + " "
+					+ dateFormat.format(beforePriceDO.getTime()) + " "
+					+ beforePriceDO.getMa());
+			if (beforePriceDO.getMa(ma) <= 0 || afterPriceDO.getMa(ma) <= 0) {
 				return 0;
 			}
-			float beforePrice = beforeStockDO.getMa(ma);
-			float afterPrice = afterStockDO.getMa(ma);
+			float beforePrice = beforePriceDO.getMa(ma);
+			float afterPrice = afterPriceDO.getMa(ma);
 			float rise = (afterPrice - beforePrice) / beforePrice * 100;
 			rise = NumberUtil.roundDown(rise, 2);
 			return rise;
@@ -136,34 +136,34 @@ public class StockBO {
 		return 0;
 	}
 
-	public List<StockDO> initStockListMa(List<StockDO> stockList, String ma) {
+	public List<PriceDO> initPriceListMa(List<PriceDO> priceList, String ma) {
 		if (StringUtils.isEmpty(ma)) {
 			ma = "20,25,60,90,200,350";
 		}
 
-		for (StockDO stockDO : stockList) {
-			// log.info(dateFormat.format(stockDO.getTime()));
+		for (PriceDO priceDO : priceList) {
+			// log.info(dateFormat.format(priceDO.getTime()));
 			JSONObject json = new JSONObject();
 			if (StringUtils.isNotEmpty(ma)) {
 				String[] mas = ma.split(",");
 				for (String tmpma : mas) {
-					float floatMa = StockUtil.MA(stockList, stockDO,
+					float floatMa = PriceUtil.MA(priceList, priceDO,
 							Integer.parseInt(tmpma));
 					json.put(tmpma, floatMa);
 				}
 			}
-			stockDO.setMa(json.toString());
+			priceDO.setMa(json.toString());
 		}
-		return stockList;
+		return priceList;
 	}
 
-	public List<StockDO> initStockListAtr(List<StockDO> stockList, int time) {
+	public List<PriceDO> initPriceListAtr(List<PriceDO> priceList, int time) {
 		if (time <= 0) {
 			time = 20;
 		}
-		for (StockDO stockDO : stockList) {
-			stockDO.setAtr(stockUtil.atr(stockList, stockDO, time));
+		for (PriceDO priceDO : priceList) {
+			priceDO.setAtr(priceUtil.atr(priceList, priceDO, time));
 		}
-		return stockList;
+		return priceList;
 	}
 }

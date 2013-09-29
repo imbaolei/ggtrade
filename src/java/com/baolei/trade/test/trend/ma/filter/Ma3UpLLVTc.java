@@ -2,8 +2,8 @@ package com.baolei.trade.test.trend.ma.filter;
 
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.common.NumberUtil;
-import com.baolei.ghost.common.StockUtil;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.common.PriceUtil;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.baolei.trade.test.Test;
 import com.baolei.trade.test.trend.ma.Ma3Tc;
 
@@ -43,7 +43,7 @@ public class Ma3UpLLVTc extends Ma3LLVTc {
 	}
 
 	protected boolean canBuyFirst(String dateString) {
-		StockDO lastJyStock = findLastJyStock(dateString);
+		PriceDO lastJyStock = findLastJyStock(dateString);
 		if (lastJyStock == null) {
 			return false;
 		}
@@ -58,7 +58,7 @@ public class Ma3UpLLVTc extends Ma3LLVTc {
 	}
 
 	protected boolean canBuyDingTou(String dateString) {
-		StockDO lastJyStock = findLastJyStock(dateString);
+		PriceDO lastJyStock = findLastJyStock(dateString);
 		if (lastJyStock == null) {
 			return false;
 		}
@@ -72,7 +72,7 @@ public class Ma3UpLLVTc extends Ma3LLVTc {
 	}
 	
 	public boolean needBuyThisTest(String dateString) {
-		StockDO stockDO = pdStockMap.get(dateString);
+		PriceDO stockDO = pdStockMap.get(dateString);
 		// 如果判断没有头寸 而且 趋势不是走弱，即走强
 		// 如果有现金 就买入
 		if ((cash > 0) && isMaReadyJy(stockDO) && trendin(stockDO)) {
@@ -85,7 +85,7 @@ public class Ma3UpLLVTc extends Ma3LLVTc {
 	}
 	
 	
-	protected boolean trendin(StockDO stockDO) {
+	protected boolean trendin(PriceDO stockDO) {
 		float ma1 = stockDO.getMa(p1.toString());
 		float ma2 = stockDO.getMa(p2.toString());
 		float ma3 = stockDO.getMa(p3.toString());

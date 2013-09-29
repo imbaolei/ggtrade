@@ -10,8 +10,8 @@ import java.util.List;
 import com.baolei.ghost.AccountDO;
 import com.baolei.ghost.DataPool;
 import com.baolei.ghost.common.Constant;
-import com.baolei.ghost.common.StockUtil;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.common.PriceUtil;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.baolei.ghost.plan.Plan;
 
 /**
@@ -36,7 +36,7 @@ public class DayBbiIn10LowOutOnWBPlan extends Plan {
 	}
 
 	@Override
-	public void execute(StockDO stockDO, AccountDO accountDO)
+	public void execute(PriceDO stockDO, AccountDO accountDO)
 			throws ParseException {
 		if (isBuy(stockDO, accountDO)) {
 			// 达到买点后,先制定操作计划,再进行买卖
@@ -53,23 +53,23 @@ public class DayBbiIn10LowOutOnWBPlan extends Plan {
 		}
 	}
 
-	public boolean isBuy(StockDO stockDO, AccountDO accountDO)
+	public boolean isBuy(PriceDO stockDO, AccountDO accountDO)
 			throws ParseException {
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		if (Constant.PLAN_ACTION_BUY.equals(this.getAction())) {
 			float theBbi = stockDO.getBbi();
-			Date preDate = StockUtil.pre(dataPool.getDayStockMap(),
+			Date preDate = PriceUtil.pre(dataPool.getDayStockMap(),
 					stockDO.getTime());
 			float pre1Bbi = dataPool.getDayStockMap()
 					.get(dateFormat.format(preDate)).getBbi();
-			Date pre2Date = StockUtil.pre(dataPool.getDayStockMap(), preDate);
+			Date pre2Date = PriceUtil.pre(dataPool.getDayStockMap(), preDate);
 			float pre2Bbi = dataPool.getDayStockMap()
 					.get(dateFormat.format(pre2Date)).getBbi();
-			Date pre3Date = StockUtil.pre(dataPool.getDayStockMap(), pre2Date);
+			Date pre3Date = PriceUtil.pre(dataPool.getDayStockMap(), pre2Date);
 			float pre3Bbi = dataPool.getDayStockMap()
 					.get(dateFormat.format(pre3Date)).getBbi();
 
-			Date pre1WeekDayDate = StockUtil.preWeekDay(
+			Date pre1WeekDayDate = PriceUtil.preWeekDay(
 					dataPool.getWeekStockMap(), stockDO.getTime());
 			float pre1WeekBbi = dataPool.getWeekStockMap()
 					.get(dateFormat.format(pre1WeekDayDate)).getBbi();
@@ -79,7 +79,7 @@ public class DayBbiIn10LowOutOnWBPlan extends Plan {
 			// float pre2WeekBbi = dataPool.getWeekStockMap().get(
 			// dateFormat.format(pre2WeekDayDate)).getBbi();
 
-			float theDayWeekBbi = StockUtil.getTheTimeBbiOfPeriod(
+			float theDayWeekBbi = PriceUtil.getTheTimeBbiOfPeriod(
 					dataPool.getWeekStockMap(), stockDO);
 
 			// 买点：本周bbi大于上周bbi，当日bbi大于昨天，昨天bbi大于前天，大前天bbi大于前天
@@ -93,7 +93,7 @@ public class DayBbiIn10LowOutOnWBPlan extends Plan {
 		return false;
 	}
 
-	public void setBuyPlan(StockDO stockDO, AccountDO accountDO)
+	public void setBuyPlan(PriceDO stockDO, AccountDO accountDO)
 			throws ParseException {
 		this.setPlanTrades(4);// 设置一共交易次数为4
 		// 如果空仓 根据现有总金额计算 atr 购买数量 加仓点 和 止损点
@@ -120,7 +120,7 @@ public class DayBbiIn10LowOutOnWBPlan extends Plan {
 		// }
 
 		BigDecimal amount = new BigDecimal(this.getBalance());
-		Float calatr = StockUtil.atr(dataPool.getDayStockMap(),
+		Float calatr = PriceUtil.atr(dataPool.getDayStockMap(),
 				stockDO.getTime());
 		this.setAtr(calatr);
 		int num = amount
@@ -163,9 +163,9 @@ public class DayBbiIn10LowOutOnWBPlan extends Plan {
 
 	}
 
-	public void executeBuy(StockDO stockDO, AccountDO accountDO)
+	public void executeBuy(PriceDO stockDO, AccountDO accountDO)
 			throws ParseException {
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		System.out.println(dateFormat.format(stockDO.getTime()) + "Week买点"
 				+ this.getBuyPoint()
 				+ "出现,买入..................................:"
@@ -181,7 +181,7 @@ public class DayBbiIn10LowOutOnWBPlan extends Plan {
 		this.setAction(Constant.PLAN_ACTION_JIACANG);
 	}
 
-	public boolean isStopLoss(StockDO stockDO, AccountDO accountDO) {
+	public boolean isStopLoss(PriceDO stockDO, AccountDO accountDO) {
 		if (!Constant.PLAN_ACTION_BUY.equals(this.getAction())) {
 			// System.out.println(StockUtil.dateFormat.format(stockDO.getTime())+":"+planDO.getStopLoss()+":"+stockDO.getLow());
 			// 如果止损点在最高和最低点之间或者开盘价就在止损点之下,都执行止损
@@ -194,8 +194,8 @@ public class DayBbiIn10LowOutOnWBPlan extends Plan {
 
 	}
 
-	public void executeStopLost(StockDO stockDO, AccountDO accountDO) {
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+	public void executeStopLost(PriceDO stockDO, AccountDO accountDO) {
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		BigDecimal stopLoss = new BigDecimal(this.getStopLoss());
 		BigDecimal count = new BigDecimal(this.getTotalNum());
 		Float money = stopLoss.multiply(count)
@@ -213,7 +213,7 @@ public class DayBbiIn10LowOutOnWBPlan extends Plan {
 		this.getExitStatus().add(Constant.EXIT_STATUS_STOPLOST);
 	}
 
-	public void setJiacangPlan(StockDO stockDO, AccountDO accountDO) {
+	public void setJiacangPlan(PriceDO stockDO, AccountDO accountDO) {
 		// 如果不是空仓 从新计算下一次加仓点 和止损点
 
 		Float atr = this.getAtr();
@@ -222,7 +222,7 @@ public class DayBbiIn10LowOutOnWBPlan extends Plan {
 				2, BigDecimal.ROUND_DOWN).floatValue());
 		this.setJcPoint(new BigDecimal(this.getJcPoint() + 0.5f * this.getAtr())
 				.setScale(2, BigDecimal.ROUND_DOWN).floatValue());
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		if (Constant.PLAN_ACTION_JIACANG.equals(this.getAction())) {
 			// 如果还可以加仓，则计算下次计划
 			// 操作余额不够支付正常加仓计划时，已余额最大可以的买的数量作为下次加仓数量
@@ -258,7 +258,7 @@ public class DayBbiIn10LowOutOnWBPlan extends Plan {
 
 	}
 
-	public boolean isJustWin(StockDO stockDO, AccountDO accountDO){
+	public boolean isJustWin(PriceDO stockDO, AccountDO accountDO){
 		// DateFormat dateFormat = new
 		// SimpleDateFormat(StockUtil.dateFormatString);
 		// StockDO preStockDO = dataPool.getDayStockMap().get(
@@ -270,7 +270,7 @@ public class DayBbiIn10LowOutOnWBPlan extends Plan {
 		// }
 		// }
 		// return false;
-		float low = StockUtil.preLow(dataPool.getDayStockMap(),
+		float low = PriceUtil.preLow(dataPool.getDayStockMap(),
 				stockDO.getTime(), 10);
 		if (Constant.PLAN_ACTION_JUSTWIN.equals(this.getAction())) {
 			if (low != 0 && stockDO.getLow() <= low) {
@@ -280,9 +280,9 @@ public class DayBbiIn10LowOutOnWBPlan extends Plan {
 		return false;
 	}
 
-	public void executeJustWin(StockDO stockDO, AccountDO accountDO) {
+	public void executeJustWin(PriceDO stockDO, AccountDO accountDO) {
 		// System.out.println("满仓后余额还有:"+accountDO.getBalance());
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		System.out.println(dateFormat.format(stockDO.getTime()) + "止赢点"
 				+ stockDO.getClose()
 				+ "出现,止赢==================================>:"
@@ -299,7 +299,7 @@ public class DayBbiIn10LowOutOnWBPlan extends Plan {
 		this.getExitStatus().add(Constant.EXIT_STATUS_JUSTWIN);
 	}
 
-	public boolean isJiaCang(StockDO stockDO, AccountDO accountDO) {
+	public boolean isJiaCang(PriceDO stockDO, AccountDO accountDO) {
 		if (Constant.PLAN_ACTION_JIACANG.equals(this.getAction())
 				&& this.getTrades() < this.getPlanTrades()) {
 			if (this.getJcPoint() <= stockDO.getHigh()) {
@@ -309,9 +309,9 @@ public class DayBbiIn10LowOutOnWBPlan extends Plan {
 		return false;
 	}
 
-	public void executeJiaCang(StockDO stockDO, AccountDO accountDO)
+	public void executeJiaCang(PriceDO stockDO, AccountDO accountDO)
 			throws ParseException {
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 		System.out.println(dateFormat.format(stockDO.getTime()) + "加仓点"
 				+ this.getJcPoint() + "出现,加仓:" + this.getTradeNum() + "股");
 		BigDecimal jcCount = new BigDecimal(this.getTradeNum());
@@ -342,58 +342,58 @@ public class DayBbiIn10LowOutOnWBPlan extends Plan {
 
 	@Override
 	public boolean canTrade(Date time) throws ParseException {
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
-		StockDO theDay = dataPool.getDayStockMap().get(dateFormat.format(time));
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
+		PriceDO theDay = dataPool.getDayStockMap().get(dateFormat.format(time));
 		if (theDay == null || theDay.getBbi() <= 0) {
 			return false;
 		}
-		Date preDay = StockUtil
+		Date preDay = PriceUtil
 				.pre(dataPool.getDayStockMap(), theDay.getTime());
 		if (preDay == null) {
 			return false;
 		}
-		StockDO preDayStockDO = dataPool.getDayStockMap().get(
+		PriceDO preDayStockDO = dataPool.getDayStockMap().get(
 				dateFormat.format(preDay.getTime()));
 		if (preDayStockDO.getBbi() <= 0) {
 			return false;
 		}
-		Date pre2Day = StockUtil.pre(dataPool.getDayStockMap(), preDay);
+		Date pre2Day = PriceUtil.pre(dataPool.getDayStockMap(), preDay);
 		if (pre2Day == null) {
 			return false;
 		}
-		StockDO pre2DayStockDO = dataPool.getDayStockMap().get(
+		PriceDO pre2DayStockDO = dataPool.getDayStockMap().get(
 				dateFormat.format(pre2Day.getTime()));
 		if (pre2DayStockDO.getBbi() <= 0) {
 			return false;
 		}
-		Date pre3Day = StockUtil.pre(dataPool.getDayStockMap(), pre2Day);
+		Date pre3Day = PriceUtil.pre(dataPool.getDayStockMap(), pre2Day);
 		if (pre3Day == null) {
 			return false;
 		}
-		StockDO pre3DayStockDO = dataPool.getDayStockMap().get(
+		PriceDO pre3DayStockDO = dataPool.getDayStockMap().get(
 				dateFormat.format(pre3Day.getTime()));
 		if (pre3DayStockDO.getBbi() <= 0) {
 			return false;
 		}
 
-		Date pre1WeekDay = StockUtil.preWeekDay(dataPool.getWeekStockMap(),
+		Date pre1WeekDay = PriceUtil.preWeekDay(dataPool.getWeekStockMap(),
 				theDay.getTime());
 		if (pre1WeekDay == null) {
 			return false;
 		}
-		StockDO pre1WeekDayStockDO = dataPool.getWeekStockMap().get(
+		PriceDO pre1WeekDayStockDO = dataPool.getWeekStockMap().get(
 				dateFormat.format(pre1WeekDay));
 		if (pre1WeekDayStockDO.getBbi() <= 0) {
 			return false;
 		}
 
-		Date pre2WeekDay = StockUtil.preWeekDay(dataPool.getWeekStockMap(),
+		Date pre2WeekDay = PriceUtil.preWeekDay(dataPool.getWeekStockMap(),
 				pre1WeekDay);
 		if (pre2WeekDay == null) {
 			return false;
 		}
 
-		StockDO pre2WeekDayStockDO = dataPool.getWeekStockMap().get(
+		PriceDO pre2WeekDayStockDO = dataPool.getWeekStockMap().get(
 				dateFormat.format(pre2WeekDay));
 		if (pre2WeekDayStockDO.getBbi() <= 0) {
 			return false;

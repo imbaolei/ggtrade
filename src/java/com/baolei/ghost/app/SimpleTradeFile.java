@@ -7,8 +7,8 @@ import java.util.Date;
 import com.baolei.ghost.AccountDO;
 import com.baolei.ghost.DataPool;
 import com.baolei.ghost.common.Constant;
-import com.baolei.ghost.common.StockUtil;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.common.PriceUtil;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.baolei.ghost.plan.Plan;
 import com.baolei.ghost.plan.simple.SimpleMonthBbiPlan;
 
@@ -22,12 +22,12 @@ public class SimpleTradeFile {
 		System.out.println(new Date());
 		String folder = code.substring(0, 2);
 		String tofile = InitStockFile.toFilePath + folder.toLowerCase() + "/" + code + ".txt";
-		DataPool dataPool = StockUtil.initToStockPool(tofile);
+		DataPool dataPool = PriceUtil.initToStockPool(tofile);
 		AccountDO accountDO = new AccountDO(amount);
 //		PlanDO plan = new HGPlan(dataPool);
 		Plan plan = new SimpleMonthBbiPlan(dataPool);
 //		PlanDO plan = new WeekBuyPointPlan(dataPool);
-		for (StockDO stockDO : dataPool.getMonthStockList()) {
+		for (PriceDO stockDO : dataPool.getMonthStockList()) {
 			if (plan.canTrade(stockDO.getTime())) {
 				plan.execute(stockDO, accountDO);
 			}

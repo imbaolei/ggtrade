@@ -20,9 +20,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.baolei.ghost.common.NumberUtil;
-import com.baolei.ghost.common.StockUtil;
-import com.baolei.ghost.dal.dataobject.StockDO;
-import com.baolei.trade.bo.StockBO;
+import com.baolei.ghost.common.PriceUtil;
+import com.baolei.ghost.dal.dataobject.PriceDO;
+import com.baolei.trade.bo.PriceBO;
 
 @Controller
 @RequestMapping("/report/compare_stocks.do")
@@ -30,15 +30,15 @@ public class CompareStocks {
 	protected Log log = LogFactory.getLog(getClass());
 
 	@Autowired 
-	private StockBO stockBO;
+	private PriceBO stockBO;
 
-	private StockUtil stockUtil;
+	private PriceUtil stockUtil;
 
 	private int period = 200;
 	
 	private Integer ma  =20;
 
-	DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+	DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 
 	String startDateString = "2005/01/01";
 	
@@ -60,16 +60,16 @@ public class CompareStocks {
 				Date startDate = dateFormat.parse(startDateString);
 				Date endDate = dateFormat.parse(endDateString);
 				for (String code : codes.split(",")) {
-					List<StockDO> stockList = stockBO.getStockListByFile(code);
-					stockList = stockBO.initStockListMa(stockList, ma.toString());
+					List<PriceDO> stockList = stockBO.getPriceListByFile(code);
+					stockList = stockBO.initPriceListMa(stockList, ma.toString());
 					codeList.add(code);
 					Map<String, Float> dateRiseMap = new TreeMap<String, Float>();
 
 					
 					// 计算涨幅
-					for (StockDO stockDO : stockList) {
+					for (PriceDO stockDO : stockList) {
 						if (stockDO.getTime().after(startDate) && stockDO.getTime().before(endDate)) {
-							StockDO beforeStockDO = calBeforeTime(stockList,
+							PriceDO beforeStockDO = calBeforeTime(stockList,
 									stockDO);
 							float rise = 0;
 							if(StringUtils.isNotEmpty(risetype)&&"ma".equalsIgnoreCase(risetype)){
@@ -87,9 +87,9 @@ public class CompareStocks {
 					codeDateRiseMap.put(code, dateRiseMap);
 				}
 				// 根据上证指数 计算 时间
-				List<StockDO> szStockList = stockBO
-						.getStockListByFile(szStockCode);
-				for (StockDO stockDO : szStockList) {
+				List<PriceDO> szStockList = stockBO
+						.getPriceListByFile(szStockCode);
+				for (PriceDO stockDO : szStockList) {
 					if (stockDO.getTime().after(startDate) && stockDO.getTime().before(endDate)) {
 						String dateString = dateFormat.format(stockDO
 								.getTime());
@@ -123,13 +123,13 @@ public class CompareStocks {
 	public String compareList(HttpServletRequest request, ModelMap model) {
 		String filePath = "D:/java/project/data/tdx/";
 		List<String> codeList = stockBO.getAllCodes(filePath);
-		List<List<StockDO>> stockListList = new ArrayList<List<StockDO>>();
+		List<List<PriceDO>> stockListList = new ArrayList<List<PriceDO>>();
 		for(String code : codeList){
-			List<StockDO> stockList = stockBO.getStockListByFile(code);
+			List<PriceDO> stockList = stockBO.getPriceListByFile(code);
 			stockListList.add(stockList);
 		}
-		for(List<StockDO> stockList : stockListList){
-			stockBO.calStockListMaRise(stockList, ma.toString(), period, startDateString, endDateString);
+		for(List<PriceDO> stockList : stockListList){
+			stockBO.calpriceListMaRise(stockList, ma.toString(), period, startDateString, endDateString);
 		}
 		return codes;
 		
@@ -137,7 +137,7 @@ public class CompareStocks {
 	
 	
 
-	private float calRise(StockDO beforeStockDO, StockDO afterStockDO) {
+	private float calRise(PriceDO beforeStockDO, PriceDO afterStockDO) {
 		if (beforeStockDO != null && afterStockDO != null) {
 			float beforePrice = beforeStockDO.getClose();
 			float afterPrice = afterStockDO.getClose();
@@ -148,7 +148,7 @@ public class CompareStocks {
 		return 0;
 	}
 	
-	private float calMaRise(StockDO beforeStockDO, StockDO afterStockDO) {
+	private float calMaRise(PriceDO beforeStockDO, PriceDO afterStockDO) {
 		if (beforeStockDO != null && afterStockDO != null ) {
 			log.info(beforeStockDO.getCode() + " "+ dateFormat.format(beforeStockDO.getTime()) + " " +beforeStockDO.getMa());
 			if(beforeStockDO.getMa(ma.toString()) <= 0 || afterStockDO.getMa(ma.toString()) <= 0){
@@ -163,7 +163,7 @@ public class CompareStocks {
 		return 0;
 	}
 
-	private StockDO calBeforeTime(List<StockDO> stockList, StockDO stockDO) {
+	private PriceDO calBeforeTime(List<PriceDO> stockList, PriceDO stockDO) {
 		int index = stockList.indexOf(stockDO);
 		if (index - period > 0) {
 			return stockList.get(index - period);

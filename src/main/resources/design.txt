@@ -1,3 +1,8 @@
+com.baolei.ghost 是一套交易系统 有交易机会 ，有交易机会的执行
+com.baolei.trade。test 用来测试交易收益，以一种标的来作为买卖时间点的判断，以另一种标的测试交易效果，类似华安基金的一种趋势基金
+
+
+
 1 判断能不能执行计划，就是判断执行计划所需要的条件是否都成立
 2 执行计划
   2.1 判断是否是买点 //买点不同
@@ -25,9 +30,9 @@
   		如果next[action]是止赢,只需要计算止损点即可
 		
 
-StockDO 股票对象
-drop table if exists stock;
-create table stock(						   
+PriceDO 股票行情对象
+drop table if exists price;
+create table price(						   
 	id int(11) not null auto_increment,
 	code varchar(10),
 	open float,

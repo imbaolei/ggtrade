@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 import com.baolei.ghost.common.Constant;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 
 @Service("txdFileParser")
 public class TxdFileParser implements DataParser {
@@ -61,25 +61,25 @@ public class TxdFileParser implements DataParser {
 	}
 
 	@Override
-	public List<StockDO> parse(String code) {
-		List<StockDO> stockDOList = new ArrayList<StockDO>();
+	public List<PriceDO> parse(String code) {
+		List<PriceDO> stockDOList = new ArrayList<PriceDO>();
 		List<String> sDataList = reader(code, 0);
 		for (String temp : sDataList) {
 			// 如果这行数据没有 小数点 则不是价格数据
 			if (!temp.contains(".")) {
 				continue;
 			}
-			StockDO stockDO = parseDataLine(temp);
+			PriceDO stockDO = parseDataLine(temp);
 			stockDO.setCode(code);
 			stockDOList.add(stockDO);
 		}
 		return stockDOList;
 	}
 
-	private StockDO parseDataLine(String dataLine) {
+	private PriceDO parseDataLine(String dataLine) {
 		String[] data = dataLine.split(" ");
 		// [0]日期 [1]open [2]high; [3]low [4]close [5] vol
-		StockDO stockDO = new StockDO();
+		PriceDO stockDO = new PriceDO();
 		DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
 		try {
 			Date date = dateFormat.parse(data[0]);
@@ -107,10 +107,10 @@ public class TxdFileParser implements DataParser {
 	}
 
 	@Override
-	public StockDO getLastPrice(String code) {
+	public PriceDO getLastPrice(String code) {
 		List<String> sDataList = reader(code, 0);
 		String lastLine = sDataList.get(sDataList.size()-1);
-		StockDO stockDO = parseDataLine(lastLine);
+		PriceDO stockDO = parseDataLine(lastLine);
 		return stockDO;
 	}
 

@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.baolei.ghost.common.StockUtil;
+import com.baolei.ghost.common.PriceUtil;
 import com.baolei.ghost.dal.daointerface.ReportDAO;
 import com.baolei.trade.bo.ReportBO;
 import com.baolei.trade.bo.ReportStatsBO;
@@ -69,7 +69,7 @@ public class InitDB {
 	public void initStockName(){
 		List<String> codes = getAllCodes();
 		DataParser dataParser = (DataParser) context.getBean("txdFileParser");
-		StockUtil stockUtil = (StockUtil) context.getBean("stockUtil");
+		PriceUtil stockUtil = (PriceUtil) context.getBean("stockUtil");
 		Properties props = stockUtil.getCodeProperties();
 		for (int i  = 0 ; i < codes.size() ; i++) {
 			String code = codes.get(i);

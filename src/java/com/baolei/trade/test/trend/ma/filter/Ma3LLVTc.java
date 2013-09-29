@@ -1,8 +1,8 @@
 package com.baolei.trade.test.trend.ma.filter;
 
 import com.baolei.ghost.common.Constant;
-import com.baolei.ghost.common.StockUtil;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.common.PriceUtil;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.baolei.trade.test.trend.ma.Ma3Tc;
 
 public class Ma3LLVTc extends Ma3Tc {
@@ -11,13 +11,13 @@ public class Ma3LLVTc extends Ma3Tc {
 	protected int hhvCount = 20;
 
 	protected boolean isLLV(String dateString) {
-		StockDO stockDO = pdStockMap.get(dateString);
-		return StockUtil.isLLV(pdStockList, stockDO, llvCount);
+		PriceDO stockDO = pdStockMap.get(dateString);
+		return PriceUtil.isLLV(pdStockList, stockDO, llvCount);
 	}
 
 	protected boolean isHHV(String dateString) {
-		StockDO stockDO = pdStockMap.get(dateString);
-		return StockUtil.isHHV(pdStockList, stockDO, hhvCount);
+		PriceDO stockDO = pdStockMap.get(dateString);
+		return PriceUtil.isHHV(pdStockList, stockDO, hhvCount);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class Ma3LLVTc extends Ma3Tc {
 	}
 
 	protected boolean canBuyFirst(String dateString) {
-		StockDO lastJyStock = findLastJyStock(dateString);
+		PriceDO lastJyStock = findLastJyStock(dateString);
 		if (lastJyStock == null) {
 			return false;
 		}
@@ -47,7 +47,7 @@ public class Ma3LLVTc extends Ma3Tc {
 	}
 
 	protected boolean canBuyDingTou(String dateString) {
-		StockDO lastJyStock = findLastJyStock(dateString);
+		PriceDO lastJyStock = findLastJyStock(dateString);
 		if (lastJyStock == null) {
 			return false;
 		}
@@ -63,7 +63,7 @@ public class Ma3LLVTc extends Ma3Tc {
 	@Override
 	public void buy(String dateString) {
 		super.buy(dateString);
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		stockDO.getReport().setType(Constant.REPORT_TYPE_DUO);
 	}
 
@@ -78,7 +78,7 @@ public class Ma3LLVTc extends Ma3Tc {
 	@Override
 	public void sale(String dateString) {
 		super.sale(dateString);
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		stockDO.getReport().setType(Constant.REPORT_TYPE_DUO);
 	}
 

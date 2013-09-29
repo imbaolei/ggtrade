@@ -14,13 +14,13 @@ import com.baolei.common.AbstractTestCase;
 import com.baolei.ghost.app2.DataParser;
 import com.baolei.ghost.app2.TxdFileParser;
 import com.baolei.ghost.common.Constant;
-import com.baolei.ghost.common.StockUtil;
+import com.baolei.ghost.common.PriceUtil;
 import com.baolei.ghost.dal.daointerface.ReportDAO;
-import com.baolei.ghost.dal.daointerface.StockDAO;
+import com.baolei.ghost.dal.daointerface.PriceDAO;
 import com.baolei.ghost.dal.dataobject.ReportDO;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.baolei.trade.bo.ReportBO;
-import com.baolei.trade.bo.StockBO;
+import com.baolei.trade.bo.PriceBO;
 import com.baolei.trade.bo.TradeBO;
 import com.baolei.trade.test.trend.ma.Ma3Tc;
 import com.baolei.trade.test.trend.ma.filter.Ma200Hg55LLVTcAtr;
@@ -45,16 +45,16 @@ public class StockTest extends AbstractTestCase {
 	Integer p3 = 90;
 
 	protected Log log = LogFactory.getLog(getClass());
-	DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
+	DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
 //	private String filePath = "D:/java/project/data/";
 	@Autowired
 	private TradeBO tradeBO;
 
 	@Autowired
-	private StockBO stockBO;
+	private PriceBO stockBO;
 	
 	@Autowired
-	private StockDAO stockDAO;
+	private PriceDAO stockDAO;
 
 	@Autowired
 	private ReportDAO reportDAO;
@@ -63,10 +63,10 @@ public class StockTest extends AbstractTestCase {
 	private ReportBO reportBO;
 
 	public void testGetStockListByFile() {
-		List<StockDO> stockList = tradeBO.getStockListByFile(code);
-		stockList = stockBO.initStockListMa(stockList, "");
-		stockList = stockBO.initStockListAtr(stockList, 0);
-		for (StockDO stockDO : stockList) {
+		List<PriceDO> stockList = tradeBO.getStockListByFile(code);
+		stockList = stockBO.initPriceListMa(stockList, "");
+		stockList = stockBO.initPriceListAtr(stockList, 0);
+		for (PriceDO stockDO : stockList) {
 			log.info(dateFormat.format(stockDO.getTime()));
 			log.info(stockDO.getMa());
 			log.info(stockDO.getAtr());
@@ -74,7 +74,7 @@ public class StockTest extends AbstractTestCase {
 	}
 
 	public void testMa3Tc() {
-		List<StockDO> stockList = getInitStockList(code);
+		List<PriceDO> stockList = getInitStockList(code);
 		Ma3Tc test = new Ma3Tc();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
@@ -86,7 +86,7 @@ public class StockTest extends AbstractTestCase {
 
 	
 	public void testMa3LLVTc() {
-		List<StockDO> stockList = getInitStockList(code);
+		List<PriceDO> stockList = getInitStockList(code);
 		Ma3Tc test = new Ma3LLVTc();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
@@ -98,7 +98,7 @@ public class StockTest extends AbstractTestCase {
 
 	
 	public void testMa3UpLLVTc() {
-		List<StockDO> stockList = getInitStockList(code);
+		List<PriceDO> stockList = getInitStockList(code);
 		Ma3Tc test = new Ma3UpLLVTc();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
@@ -110,7 +110,7 @@ public class StockTest extends AbstractTestCase {
 
 
 	public void testMa3LLVStopTc() {
-		List<StockDO> stockList = getInitStockList(code);
+		List<PriceDO> stockList = getInitStockList(code);
 		Ma3Tc test = new Ma3LLVStopTc();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
@@ -122,7 +122,7 @@ public class StockTest extends AbstractTestCase {
 
 	
 	public void testMa3LLVTcAtr() {
-		List<StockDO> stockList = getInitStockList(code);
+		List<PriceDO> stockList = getInitStockList(code);
 		Ma3Tc test = new Ma3LLVTcAtr();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
@@ -134,7 +134,7 @@ public class StockTest extends AbstractTestCase {
 	
 	@Test
 	public void testMa200Hg55LLVTcAtr() {
-		List<StockDO> stockList = getInitStockList(code);
+		List<PriceDO> stockList = getInitStockList(code);
 		Ma3Tc test = new Ma200Hg55LLVTcAtr();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
@@ -146,7 +146,7 @@ public class StockTest extends AbstractTestCase {
 	
 	
 	public void testMa2Hg55LLVTcAtr() {
-		List<StockDO> stockList = getInitStockList(code);
+		List<PriceDO> stockList = getInitStockList(code);
 		Ma3Tc test = new Ma2Hg55LLVTcAtr();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
@@ -156,10 +156,10 @@ public class StockTest extends AbstractTestCase {
 		test.printReport();
 	}
 
-	private List<StockDO> getInitStockList(String code) {
-		List<StockDO> stockList = tradeBO.getStockListByFile(code);
-		stockList = stockBO.initStockListMa(stockList, "");
-		stockList = stockBO.initStockListAtr(stockList, 0);
+	private List<PriceDO> getInitStockList(String code) {
+		List<PriceDO> stockList = tradeBO.getStockListByFile(code);
+		stockList = stockBO.initPriceListMa(stockList, "");
+		stockList = stockBO.initPriceListAtr(stockList, 0);
 		return stockList;
 	}
 
@@ -186,7 +186,7 @@ public class StockTest extends AbstractTestCase {
 //	}
 
 	public void executeTrade(String code) {
-		List<StockDO> stockList = getInitStockList(code);
+		List<PriceDO> stockList = getInitStockList(code);
 		Ma3Tc test = new Ma3LLVTc();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
@@ -204,12 +204,12 @@ public class StockTest extends AbstractTestCase {
 	public void testMa(){
 		DataParser sdp = new TxdFileParser();
 		log.info("start parse "  + new Date());
-		List<StockDO> stockDOList =  sdp.parse(code);
+		List<PriceDO> stockDOList =  sdp.parse(code);
 //		stockDAO.deleteStockByCode(code);
 		log.info("start insert "  + new Date());
 //		stockDAO.insertStocks(stockDOList);
 		log.info("end parse "  + new Date());
-		stockDOList = stockDAO.selectStockByCodeAndPeriod(code, Constant.STOCK_PERIOD_DAY);
+		stockDOList = stockDAO.selectPriceByCodeAndPeriod(code, Constant.STOCK_PERIOD_DAY);
 		stockDOList = tradeBO.maManage(stockDOList,"20,30,60,90,120");
 //		stockDAO.updateStocksByIdBatch(stockDOList);
 		log.info("end ma "  + new Date());

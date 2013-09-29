@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.baolei.ghost.dal.dataobject.ReportDO;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 
 public interface ReportDAO {
 

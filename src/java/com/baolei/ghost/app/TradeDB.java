@@ -12,9 +12,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.baolei.ghost.AccountDO;
 import com.baolei.ghost.DataPool;
 import com.baolei.ghost.common.Constant;
-import com.baolei.ghost.common.StockUtil;
-import com.baolei.ghost.dal.daointerface.StockDAO;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.common.PriceUtil;
+import com.baolei.ghost.dal.daointerface.PriceDAO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.baolei.ghost.plan.Plan;
 import com.baolei.ghost.plan.hg.HGOnWBPlan;
 
@@ -29,25 +29,25 @@ public class TradeDB {
 		DataPool dataPool = new DataPool();
 		ApplicationContext context = new ClassPathXmlApplicationContext(
 				"applicationContext.xml");
-		StockDAO stockDAO = (StockDAO) context.getBean("stockDAO");
-		dataPool.setDayStockList(stockDAO.selectStockByCodeAndPeriod(code,
+		PriceDAO stockDAO = (PriceDAO) context.getBean("stockDAO");
+		dataPool.setDayStockList(stockDAO.selectPriceByCodeAndPeriod(code,
 				Constant.STOCK_PERIOD_DAY));
-		dataPool.setWeekStockList(stockDAO.selectStockByCodeAndPeriod(code,
+		dataPool.setWeekStockList(stockDAO.selectPriceByCodeAndPeriod(code,
 				Constant.STOCK_PERIOD_WEEK));
-		dataPool.setMonthStockList(stockDAO.selectStockByCodeAndPeriod(code,
+		dataPool.setMonthStockList(stockDAO.selectPriceByCodeAndPeriod(code,
 				Constant.STOCK_PERIOD_MONTH));
-		DateFormat dateFormat = new SimpleDateFormat(StockUtil.dateFormatString);
-		for (StockDO stockDO : dataPool.getDayStockList()) {
+		DateFormat dateFormat = new SimpleDateFormat(PriceUtil.dateFormatString);
+		for (PriceDO stockDO : dataPool.getDayStockList()) {
 			dataPool.getDayStockMap().put(
 					dateFormat.format(stockDO.getTime()), stockDO);
 		}
 
-		for (StockDO stockDO : dataPool.getWeekStockList()) {
+		for (PriceDO stockDO : dataPool.getWeekStockList()) {
 			dataPool.getWeekStockMap().put(
 					dateFormat.format(stockDO.getTime()), stockDO);
 		}
 		
-		for (StockDO stockDO : dataPool.getMonthStockList()) {
+		for (PriceDO stockDO : dataPool.getMonthStockList()) {
 			dataPool.getMonthStockMap().put(
 					dateFormat.format(stockDO.getTime()), stockDO);
 		}
@@ -56,7 +56,7 @@ public class TradeDB {
 //		PlanDO plan = new HGPlan(dataPool);
 		Plan plan = new HGOnWBPlan(dataPool);
 //		PlanDO plan = new WeekBuyPointPlan(dataPool);
-		for (StockDO stockDO : dataPool.getDayStockList()) {
+		for (PriceDO stockDO : dataPool.getDayStockList()) {
 			if (plan.canTrade(stockDO.getTime())) {
 				plan.execute(stockDO, accountDO);
 			}

@@ -18,7 +18,7 @@ import com.baolei.ghost.dal.daointerface.ReportDAO;
 import com.baolei.ghost.dal.daointerface.ReportStatsDAO;
 import com.baolei.ghost.dal.dataobject.ReportDO;
 import com.baolei.ghost.dal.dataobject.ReportStatsDO;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 
 @Service("reportStatsBO")
 public class ReportStatsBO {
@@ -92,7 +92,7 @@ public class ReportStatsBO {
 			ReportDO lastReportDO = reportList.get(reportList.size() - 1);
 			// 如果最后一个report的状态是buy，那证明还没平仓，计算收益
 			if (Constant.REPORT_STATUS_BUY.equals(lastReportDO.getStatus())) {
-				StockDO lastStockDO = dataParser.getLastPrice(code);
+				PriceDO lastStockDO = dataParser.getLastPrice(code);
 				lastPercent = (lastStockDO.getClose() - lastReportDO.getPrice())
 						/ lastReportDO.getPrice() * 100;
 				lastPercent = NumberUtil.roundDown(lastPercent, 2);

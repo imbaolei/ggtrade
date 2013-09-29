@@ -1,7 +1,7 @@
 package com.baolei.trade.test.trend.kong.ma.filter;
 
-import com.baolei.ghost.common.StockUtil;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.common.PriceUtil;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.baolei.trade.test.trend.kong.ma.Ma3KongTc;
 
 public class Ma3KongTcLLV extends Ma3KongTc{
@@ -10,8 +10,8 @@ public class Ma3KongTcLLV extends Ma3KongTc{
 	protected int hhvCount = 20;
 	
 	protected boolean isLLV(String dateString){
-		StockDO stockDO = pdStockMap.get(dateString);
-		return StockUtil.isLLV(pdStockList, stockDO, llvCount);
+		PriceDO stockDO = pdStockMap.get(dateString);
+		return PriceUtil.isLLV(pdStockList, stockDO, llvCount);
 	}
 
 	@Override
@@ -23,8 +23,8 @@ public class Ma3KongTcLLV extends Ma3KongTc{
 	}
 	
 	protected boolean isHHV(String dateString){
-		StockDO stockDO = pdStockMap.get(dateString);
-		return StockUtil.isHHV(pdStockList, stockDO, hhvCount);
+		PriceDO stockDO = pdStockMap.get(dateString);
+		return PriceUtil.isHHV(pdStockList, stockDO, hhvCount);
 	}
 	
 	@Override

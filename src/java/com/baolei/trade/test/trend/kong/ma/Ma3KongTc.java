@@ -1,7 +1,7 @@
 package com.baolei.trade.test.trend.kong.ma;
 
 import com.baolei.ghost.common.NumberUtil;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.baolei.trade.test.trend.ma.Ma3Tc;
 
 /**
@@ -12,7 +12,7 @@ public class Ma3KongTc extends Ma3Tc {
 
 	@Override
 	public boolean needBuy(String dateString) {
-		StockDO stockDO = pdStockMap.get(dateString);
+		PriceDO stockDO = pdStockMap.get(dateString);
 		// 如果判断没有头寸 而且 趋势不是走弱，即走强
 		// 如果有现金 就买入
 		if ((cash > 0) && trendout(stockDO)) {
@@ -26,7 +26,7 @@ public class Ma3KongTc extends Ma3Tc {
 	
 	@Override
 	public boolean needSale(String dateString) {
-		StockDO stockDO = pdStockMap.get(dateString);
+		PriceDO stockDO = pdStockMap.get(dateString);
 		if ((toucunHR > 0) && !trendout(stockDO)) {
 			return true;
 		}
@@ -39,7 +39,7 @@ public class Ma3KongTc extends Ma3Tc {
 	 * 两次交易之间的头寸变化
 	 */
 	protected float toucunChange(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		float buyPoint = stockDO.getClose();
 		if(lastBuyStockDO == null){
 			return 0;

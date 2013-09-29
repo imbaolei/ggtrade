@@ -11,16 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.baolei.ghost.DataPool;
 import com.baolei.ghost.common.Constant;
-import com.baolei.ghost.common.StockUtil;
-import com.baolei.ghost.dal.daointerface.StockDAO;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.common.PriceUtil;
+import com.baolei.ghost.dal.daointerface.PriceDAO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.thoughtworks.xstream.XStream;
 
 @Controller
 public class HelloSpring {
 
 	@Autowired
-	private StockDAO stockDAO;
+	private PriceDAO stockDAO;
 
 	@RequestMapping("/trade/hellospring.do")
 	public String hello(ModelMap model) {
@@ -32,9 +32,9 @@ public class HelloSpring {
 		// JSONArray ja =
 		// JSONArray.fromObject(toDataPool.getDayStockList(),jsonConfig);
 		XStream xstream = new XStream();
-		xstream.alias("stock", StockDO.class);
+		xstream.alias("stock", PriceDO.class);
 		xstream.alias("stocks", List.class);
-		List<StockDO> stockList = stockDAO.selectStockByCodeAndPeriod(code, Constant.STOCK_PERIOD_DAY);
+		List<PriceDO> stockList = stockDAO.selectPriceByCodeAndPeriod(code, Constant.STOCK_PERIOD_DAY);
 		String xml = xstream.toXML(stockList);
 		model.addAttribute("spring", xml);
 		return "hellospring";

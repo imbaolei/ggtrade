@@ -5,67 +5,67 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 
 public class DataPool {
 	
-	private List<StockDO> dayStockList = new ArrayList<StockDO>();
+	private List<PriceDO> dayStockList = new ArrayList<PriceDO>();
 
-	private List<StockDO> weekStockList = new ArrayList<StockDO>();
+	private List<PriceDO> weekStockList = new ArrayList<PriceDO>();
 
-	private List<StockDO> monthStockList = new ArrayList<StockDO>();
+	private List<PriceDO> monthStockList = new ArrayList<PriceDO>();
 	
-	private Map<String, StockDO> dayStockMap = new TreeMap<String, StockDO>();
+	private Map<String, PriceDO> dayStockMap = new TreeMap<String, PriceDO>();
 
-	private Map<String, StockDO> weekStockMap = new TreeMap<String, StockDO>();
+	private Map<String, PriceDO> weekStockMap = new TreeMap<String, PriceDO>();
 	
-	private Map<String, StockDO> monthStockMap = new TreeMap<String, StockDO>();
+	private Map<String, PriceDO> monthStockMap = new TreeMap<String, PriceDO>();
 
-	public List<StockDO> getDayStockList() {
+	public List<PriceDO> getDayStockList() {
 		return dayStockList;
 	}
 
-	public void setDayStockList(List<StockDO> dayStockList) {
+	public void setDayStockList(List<PriceDO> dayStockList) {
 		this.dayStockList = dayStockList;
 	}
 
-	public Map<String, StockDO> getDayStockMap() {
+	public Map<String, PriceDO> getDayStockMap() {
 		return dayStockMap;
 	}
 
-	public void setDayStockMap(Map<String, StockDO> dayStockMap) {
+	public void setDayStockMap(Map<String, PriceDO> dayStockMap) {
 		this.dayStockMap = dayStockMap;
 	}
 
-	public List<StockDO> getWeekStockList() {
+	public List<PriceDO> getWeekStockList() {
 		return weekStockList;
 	}
 
-	public void setWeekStockList(List<StockDO> weekStockList) {
+	public void setWeekStockList(List<PriceDO> weekStockList) {
 		this.weekStockList = weekStockList;
 	}
 
-	public Map<String, StockDO> getWeekStockMap() {
+	public Map<String, PriceDO> getWeekStockMap() {
 		return weekStockMap;
 	}
 
-	public void setWeekStockMap(Map<String, StockDO> weekStockMap) {
+	public void setWeekStockMap(Map<String, PriceDO> weekStockMap) {
 		this.weekStockMap = weekStockMap;
 	}
 
-	public List<StockDO> getMonthStockList() {
+	public List<PriceDO> getMonthStockList() {
 		return monthStockList;
 	}
 
-	public void setMonthStockList(List<StockDO> monthStockList) {
+	public void setMonthStockList(List<PriceDO> monthStockList) {
 		this.monthStockList = monthStockList;
 	}
 
-	public Map<String, StockDO> getMonthStockMap() {
+	public Map<String, PriceDO> getMonthStockMap() {
 		return monthStockMap;
 	}
 
-	public void setMonthStockMap(Map<String, StockDO> monthStockMap) {
+	public void setMonthStockMap(Map<String, PriceDO> monthStockMap) {
 		this.monthStockMap = monthStockMap;
 	}
 	

@@ -2,7 +2,7 @@ package com.baolei.trade.test.trend.ma.filter;
 
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.common.NumberUtil;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 
 public class Ma3LLVTcAtr extends Ma3LLVTc {
 
@@ -17,7 +17,7 @@ public class Ma3LLVTcAtr extends Ma3LLVTc {
 	 */
 	protected void setJiacangPlan(String dateString) {
 		jiacangNextPlanCount++;
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		float buyPoint = stockDO.getReport().getPrice();
 		planBuyPoint = buyPoint + jiacangAtrRate * stockDO.getAtr();
 		planBuyPoint = NumberUtil.roundDown(planBuyPoint, 2);
@@ -53,11 +53,11 @@ public class Ma3LLVTcAtr extends Ma3LLVTc {
 	}
 
 	protected boolean canJiacang(String dateString) {
-		StockDO lastJyStock = findLastJyStock(dateString);
+		PriceDO lastJyStock = findLastJyStock(dateString);
 		if(lastJyStock == null){
 			return false;
 		}
-		StockDO stockDO = pdStockMap.get(dateString);
+		PriceDO stockDO = pdStockMap.get(dateString);
 		String lastJyStatus = lastJyStock.getReport().getStatus();
 		if (Constant.REPORT_STATUS_BUY.equals(lastJyStatus)) {
 			if (cash > 0) {
@@ -79,7 +79,7 @@ public class Ma3LLVTcAtr extends Ma3LLVTc {
 	}
 
 	protected void executeBuy(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		float fee = 0;
 		fee = fee(planBuyToucun);
 		stockDO.getReport().setFee(fee);
@@ -94,7 +94,7 @@ public class Ma3LLVTcAtr extends Ma3LLVTc {
 	}
 
 	protected void setBuyReport(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		float buyPoint = stockDO.getReport().getPrice();
 		float fee = stockDO.getReport().getFee();
 		float account = toucunHR + cash;

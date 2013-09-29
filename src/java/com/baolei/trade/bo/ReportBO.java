@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.baolei.ghost.common.Constant;
 import com.baolei.ghost.dal.daointerface.ReportDAO;
 import com.baolei.ghost.dal.dataobject.ReportDO;
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.baolei.trade.test.trend.ma.Ma3Tc;
 import com.baolei.trade.test.trend.ma.filter.Ma3LLVStopTc;
 
@@ -29,7 +29,7 @@ public class ReportBO {
 	private TradeBO tradeBO;
 
 	@Autowired
-	private StockBO stockBO;
+	private PriceBO stockBO;
 	
 	public List<String> getCodesFromReport(int start,int count){
 		Map param = new HashMap();
@@ -76,7 +76,7 @@ public class ReportBO {
 		Integer p1 = 20;
 		Integer p2 = 60;
 		Integer p3 = 90;
-		List<StockDO> stockList = getInitStockList(code);
+		List<PriceDO> stockList = getInitStockList(code);
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
 		test.setMoneyDingTou(0);
@@ -88,9 +88,9 @@ public class ReportBO {
 		reportDAO.insertReports(reportList);
 	}
 	
-	public List<ReportDO> getAllTradeReport(List<StockDO> stockList) {
+	public List<ReportDO> getAllTradeReport(List<PriceDO> stockList) {
 		List<ReportDO> reportList = new ArrayList<ReportDO>();
-		for (StockDO stockDO : stockList) {
+		for (PriceDO stockDO : stockList) {
 			String status = stockDO.getReport().getStatus();
 			if (Constant.REPORT_STATUS_SALE.equals(status)
 					|| Constant.REPORT_STATUS_BUY.equals(status)) {
@@ -102,9 +102,9 @@ public class ReportBO {
 		return reportList;
 	}
 	
-	private List<StockDO> getInitStockList(String code) {
-		List<StockDO> stockList = tradeBO.getStockListByFile(code);
-		stockList = stockBO.initStockListMa(stockList, "");
+	private List<PriceDO> getInitStockList(String code) {
+		List<PriceDO> stockList = tradeBO.getStockListByFile(code);
+		stockList = stockBO.initPriceListMa(stockList, "");
 		return stockList;
 	}
 	

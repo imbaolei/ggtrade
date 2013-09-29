@@ -1,6 +1,6 @@
 package com.baolei.trade.test.trend.ma.filter;
 
-import com.baolei.ghost.dal.dataobject.StockDO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 
 /**
  * 在LLV的基础上再加上一个 比如亏村15%时止损的条件
@@ -22,12 +22,12 @@ public class Ma3LLVStopTc extends Ma3LLVTc {
 	}
 
 	protected boolean isStopLoss(String dateString) {
-		StockDO stockDO = jyStockMap.get(dateString);
+		PriceDO stockDO = jyStockMap.get(dateString);
 		float buyPoint = stockDO.getClose();
 		if (lastBuyStockDO == null) {
 			return false;
 		}
-		StockDO startStockDO = findStartStock(dateString);
+		PriceDO startStockDO = findStartStock(dateString);
 		float startBuyPoint = startStockDO.getClose();
 		float change = 1 - buyPoint / startBuyPoint;
 		if (change > stopLoss) {

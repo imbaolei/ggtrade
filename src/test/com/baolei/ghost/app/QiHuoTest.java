@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.baolei.common.AbstractTestCase;
 import com.baolei.ghost.app2.DataParser;
-import com.baolei.ghost.dal.dataobject.StockDO;
-import com.baolei.trade.bo.StockBO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
+import com.baolei.trade.bo.PriceBO;
 import com.baolei.trade.test.trend.ma.Ma3Tc;
 import com.baolei.trade.test.trend.ma.filter.Ma3LLVTc;
 
@@ -28,11 +28,11 @@ public class QiHuoTest  extends AbstractTestCase{
 	DataParser dzhTxtParser;
 	
 	@Autowired
-	private StockBO stockBO;
+	private PriceBO stockBO;
 	
 	@Test
 	public void testMa3LLVTc() {
-		List<StockDO> stockList = getInitStockList(code);
+		List<PriceDO> stockList = getInitStockList(code);
 		Ma3Tc test = new Ma3LLVTc();
 		test.initCash(account);
 		test.initMaParam(p1, p2, p3);
@@ -42,10 +42,10 @@ public class QiHuoTest  extends AbstractTestCase{
 		test.printReport();
 	}
 	
-	private List<StockDO> getInitStockList(String code) {
-		List<StockDO> stockList = dzhTxtParser.parse(code);
-		stockList = stockBO.initStockListMa(stockList, "");
-		stockList = stockBO.initStockListAtr(stockList, 0);
+	private List<PriceDO> getInitStockList(String code) {
+		List<PriceDO> stockList = dzhTxtParser.parse(code);
+		stockList = stockBO.initPriceListMa(stockList, "");
+		stockList = stockBO.initPriceListAtr(stockList, 0);
 		return stockList;
 	}
 }
