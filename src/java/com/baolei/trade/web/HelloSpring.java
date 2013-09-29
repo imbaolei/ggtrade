@@ -22,7 +22,7 @@ public class HelloSpring {
 	@Autowired
 	private StockDAO stockDAO;
 
-	@RequestMapping("/hellospring.do")
+	@RequestMapping("/trade/hellospring.do")
 	public String hello(ModelMap model) {
 		String code = "SZ399300";
 //		DataPool toDataPool = StockUtil.initStockPool("SZ399300");

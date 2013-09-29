@@ -1,95 +1,64 @@
-package com.baolei.ghost.dal.dataobject;
+package com.baolei.trade.alert.domian;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import net.sf.json.JSONObject;
-
-
-public class StockDO {
+public class AlertStockDO {
 	
-	private String code;
+	String code;
 	
-	private int id;
+	String name;
 	
-	private Date time;
+	public String getName() {
+		return name;
+	}
 
-	private float open;
+	public void setName(String name) {
+		this.name = name;
+	}
 
-	private float high;
+	int id;
+	
+	Date time;
 
-	private float low;
+	float open;
 
-	private float close;
+	float high;
 
-	private float vol;
+	float low;
+
+	float close;
+
+	float vol;
 	
-	private float bbi;
+	float bbi;
 	
-	private String period;
+	String period; //周期
 	
-	private String ma;
+	float upAlert;
 	
-	private float atr;
+	List<AlertConfig> alertConfigs = new ArrayList<AlertConfig>();
+	
+	public List<AlertConfig> getAlertConfigs() {
+		return alertConfigs;
+	}
+
+	public void setAlertConfigs(List<AlertConfig> alertConfigs) {
+		this.alertConfigs = alertConfigs;
+	}
+
+	public float getUpAlert() {
+		return upAlert;
+	}
+
+	public void setUpAlert(float upAlert) {
+		this.upAlert = upAlert;
+	}
 
 	private Date gmtCreate;
 
     private Date gmtModified;
-	
-    private float rise; //用于计算排名时，记录一下涨跌幅
-    
-    private int rank; //计算一个组合中的排名,从0~100
-    
-	public int getRank() {
-		return rank;
-	}
-
-	public void setRank(int rank) {
-		this.rank = rank;
-	}
-
-	public float getRise() {
-		return rise;
-	}
-
-	public void setRise(float rise) {
-		this.rise = rise;
-	}
-
-	public float getAtr() {
-		return atr;
-	}
-
-	public void setAtr(float atr) {
-		this.atr = atr;
-	}
-
-	ReportDO report = new ReportDO();
-	
-	public ReportDO getReport() {
-		return report;
-	}
-
-	public void setReport(ReportDO report) {
-		this.report = report;
-	}
-
-	public float getMa(String key){
-		JSONObject json = JSONObject.fromObject(ma); 
-		Object value = json.get(key);
-		if(value != null){
-			return Float.parseFloat(value.toString());
-		}
-		return 0;
-	}
-	
-	public String getMa() {
-		return ma;
-	}
-
-	public void setMa(String ma) {
-		this.ma = ma;
-	}
-
 
 	public float getBbi() {
 		return bbi;
@@ -188,5 +157,4 @@ public class StockDO {
 	}
 
 }
-
 

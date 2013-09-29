@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 
 public class AtrPlan {
 
-	private static float money = 400000;
+	private static float money = 170000;
 
-	private static float atr = 0.44f;
+	private static float atr = 0.82f;
 
-	private static float buyPoint = 11.5f;
+	private static float buyPoint = 12.05f;
 
 	private static int n = 2;
 	
@@ -50,6 +50,8 @@ public class AtrPlan {
 	}
 	
 	public static void calTheLost(){
+		float atr05 =  new BigDecimal(0.5f).multiply(new BigDecimal(atr)).floatValue();
+		System.out.println("atr :" + atr + " 加仓间隔："+atr05);
 		float lost1 = 2*atr*num;
 		float lost2 = (float) (2*atr*num + 1.5*atr*num);
 		float lost3 = (float) (2*atr*num + 1.5*atr*num + 1*atr*num);
