@@ -3,9 +3,8 @@ package com.baolei.ghost.dal.daointerface;
 import java.util.List;
 import java.util.Map;
 
-import com.baolei.ghost.dal.dataobject.ReportDO;
 import com.baolei.ghost.dal.dataobject.ReportStatsDO;
-import com.baolei.ghost.dal.dataobject.PriceDO;
+import com.baolei.ghost.dal.dataobject.StatisticsIndustryDO;
 
 public interface ReportStatsDAO {
 
@@ -13,5 +12,6 @@ public interface ReportStatsDAO {
 	public Integer insertReportStats(ReportStatsDO record) ;
 	public ReportStatsDO selectReportStatsByCode(String code);
 	public int deleteReportStatsByCode(String code);
-	List<ReportStatsDO> seleteReportStatsByConditions(Map param);
+	public List<ReportStatsDO> seleteReportStatsByConditions(Map param);
+	
 }

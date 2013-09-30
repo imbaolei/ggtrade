@@ -18,15 +18,30 @@
     <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
     <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
   </resultMap>
+  <resultMap id="RM-STATISTICS-INDUSTRY" class="com.baolei.ghost.dal.dataobject.StatisticsIndustryDO" >
+    <result column="industry" property="industry" jdbcType="VARCHAR" />
+    <result column="counts" property="counts" jdbcType="INTEGER" />
+  </resultMap>
   <select id="SQL_SELECT_STATISTICS_BY_ID" resultMap="RM-STATISTICS" parameterClass="com.baolei.ghost.dal.dataobject.StatisticsDO" >
     select *
     from statistics
     where id = #id#
   </select>
-  <select id="SQL_SELECT_STATISTICS_BY_CODE" resultMap="RM-STATISTICS" parameterClass="com.baolei.ghost.dal.dataobject.StatisticsDO" >
+  <select id="SQL_SELECT_STATISTICS_BY_TIME" resultMap="RM-STATISTICS" parameterClass="java.util.Map" >
     select *
     from statistics
-    where code = #code#  order by time
+    where time = #time# 
+  </select>
+  
+  <select id="SQL_SELECT_STATISTICS_BY_TIME_GROUP_BY_INDUSTRY" resultMap="RM-STATISTICS-INDUSTRY" parameterClass="java.util.Map" >
+    select industry,count(*) as counts from  statistics  
+    where time= #time# and  rise_rank >= #menkan#
+    group by industry  
+    order by counts  desc 
+  </select>
+  
+  <select id="SQL_SELECT_DATES_FROME_STATISTICS" resultMap="java.util.Date" parameterClass="java.util.Map" >
+    SELECT distinct time FROM  statistics  order by time ;
   </select>
   
   <delete id="SQL_DELETE_STATISTICS_BY_TIME" parameterClass="com.baolei.ghost.dal.dataobject.StatisticsDO" >

@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import com.baolei.ghost.dal.daointerface.BaseDAO;
 import com.baolei.ghost.dal.daointerface.StatisticsDAO;
-import com.baolei.ghost.dal.dataobject.ReportDO;
 import com.baolei.ghost.dal.dataobject.StatisticsDO;
+import com.baolei.ghost.dal.dataobject.StatisticsIndustryDO;
 import com.ibatis.sqlmap.client.SqlMapExecutor;
 
 @Repository("statisticsDAO")
@@ -54,11 +54,11 @@ public class StatisticsDAOImpl  extends BaseDAO implements StatisticsDAO {
 	}
 
 	@Override
-	public List<ReportDO> selectStatisticsByCode(String code) {
+	public List<StatisticsDO> selectStatisticsByTime(Date time) {
 		Map map = new HashMap();
-		map.put("code", code);
-		List<ReportDO> record = (List<ReportDO>) getSqlMapClientTemplate().queryForList(
-				"SQL_SELECT_STATISTICS_BY_CODE", map);
+		map.put("time", time);
+		List<StatisticsDO> record = (List<StatisticsDO>) getSqlMapClientTemplate().queryForList(
+				"SQL_SELECT_STATISTICS_BY_TIME", map);
 		return record;
 	}
 
@@ -69,6 +69,20 @@ public class StatisticsDAOImpl  extends BaseDAO implements StatisticsDAO {
 		int rows = getSqlMapClientTemplate().delete("SQL_DELETE_STATISTICS_BY_TIME",
 				key);
 		return rows;
+	}
+
+	@Override
+	public List<StatisticsIndustryDO> seleteIndustryStatistics(Map map) {
+		List<StatisticsIndustryDO> record = (List<StatisticsIndustryDO>) getSqlMapClientTemplate().queryForList(
+				"SQL_SELECT_STATISTICS_BY_TIME_GROUP_BY_INDUSTRY", map);
+		return record;
+	}
+
+	@Override
+	public List<Date> selectDatesFromStatistics(Map param) {
+		List<Date> record = (List<Date>) getSqlMapClientTemplate().queryForList(
+				"SQL_SELECT_DATES_FROME_STATISTICS", param);
+		return record;
 	}
 
 }
