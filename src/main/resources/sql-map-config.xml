@@ -2,7 +2,9 @@
 <!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN" 
     "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
 <sqlMapConfig>
+	<sqlMap resource="com/baolei/ghost/dal/dataobject/sqlmap_stock.xml" />
 	<sqlMap resource="com/baolei/ghost/dal/dataobject/sqlmap_price.xml" />
 	<sqlMap resource="com/baolei/ghost/dal/dataobject/sqlmap_report.xml" />
+	<sqlMap resource="com/baolei/ghost/dal/dataobject/sqlmap_statistics.xml" />
 	<sqlMap resource="com/baolei/ghost/dal/dataobject/sqlmap_report_stats.xml" /><!--  -->
 </sqlMapConfig>

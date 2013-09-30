@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="stock" >
+  <resultMap id="RM-STATISTICS" class="com.baolei.ghost.dal.dataobject.StatisticsDO" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="industry" property="industry" jdbcType="VARCHAR" />
+    <result column="open" property="open" jdbcType="REAL" />
+    <result column="close" property="close" jdbcType="REAL" />
+    <result column="high" property="high" jdbcType="REAL" />
+    <result column="low" property="low" jdbcType="REAL" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="rise_rate" property="riseRate" jdbcType="REAL" />
+    <result column="change_rate" property="changeRate" jdbcType="REAL" />
+    <result column="rise_rank" property="riseRank" jdbcType="INTEGER" />
+    <result column="results_up" property="resultsUp" jdbcType="REAL" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <select id="SQL_SELECT_STATISTICS_BY_ID" resultMap="RM-STATISTICS" parameterClass="com.baolei.ghost.dal.dataobject.StatisticsDO" >
+    select *
+    from statistics
+    where id = #id#
+  </select>
+  <select id="SQL_SELECT_STATISTICS_BY_CODE" resultMap="RM-STATISTICS" parameterClass="com.baolei.ghost.dal.dataobject.StatisticsDO" >
+    select *
+    from statistics
+    where code = #code#  order by time
+  </select>
+  
+  <delete id="SQL_DELETE_STATISTICS_BY_TIME" parameterClass="com.baolei.ghost.dal.dataobject.StatisticsDO" >
+    delete from statistics
+    where time = #time#
+  </delete>
+  <insert id="SQL_INSERT_STATISTICS" parameterClass="com.baolei.ghost.dal.dataobject.StatisticsDO" >
+    insert into statistics (code,name,industry,open, close, high, low,  time, rise_rate,change_rate,rise_rank, results_up,gmt_create, gmt_modified)
+    values (#code#,#name#,#industry#,#open#, #close#, #high#, #low#,  #time#, #riseRate#,#changeRate#,#riseRank#, #resultsUp#, #gmtCreate#,#gmtModified#)
+    <selectKey resultClass="java.lang.Integer" keyProperty="id" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+  
+</sqlMap>
