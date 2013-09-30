@@ -62,7 +62,7 @@ public class TxdFileParser implements DataParser {
 
 	@Override
 	public List<PriceDO> parse(String code) {
-		List<PriceDO> stockDOList = new ArrayList<PriceDO>();
+		List<PriceDO> priceDOList = new ArrayList<PriceDO>();
 		List<String> sDataList = reader(code, 0);
 		for (String temp : sDataList) {
 			// 如果这行数据没有 小数点 则不是价格数据
@@ -71,9 +71,9 @@ public class TxdFileParser implements DataParser {
 			}
 			PriceDO stockDO = parseDataLine(temp);
 			stockDO.setCode(code);
-			stockDOList.add(stockDO);
+			priceDOList.add(stockDO);
 		}
-		return stockDOList;
+		return priceDOList;
 	}
 
 	private PriceDO parseDataLine(String dataLine) {

@@ -31,8 +31,8 @@ com.baolei.trade。test 用来测试交易收益，以一种标的来作为买�
 		
 
 PriceDO 股票行情对象
-drop table if exists price;
-create table price(						   
+drop table if exists ggtrade.price;
+create table ggtrade.price(						   
 	id int(11) not null auto_increment,
 	code varchar(10),
 	open float,
@@ -46,6 +46,47 @@ create table price(
 	gmt_create datetime,
 	gmt_modified datetime,
 	PRIMARY KEY (`id`),
-  	KEY `Index_stock_time` (`time`),
-  	KEY `Index_stock_code_period` (`code`,`period`)
+  	KEY `Index_price_time` (`time`),
+  	KEY `Index_price_code_period` (`code`,`period`)
 ) type = innodb;
+
+
+StockDO 股票对象
+drop table if exists ggtrade.stock;
+create table ggtrade.stock(						   
+	id int(11) not null auto_increment,
+	code varchar(10),
+	name varchar(10),
+	industry varchar(10),
+	gmt_create datetime,
+	gmt_modified datetime,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `code_UNIQUE` (`code`),
+  	KEY `Index_stock_code` (`code`)
+) type = innodb;
+
+
+drop table if exists ggtrade.statistics;
+create table ggtrade.statistics(						   
+	id int(11) not null auto_increment,
+	code varchar(10),
+	name varchar(10),
+	industry varchar(10),
+	time datetime,
+	open float,
+	close float,
+	high float,
+	low float,
+	rise_rate float,
+	change_rate float,
+	rise_rank float,
+	results_up float,
+	gmt_create datetime,
+	gmt_modified datetime,
+	PRIMARY KEY (`id`),
+  	KEY `Index_statistics_time` (`time`)
+) type = innodb;
+
+
+
+
