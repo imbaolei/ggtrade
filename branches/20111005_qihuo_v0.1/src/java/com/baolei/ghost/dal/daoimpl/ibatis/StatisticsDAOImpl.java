@@ -84,5 +84,19 @@ public class StatisticsDAOImpl  extends BaseDAO implements StatisticsDAO {
 				"SQL_SELECT_DATES_FROME_STATISTICS", param);
 		return record;
 	}
+	
+	@Override
+	public List<Date> selectAllDatesFromStatistics() {
+		List<Date> record = (List<Date>) getSqlMapClientTemplate().queryForList(
+				"SQL_SELECT_ALL_DATES_FROME_STATISTICS");
+		return record;
+	}
+
+	@Override
+	public List<StatisticsDO> selectStatistics(Map param) {
+		List<StatisticsDO> record = (List<StatisticsDO>) getSqlMapClientTemplate().queryForList(
+				"SQL_SELECT_STATISTICS", param);
+		return record;
+	}
 
 }

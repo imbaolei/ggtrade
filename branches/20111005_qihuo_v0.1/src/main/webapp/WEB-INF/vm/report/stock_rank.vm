@@ -5,7 +5,7 @@
         <script src=/html/js/jquery.js type=text/javascript></script>
     </head>
     <style type="text/css">
-        table {font-size:12px; color: #333}
+        table {font-size:12px;color: #333}
         table {
         border-collapse:collapse; /* 关键属性：合并表格内外边框(其实表格边框有2px，外面1px，里面还有1px哦) */
         border:solid #999; /* 设置边框属性；样式(solid=实线)、颜色(#999=灰) */
@@ -20,8 +20,11 @@
 		a:active {color: #333}	/* 选定的链接 */
     </style>
     <body>
+		#if($industry)
+			行业：$industry
+		#end
 		#set($tableWidth = $resultMap.entrySet().size() * 70)
-        <table   width=$tableWidth  >
+        <table width=$tableWidth>
             <tr>
                 #foreach($entry in $resultMap.entrySet())
                     <td  >$dateFormat.format($entry.key)</td>
@@ -29,12 +32,14 @@
             </tr>
             <tr  >
                 #foreach($entry in $resultMap.entrySet())
-                    #set($industryList = $entry.value)
+                    #set($statList = $entry.value)
                     <td >
-                        #foreach($industry in $industryList)
+                        #foreach($stat in $statList)
 							$velocityCount. 
-							<a target="_blank" alt="查看本行业下的强度靠前的股票排名"  href=/report/statistics_list.do?m=stock_rank&menkan=${menkan}&type=${type}&start=${start}&end=${end}&industry=${industry.industry}>$industry.industry</a>
-							[${industry.counts}] <br><br>
+							$stat.code 
+							<a alt="查看本行业下的所有股票排名 查看这个股票的强度走势" target="_blank" href=/report/statistics_list.do?m=stock_rank&menkan=0&type=${type}&start=${start}&end=${end}&industry=${stat.industry}>$stat.name</a> <br>
+							[$stat.riseRank] ${stat.riseRate}% #if($industry == "") $stat.industry #end <br>
+							<br>
                         #end 
                     </td>
                 #end

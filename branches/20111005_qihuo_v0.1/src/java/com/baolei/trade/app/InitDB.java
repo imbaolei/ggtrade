@@ -23,7 +23,7 @@ import com.baolei.trade.data.StockDataParser;
 
 public class InitDB {
 	
-	private String statisticsPath = "D:/tmp/stock/week/";
+	private String statisticsPath = "D:/tmp/stock/week/all/";
 
 	protected Log log = LogFactory.getLog(getClass());
 
@@ -32,7 +32,7 @@ public class InitDB {
 	public static void main(String[] args) {
 		InitDB idb = new InitDB();
 //		idb.initStocksToDB();
-		//idb.initStatisticsListByFile("2013-09-27");
+//		idb.initStatisticsListByFile("2006-01-27");
 		idb.initAllStatisticsToDB();
 	}
 
@@ -83,6 +83,7 @@ public class InitDB {
 			StockDataParser dataParser = (StockDataParser) context
 					.getBean("tdxStockDataParser");
 			String file = statisticsPath+fileName+".xls";
+			System.out.println(file + " start parse !");
 			List<StatisticsDO> statsList =  dataParser.getStatisticsListByFile(file,time);
 			statisticsDAO.deleteStatisticsByDate(time);
 			StockDAO stockDAO = (StockDAO) context.getBean("stockDAO");
@@ -98,6 +99,7 @@ public class InitDB {
 					statsInsertList.add(stats);
 			}
 			statisticsDAO.insertStatisticses(statsInsertList);
+			System.out.println(file + " over parse !");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
