@@ -33,6 +33,27 @@
     where time = #time# 
   </select>
   
+  <select id="SQL_SELECT_STATISTICS" resultMap="RM-STATISTICS" parameterClass="java.util.Map" >
+    select *
+    from statistics
+    where   1=1  
+	<dynamic>
+    	<isGreaterThan prepend=" and " property="menkan" compareValue="0">
+			 rise_rank >= #menkan# 
+		</isGreaterThan>
+   		<isNotEmpty  prepend="AND" property="industry">
+   			industry = #industry#
+ 		</isNotEmpty>
+ 		<isNotEmpty  prepend="AND" property="code">
+   			code = #code#
+ 		</isNotEmpty>
+ 		<isNotNull  prepend="AND" property="time">
+   			time = #time#
+ 		</isNotNull>
+ 	</dynamic>	
+    order by rise_rank desc
+  </select>
+  
   <select id="SQL_SELECT_STATISTICS_BY_TIME_GROUP_BY_INDUSTRY" resultMap="RM-STATISTICS-INDUSTRY" parameterClass="java.util.Map" >
     select industry,count(*) as counts from  statistics  
     where time= #time# and  rise_rank >= #menkan#
@@ -40,8 +61,16 @@
     order by counts  desc 
   </select>
   
-  <select id="SQL_SELECT_DATES_FROME_STATISTICS" resultMap="java.util.Date" parameterClass="java.util.Map" >
-    SELECT distinct time FROM  statistics  order by time ;
+  <select id="SQL_SELECT_DATES_FROME_STATISTICS" resultClass="java.util.Date" parameterClass="java.util.Map" >
+   <![CDATA[ 
+    SELECT distinct time FROM  statistics 
+    where  time >= #start#  and  time <= #end#  
+    order by time 
+   ]]>  
+  </select>
+  
+  <select id="SQL_SELECT_ALL_DATES_FROME_STATISTICS" resultClass="java.util.Date"  >
+    SELECT distinct time FROM  statistics  order by time 
   </select>
   
   <delete id="SQL_DELETE_STATISTICS_BY_TIME" parameterClass="com.baolei.ghost.dal.dataobject.StatisticsDO" >

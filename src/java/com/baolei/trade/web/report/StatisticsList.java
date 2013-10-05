@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.baolei.ghost.dal.daointerface.StatisticsDAO;
 import com.baolei.ghost.dal.dataobject.StatisticsDO;
 import com.baolei.ghost.dal.dataobject.StatisticsIndustryDO;
+import com.baolei.trade.bo.StatisticsBO;
 
 @Controller
 @RequestMapping("/report/statistics_list.do")
@@ -32,20 +33,26 @@ public class StatisticsList {
 	@Autowired
 	private StatisticsDAO statisticsDAO;
 
+	@Autowired
+	private StatisticsBO statisticsBO;
+
 	private int rankThreshold = 80;
 
 	/**
-	 * 取某个时间点 强度前多少的股票 进行统计后排序，按照股票的行业 出现的次数排序
+	 * 取某个时间点、强度前多少的股票 进行统计后排序，按照股票的行业 出现的次数排序
+	 * 
 	 * @param menkan
 	 * @param request
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(params = "m=industry")
-	public String industryStats(@RequestParam(value = "menkan", required = false) Integer menkan,HttpServletRequest request, ModelMap model) {
+	public String industryStats(
+			@RequestParam(value = "menkan", required = false) Integer menkan,
+			HttpServletRequest request, ModelMap model) {
 		String timeString = request.getParameter("time");
-		if(menkan != null){
-			rankThreshold  = menkan;
+		if (menkan != null) {
+			rankThreshold = menkan;
 		}
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -87,78 +94,148 @@ public class StatisticsList {
 
 		return "report/statistics_list";
 	}
-	
+
 	/**
-	 * 取某个时间点 强度前多少的股票 进行统计后排序，按照股票的行业 出现的次数排序
+	 * 取 强度 大于 mankan的 个股 ，根据所属行业统计后，按照行业排序
+	 * 
+	 * @param menkan
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(params = "m=stock_rank")
+	public String industryRank(
+			@RequestParam(value = "start", required = false) String startTimeParam,
+			@RequestParam(value = "end", required = false) String endTimeParam,
+			@RequestParam(value = "type", required = false) String typeParam,
+			@RequestParam(value = "industry", required = false) String industryParam,
+			@RequestParam(value = "menkan", required = false) Integer menkanParam,
+			@RequestParam(value = "code", required = false) String codeParam,
+			HttpServletRequest request, ModelMap model) {
+		
+		String startTimeString = "1949-1-1";
+		String endTimeString = "2049-1-1";
+		String type = "week";
+		int menkan = 80;
+		String industry = "";
+		try {
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Map param = new HashMap();
+			
+			
+			if (startTimeParam != null && !startTimeParam.isEmpty()) {
+				startTimeString = startTimeParam;
+			}
+			if (endTimeParam != null && !endTimeParam.isEmpty()) {
+				endTimeString = endTimeParam;
+			}
+			if (typeParam != null && !typeParam.isEmpty()) {
+				type = typeParam;
+			}
+			if (menkanParam != null && menkanParam >= 0) {
+				menkan = menkanParam;
+			}
+			
+			if (industryParam != null && !industryParam.isEmpty()) {
+				industry = industryParam;
+				param.put("industry", industry);
+			}
+			
+			if (codeParam != null && !codeParam.isEmpty()) {
+				param.put("code", codeParam);
+			}
+			Date start = dateFormat.parse(startTimeString);
+			Date end = dateFormat.parse(endTimeString);
+			
+			param.put("start", start);
+			param.put("end", end);
+			param.put("type", type);
+			param.put("menkan", menkan);
+			
+			
+			Map<Date, List<StatisticsDO>> resultMap = statisticsBO
+					.seleteStockStatistics(param);
+
+			model.addAttribute("resultMap", resultMap);
+			model.addAttribute("dateFormat", dateFormat);
+			model.addAttribute("industry", industry);
+			model.addAttribute("start", dateFormat.format(start));
+			model.addAttribute("end", dateFormat.format(end));
+			model.addAttribute("type", type);
+			model.addAttribute("menkan", menkan);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return "report/stock_rank";
+	}
+
+	/**
+	 * 取一个时间段类的 强度 大于 mankan的 个股 ，根据所属行业统计，按照行业排序
+	 * 
 	 * @param menkan
 	 * @param request
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(params = "m=industry_rank")
-	public String industryRank(@RequestParam(value = "menkan", required = false) Integer menkan,HttpServletRequest request, ModelMap model) {
-		String timeString = request.getParameter("time");
-		if(menkan != null){
-			rankThreshold  = menkan;
-		}
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	public String allIndustryRank(
+			@RequestParam(value = "start", required = false) String startTimeParam,
+			@RequestParam(value = "end", required = false) String endTimeParam,
+			@RequestParam(value = "type", required = false) String typeParam,
+			@RequestParam(value = "menkan", required = false) Integer menkanParam,
+			HttpServletRequest request, ModelMap model) {
+		
+		String startTimeString = "1949-1-1";
+		String endTimeString = "2049-1-1";
+		String type = "week";
+		int menkan = 80;
 
 		try {
-			Date time = dateFormat.parse(timeString);
-			Map param = new HashMap();
-			param.put("time", time);
-			param.put("menkan", rankThreshold);
-			List<StatisticsIndustryDO> industryList = statisticsDAO
-					.seleteIndustryStatistics(param);
-			model.addAttribute("industryList", industryList);
-			
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			if (startTimeParam != null && !startTimeParam.isEmpty()) {
+				startTimeString = startTimeParam;
+			}
+			if (endTimeParam != null && !endTimeParam.isEmpty()) {
+				endTimeString = endTimeParam;
+			}
+			if (typeParam != null && !typeParam.isEmpty()) {
+				type = typeParam;
+			}
+			if (menkanParam != null && menkanParam >= 0) {
+				menkan = menkanParam;
+			}
+			Date start = dateFormat.parse(startTimeString);
+
+			Date end = dateFormat.parse(endTimeString);
+			Map<Date, List<StatisticsIndustryDO>> resultMap = statisticsBO
+					.seleteIndustryStatisticsByDate(start, end, menkan, type);
+
+			model.addAttribute("resultMap", resultMap);
+			model.addAttribute("dateFormat", dateFormat);
+			model.addAttribute("start", dateFormat.format(start));
+			model.addAttribute("end", dateFormat.format(end));
+			model.addAttribute("type", type);
+			model.addAttribute("menkan", menkan);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
 		return "report/industry_rank";
 	}
-	
-	
-	@RequestMapping(params = "m=all_industry_rank")
-	public String allIndustryRank(@RequestParam(value = "menkan", required = false) Integer menkan,HttpServletRequest request, ModelMap model) {
-		Map param = new HashMap();
-		List<Date> dates = statisticsDAO.selectDatesFromStatistics(param);
-		if(menkan != null){
-			rankThreshold  = menkan;
+
+	public List<Entry<String, Integer>> sortKeywordMap(
+			Map<String, Integer> keywordMap) {
+		List<Entry<String, Integer>> arrayList = new ArrayList<Entry<String, Integer>>(
+				keywordMap.entrySet());
+		Collections.sort(arrayList, new Comparator<Entry<String, Integer>>() {
+			public int compare(Entry<String, Integer> e1,
+					Entry<String, Integer> e2) {
+				return (e2.getValue()).compareTo(e1.getValue());
+			}
+		});
+		for (Entry<String, Integer> entry : arrayList) {
+			System.out.println(entry.getKey() + "  " + entry.getValue());
 		}
-		
-		Map resultMap = new TreeMap();
-		for(Date date : dates){
-			Map param2 = new HashMap();
-			param2.put("time", date);
-			param2.put("menkan", rankThreshold);
-			List<StatisticsIndustryDO> industryList = statisticsDAO
-					.seleteIndustryStatistics(param2);
-			resultMap.put(date, industryList);
-		}
-		
-		model.addAttribute("resultMap", resultMap);
-		
-		return "report/industry_rank";
+		return arrayList;
 	}
-	
-	public List<Entry<String, Integer>> sortKeywordMap(  
-            Map<String, Integer> keywordMap) {  
-        List<Entry<String, Integer>> arrayList = new ArrayList<Entry<String, Integer>>(  
-                keywordMap.entrySet());  
-        Collections.sort(arrayList, new Comparator<Entry<String, Integer>>() {  
-            public int compare(Entry<String, Integer> e1,  
-                    Entry<String, Integer> e2) {  
-                return (e2.getValue()).compareTo(e1.getValue());  
-            }  
-        });  
-        for (Entry<String, Integer> entry : arrayList) {  
-            System.out.println(entry.getKey() + "  " + entry.getValue());  
-        }  
-        return arrayList;  
-    }  
-
-
 
 }

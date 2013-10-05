@@ -15,11 +15,16 @@ public interface StatisticsDAO {
 	public Integer insertStatistics(StatisticsDO record);
 
 	public List<StatisticsDO> selectStatisticsByTime(Date date);
+	
+	public List<StatisticsDO> selectStatistics(Map param);
 
 	public int deleteStatisticsByDate(Date date);
 	
 	public List<StatisticsIndustryDO> seleteIndustryStatistics(Map param);
 	
 	public List<Date> selectDatesFromStatistics(Map param);
+	
+	public List<Date> selectAllDatesFromStatistics();
+
 
 }
