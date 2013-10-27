@@ -14,6 +14,7 @@
     <result column="rise_rate" property="riseRate" jdbcType="REAL" />
     <result column="change_rate" property="changeRate" jdbcType="REAL" />
     <result column="rise_rank" property="riseRank" jdbcType="INTEGER" />
+    <result column="guanzhu" property="guanzhu" jdbcType="INTEGER" />
     <result column="results_up" property="resultsUp" jdbcType="REAL" />
     <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
     <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
@@ -50,8 +51,12 @@
  		<isNotNull  prepend="AND" property="time">
    			time = #time#
  		</isNotNull>
- 	</dynamic>	
-    order by rise_rank desc
+ 	</dynamic>
+ 	 <dynamic >
+   		<isNotNull property="order">
+   			order by $order$ desc
+ 		</isNotNull>
+ 	</dynamic>
   </select>
   
   <select id="SQL_SELECT_STATISTICS_BY_TIME_GROUP_BY_INDUSTRY" resultMap="RM-STATISTICS-INDUSTRY" parameterClass="java.util.Map" >
@@ -84,5 +89,35 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
   </insert>
+  <update id="SQL_UPDATE_STATISTICS_BY_ID_SELECTIVE" parameterClass="com.baolei.ghost.dal.dataobject.StatisticsDO" >
+    update statistics
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="code" >
+        code = #code#
+      </isNotNull>
+      <isNotNull prepend="," property="open" >
+        open = #open#
+      </isNotNull>
+      <isNotNull prepend="," property="close" >
+        close = #close#
+      </isNotNull>
+      <isNotNull prepend="," property="high" >
+        high = #high#
+      </isNotNull>
+      <isNotNull prepend="," property="low" >
+        low = #low#
+      </isNotNull>
+      <isNotNull prepend="," property="time" >
+        time = #time#
+      </isNotNull>
+      <isNotNull prepend="," property="guanzhu" >
+        guanzhu = #guanzhu#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtModified" >
+        gmt_modified = #gmtModified#
+      </isNotNull>
+    </dynamic>
+    where id = #id#
+  </update>
   
 </sqlMap>

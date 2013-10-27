@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.baolei.ghost.dal.daointerface.BaseDAO;
 import com.baolei.ghost.dal.daointerface.StatisticsDAO;
+import com.baolei.ghost.dal.dataobject.PriceDO;
 import com.baolei.ghost.dal.dataobject.StatisticsDO;
 import com.baolei.ghost.dal.dataobject.StatisticsIndustryDO;
 import com.ibatis.sqlmap.client.SqlMapExecutor;
@@ -97,6 +98,37 @@ public class StatisticsDAOImpl  extends BaseDAO implements StatisticsDAO {
 		List<StatisticsDO> record = (List<StatisticsDO>) getSqlMapClientTemplate().queryForList(
 				"SQL_SELECT_STATISTICS", param);
 		return record;
+	}
+
+	
+	public int updateStatisticsByIdSelective(StatisticsDO record){
+		int rows = getSqlMapClientTemplate().update(
+				"SQL_UPDATE_STATISTICS_BY_ID_SELECTIVE", record);
+		return rows;
+	}
+	
+	
+	
+	public void updateStatisticsByIdBatch(final List<StatisticsDO> statisticsList) {
+		getSqlMapClientTemplate().execute(new SqlMapClientCallback() {
+			public Object doInSqlMapClient(SqlMapExecutor executor)
+					throws SQLException {
+				executor.startBatch();
+				int batch = 0;
+				for (int i = 0, count = statisticsList.size(); i < count; i++) {
+					getSqlMapClientTemplate().update("SQL_UPDATE_STATISTICS_BY_ID_SELECTIVE", statisticsList.get(i));
+					batch++;
+					if(batch==300){
+	    				executor.executeBatch();
+	    				batch = 0;
+	    			}
+
+				}
+				executor.executeBatch();
+				return null;
+			}
+		});
+		
 	}
 
 }

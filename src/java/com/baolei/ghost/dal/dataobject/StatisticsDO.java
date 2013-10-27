@@ -34,6 +34,16 @@ public class StatisticsDO {
 
     private Date gmtModified;
     
+    private int guanzhu; //关注的股票  0:代表 不需要关注  1:代表第一次进入关注  2:代表不是第一次进入关注
+    
+
+	public int getGuanzhu() {
+		return guanzhu;
+	}
+
+	public void setGuanzhu(int guanzhu) {
+		this.guanzhu = guanzhu;
+	}
 
 	public int getId() {
 		return id;

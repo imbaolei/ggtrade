@@ -72,6 +72,7 @@ public class StatisticsBO {
 		Map<Date,List<StatisticsDO>> resultMap = new TreeMap();
 		for(Date date : dates){
 			param.put("time",date);
+			param.put("order", "rise_rank");
 			List<StatisticsDO> industryList = statisticsDAO
 					.selectStatistics(param);
 			resultMap.put(date, industryList);
